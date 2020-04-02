@@ -57,15 +57,14 @@ public class UsuarioDB {
 	}
 
 	
-	//SQL INJECTION
-	public ArrayList<Usuario> buscarPorTipo(String busca) {
+	public ArrayList<Usuario> buscarPorTipo(String tipo) {
 		Connection con = ConnectionFactory.getConnection();
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		ArrayList<Usuario> lista = new ArrayList<Usuario>();
-		
 		try {
-			stmt = con.prepareStatement("Select * from tartarugas where " + busca);
+			stmt = con.prepareStatement("Select * from tartarugas where tipo = %?%;");
+			stmt.setString(1, tipo);
 			rs = stmt.executeQuery();
 			while(rs.next()) {
 				Usuario user = new Usuario();
