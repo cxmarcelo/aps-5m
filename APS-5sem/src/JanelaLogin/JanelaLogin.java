@@ -1,12 +1,12 @@
 package JanelaLogin;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.EventQueue;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JTextField;
 import java.awt.event.FocusAdapter;
@@ -17,17 +17,15 @@ import javax.swing.SwingConstants;
 import javax.swing.JButton;
 
 public class JanelaLogin extends JFrame {
-
+	private static final long serialVersionUID = 1L;
+	
 	private JPanel contentPane;
 	private JTextField textFieldLogin;
-	private JTextField textFieldSenha;
+	private JPasswordField passField;
 	private ImageIcon imagem = new ImageIcon(getClass().getResource("logoaps.png"));
-	private JLabel lblNewLabelTitulo;
+	private JLabel lblTitulo;
 	
 
-	/**
-	 * Launch the application.
-	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -41,9 +39,6 @@ public class JanelaLogin extends JFrame {
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 */
 	public JanelaLogin() {
 		setTitle("Login");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -78,39 +73,37 @@ public class JanelaLogin extends JFrame {
 		contentPane.add(textFieldLogin);
 		textFieldLogin.setColumns(10);
 		
-		textFieldSenha = new JTextField();
-		textFieldSenha.setForeground(Color.GRAY);
-		textFieldSenha.setText("Senha");
-		textFieldSenha.addFocusListener(new FocusAdapter() {
-			@Override
+		passField = new JPasswordField	();
+		passField.setForeground(Color.GRAY);
+		passField.setText("Senha");
+		passField.addFocusListener(new FocusAdapter() {
 			public void focusGained(FocusEvent arg0) {
-				if("Senha".equals(textFieldSenha.getText())) {
-					textFieldSenha.setForeground(Color.BLACK);
-					textFieldSenha.setText("");
+				if("Senha".equals(String.valueOf(passField.getPassword()))) {
+					passField.setForeground(Color.BLACK);
+					passField.setText("");
 				}
 			}
-			@Override
 			public void focusLost(FocusEvent e) {
-				if("".equals(textFieldSenha.getText())) {
-					textFieldSenha.setForeground(Color.GRAY);
-					textFieldSenha.setText("Senha");
+				if("".equals(String.copyValueOf(passField.getPassword()))) {
+					passField.setForeground(Color.GRAY);
+					passField.setText("Senha");
 				}
 			}
 		});
-		textFieldSenha.setBounds(200, 438, 193, 22);
-		contentPane.add(textFieldSenha);
-		textFieldSenha.setColumns(10);
+		passField.setBounds(200, 438, 193, 22);
+		contentPane.add(passField);
+		passField.setColumns(10);
 		
-		JLabel lblNewLabelLogo = new JLabel(imagem);
-		lblNewLabelLogo.setBounds(97, 150, 420, 229);
-		contentPane.add(lblNewLabelLogo);
+		JLabel lblLogo = new JLabel(imagem);
+		lblLogo.setBounds(97, 150, 420, 229);
+		contentPane.add(lblLogo);
 		
-		lblNewLabelTitulo = new JLabel("Tiet\u00EA Solutions");
-		lblNewLabelTitulo.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabelTitulo.setForeground(Color.WHITE);
-		lblNewLabelTitulo.setFont(new Font("Tahoma", Font.BOLD, 27));
-		lblNewLabelTitulo.setBounds(149, 85, 298, 35);
-		contentPane.add(lblNewLabelTitulo);
+		lblTitulo = new JLabel("Tiet\u00EA Solutions");
+		lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
+		lblTitulo.setForeground(Color.WHITE);
+		lblTitulo.setFont(new Font("Tahoma", Font.BOLD, 27));
+		lblTitulo.setBounds(149, 85, 298, 35);
+		contentPane.add(lblTitulo);
 		
 		JButton btnConectar = new JButton("Conectar");
 		btnConectar.setBounds(248, 482, 97, 25);
