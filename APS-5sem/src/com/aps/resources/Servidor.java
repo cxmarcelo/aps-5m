@@ -53,11 +53,6 @@ public class Servidor extends Thread{
 		       sendToAll(bfw, msg);
 		       System.out.println(msg);                                              
 		       }
-		               
-			
-			
-			
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -93,7 +88,6 @@ public class Servidor extends Thread{
 		       Thread t = new Servidor(con);
 		        t.start();   
 		    }
-		                              
 		  }catch (Exception e) {
 		    
 		    e.printStackTrace();

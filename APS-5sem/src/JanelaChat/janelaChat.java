@@ -1,6 +1,5 @@
 package JanelaChat;
 
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -10,27 +9,17 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
-import java.awt.SystemColor;
-import javax.swing.UIManager;
-import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.JLabel;
 import java.awt.Font;
-import javax.swing.SwingConstants;
-import javax.swing.DropMode;
-import java.awt.Window.Type;
 import javax.swing.JTextArea;
-import javax.swing.JTable;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
 public class janelaChat extends JFrame {
-
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 
-	/**
-	 * Launch the application.
-	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -44,9 +33,6 @@ public class janelaChat extends JFrame {
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 */
 	public janelaChat() {
 		setTitle("Sala 1");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -67,21 +53,23 @@ public class janelaChat extends JFrame {
 		btnEnviar.setBounds(453, 400, 97, 38);
 		contentPane.add(btnEnviar);
 		
-		JButton btnNewButton = new JButton("Anexar");
-		btnNewButton.addActionListener(new ActionListener() {
+		JButton btnAnexar = new JButton("Anexar");
+		btnAnexar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				//Funçao para enviar arquivo
 			}
 		});
-		btnNewButton.setBounds(453, 448, 97, 38);
-		contentPane.add(btnNewButton);
+		btnAnexar.setBounds(453, 448, 97, 38);
+		contentPane.add(btnAnexar);
 		
-		JButton btnNewButton_1 = new JButton("Voltar as Salas");
-		btnNewButton_1.addActionListener(new ActionListener() {
+		JButton btnVoltar = new JButton("Voltar as Salas");
+		btnVoltar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				//Função Voltar
 			}
 		});
-		btnNewButton_1.setBounds(291, 509, 150, 31);
-		contentPane.add(btnNewButton_1);
+		btnVoltar.setBounds(291, 509, 150, 31);
+		contentPane.add(btnVoltar);
 		
 		JLabel lblNomeDoInfeliz = new JLabel("Nome do infeliz");
 		lblNomeDoInfeliz.setFont(new Font("Tahoma", Font.BOLD, 17));
@@ -94,14 +82,12 @@ public class janelaChat extends JFrame {
 		textArea.setForeground(Color.GRAY);
 		textArea.setText("Escreva...");
 		textArea.addFocusListener(new FocusAdapter() {
-			@Override
 			public void focusGained(FocusEvent e) {
 				if("Escreva...".equals(textArea.getText())) {
 					textArea.setForeground(Color.BLACK);
 					textArea.setText("");
 				}
 			}
-			@Override
 			public void focusLost(FocusEvent e) {
 				if("".equals(textArea.getText())) {
 					textArea.setForeground(Color.GRAY);
