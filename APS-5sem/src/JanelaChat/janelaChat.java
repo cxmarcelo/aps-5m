@@ -97,7 +97,6 @@ public class janelaChat extends JFrame {
 			@Override
 			public void focusGained(FocusEvent e) {
 				if("Escreva...".equals(textArea.getText())) {
-					System.out.println(textArea.getText());
 					textArea.setForeground(Color.BLACK);
 					textArea.setText("");
 				}
@@ -105,7 +104,6 @@ public class janelaChat extends JFrame {
 			@Override
 			public void focusLost(FocusEvent e) {
 				if("".equals(textArea.getText())) {
-					System.out.println(textArea.getText());
 					textArea.setForeground(Color.GRAY);
 					textArea.setText("Escreva...");
 				}
@@ -120,12 +118,12 @@ public class janelaChat extends JFrame {
 		lblIntegrantes.setBounds(579, 11, 119, 31);
 		contentPane.add(lblIntegrantes);
 		
-		JTextArea txtrErick = new JTextArea();
-		txtrErick.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 17));
-		txtrErick.setForeground(Color.WHITE);
-		txtrErick.setEditable(false);
-		txtrErick.setBackground(new Color(46,84,143));
-		txtrErick.setBounds(579, 45, 119, 441);
-		contentPane.add(txtrErick);
+		JTextArea txtIntegrantes = new JTextArea();
+		txtIntegrantes.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 17));
+		txtIntegrantes.setForeground(Color.WHITE);
+		txtIntegrantes.setEditable(false);
+		txtIntegrantes.setBackground(new Color(46,84,143));
+		txtIntegrantes.setBounds(579, 45, 119, 441);
+		contentPane.add(txtIntegrantes);
 	}
 }
