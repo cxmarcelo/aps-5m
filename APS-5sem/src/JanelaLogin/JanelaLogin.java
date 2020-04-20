@@ -26,7 +26,7 @@ public class JanelaLogin extends JFrame {
 	private JPasswordField passField;
 	private ImageIcon imagem = new ImageIcon(getClass().getResource("../com/aps/imgs/logoaps.png"));
 	private JLabel lblTitulo;
-
+	private JLabel lblMensagem;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -49,9 +49,8 @@ public class JanelaLogin extends JFrame {
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(46,84,143));
 		contentPane.setBorder(null);
-		setContentPane(contentPane);
 		contentPane.setLayout(null);
-
+		setContentPane(contentPane);
 
 		//textFieldSenha
 
@@ -112,13 +111,13 @@ public class JanelaLogin extends JFrame {
 		lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTitulo.setForeground(Color.WHITE);
 		lblTitulo.setFont(new Font("Tahoma", Font.BOLD, 27));
-		lblTitulo.setBounds(149, 85, 298, 35);
+		lblTitulo.setBounds(149, 25, 298, 35);
 		contentPane.add(lblTitulo);
 
 		
 		//Logo
 		JLabel lblLogo = new JLabel(imagem);
-		lblLogo.setBounds(97, 150, 420, 229);
+		lblLogo.setBounds(97, 120, 420, 229);
 		contentPane.add(lblLogo);
 
 		
@@ -129,16 +128,36 @@ public class JanelaLogin extends JFrame {
 		textAreaGambi.setBounds(69, 13, 4, 22);
 		contentPane.add(textAreaGambi);
 
-		
 		//botão conectar
 		JButton btnConectar = new JButton("Conectar");
 		btnConectar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-			
+				//conectar();
 			}
 		});
 		btnConectar.setBounds(248, 482, 97, 25);
 		contentPane.add(btnConectar);
-
+	
+		
+		lblMensagem = new JLabel("");
+		lblMensagem.setForeground(Color.RED);
+		lblMensagem.setBounds(200, 360, 193, 22);
+		contentPane.add(lblMensagem);
+	
 	}
+	
+	/*
+	private void conectar() {
+		//funçao autenticar do servidor
+		if(xxx.autenticar(textFieldLogin.getText(), passField.getPassword().toString())) {
+			//chamar outra função no servidor que retornar um usuario
+			//telalogado(usuario)
+			//dispose();
+		}else {
+			lblMensagem.setText("Usúario ou senha inválido");
+			passField.setText("");
+		}
+	}
+	*/
+	
 }

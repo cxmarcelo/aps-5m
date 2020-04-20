@@ -5,6 +5,9 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import com.aps.dominio.Usuario;
+
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -15,16 +18,21 @@ import java.awt.Font;
 import javax.swing.JTextArea;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.util.ArrayList;
 
 public class janelaChat extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-
+	private ArrayList<Usuario> conectados = new ArrayList<Usuario>();
+	private JTextArea textArea;
+	
+	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					janelaChat frame = new janelaChat();
+					Usuario user = new Usuario("erickson199?", "Erickson123", "Erick", null);
+					janelaChat frame = new janelaChat(user);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -33,7 +41,7 @@ public class janelaChat extends JFrame {
 		});
 	}
 
-	public janelaChat() {
+	public janelaChat(Usuario usuario) {
 		setTitle("Sala 1");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 750, 600);
@@ -50,6 +58,11 @@ public class janelaChat extends JFrame {
 		contentPane.add(txtPanel);
 		
 		JButton btnEnviar = new JButton("Enviar");
+		btnEnviar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				enviarMsg();
+			}
+		});
 		btnEnviar.setBounds(453, 400, 97, 38);
 		contentPane.add(btnEnviar);
 		
@@ -57,6 +70,7 @@ public class janelaChat extends JFrame {
 		btnAnexar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				//Funçao para enviar arquivo
+				
 			}
 		});
 		btnAnexar.setBounds(453, 448, 97, 38);
@@ -71,13 +85,13 @@ public class janelaChat extends JFrame {
 		btnVoltar.setBounds(291, 509, 150, 31);
 		contentPane.add(btnVoltar);
 		
-		JLabel lblNomeDoInfeliz = new JLabel("Nome do infeliz");
+		JLabel lblNomeDoInfeliz = new JLabel(usuario.getNome());
 		lblNomeDoInfeliz.setFont(new Font("Tahoma", Font.BOLD, 17));
 		lblNomeDoInfeliz.setForeground(Color.WHITE);
 		lblNomeDoInfeliz.setBounds(32, 16, 518, 21);
 		contentPane.add(lblNomeDoInfeliz);
 		
-		JTextArea textArea = new JTextArea();	
+		textArea = new JTextArea();	
 		textArea.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		textArea.setForeground(Color.GRAY);
 		textArea.setText("Escreva...");
@@ -112,4 +126,13 @@ public class janelaChat extends JFrame {
 		txtIntegrantes.setBounds(579, 45, 119, 441);
 		contentPane.add(txtIntegrantes);
 	}
+	
+	//não implementada
+	private void enviarMsg() {
+		textArea.getText();
+		//funcão para enviar ao servidor
+		textArea.setText("");
+	}
+	
+	
 }
