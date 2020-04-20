@@ -7,8 +7,6 @@ public class Login {
 
 	private UsuarioDB userDB = new UsuarioDB();
 	
-	//if false msg falando q nao foi possivel logar
-	//if true chama o obj do  login
 	public boolean logar(String login, String senha) {
 		Usuario us = userDB.buscarLogin(login).get(0);
 		if (us != null) {

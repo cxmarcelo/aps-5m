@@ -1,6 +1,5 @@
 package JanelaSalas;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.EventQueue;
 
@@ -16,21 +15,19 @@ import javax.swing.JButton;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.border.LineBorder;
-import javax.swing.border.EtchedBorder;
-import javax.swing.border.MatteBorder;
-import javax.swing.border.SoftBevelBorder;
-import javax.swing.border.BevelBorder;
-import javax.swing.border.TitledBorder;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class JanelaSalas extends JFrame {
+	private static final long serialVersionUID = 1L;
 
 	private JPanel contentPane;
-	private ImageIcon imagemPoluidoresRio = new ImageIcon(getClass().getResource("Mundo.png"));
-	private ImageIcon imagemEsgoto = new ImageIcon(getClass().getResource("Esgoto.png"));
-	private ImageIcon imagemLimpeza = new ImageIcon(getClass().getResource("Limpeza.png"));
-	private ImageIcon imagemUrbana = new ImageIcon(getClass().getResource("Urbana.png"));
+	private ImageIcon imagemPoluidoresRio = new ImageIcon(getClass().getResource("../com/aps/imgs/Mundo.png"));
+	private ImageIcon imagemEsgoto = new ImageIcon(getClass().getResource("../com/aps/imgs/Esgoto.png"));
+	private ImageIcon imagemLimpeza = new ImageIcon(getClass().getResource("../com/aps/imgs/Limpeza.png"));
+	private ImageIcon imagemUrbana = new ImageIcon(getClass().getResource("../com/aps/imgs/Urbana.png"));
 
 	/**
 	 * Launch the application.
@@ -158,18 +155,38 @@ public class JanelaSalas extends JFrame {
 		contentPane.add(lblSalas);
 
 		JButton btnPoluidoresRio = new JButton("Entrar");
+		btnPoluidoresRio.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				entrarEmSala();
+			}
+		});
 		btnPoluidoresRio.setBounds(149, 271, 97, 25);
 		contentPane.add(btnPoluidoresRio);
 
 		JButton btnRemanejamentoEsgoto = new JButton("Entrar");
+		btnRemanejamentoEsgoto.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				entrarEmSala();
+			}
+		});
 		btnRemanejamentoEsgoto.setBounds(544, 271, 97, 25);
 		contentPane.add(btnRemanejamentoEsgoto);
 
 		JButton btnUrbana = new JButton("Entrar");
+		btnUrbana.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				entrarEmSala();
+			}
+		});
 		btnUrbana.setBounds(544, 507, 97, 25);
 		contentPane.add(btnUrbana);
 
 		JButton btnEstacoes = new JButton("Entrar");
+		btnEstacoes.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				entrarEmSala();
+			}
+		});
 		btnEstacoes.setBounds(149, 507, 97, 25);
 		contentPane.add(btnEstacoes);
 
@@ -378,4 +395,9 @@ public class JanelaSalas extends JFrame {
 			}
 		});
 	}
+
+	//Não implementada
+	private void entrarEmSala() {
+	}
+	
 }

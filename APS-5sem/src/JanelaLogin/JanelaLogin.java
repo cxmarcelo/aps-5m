@@ -7,7 +7,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
-import javax.swing.border.EmptyBorder;
 import javax.swing.JTextField;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -16,6 +15,8 @@ import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.JButton;
 import javax.swing.JTextArea;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class JanelaLogin extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -23,10 +24,8 @@ public class JanelaLogin extends JFrame {
 	private JPanel contentPane;
 	private JTextField textFieldLogin;
 	private JPasswordField passField;
-	private ImageIcon imagem = new ImageIcon(getClass().getResource("logoaps.png"));
+	private ImageIcon imagem = new ImageIcon(getClass().getResource("../com/aps/imgs/logoaps.png"));
 	private JLabel lblTitulo;
-	private JLabel lblSenha;
-	private JLabel lblLogin;
 
 
 	public static void main(String[] args) {
@@ -133,10 +132,13 @@ public class JanelaLogin extends JFrame {
 		
 		//botão conectar
 		JButton btnConectar = new JButton("Conectar");
+		btnConectar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			
+			}
+		});
 		btnConectar.setBounds(248, 482, 97, 25);
 		contentPane.add(btnConectar);
-
-
 
 	}
 }

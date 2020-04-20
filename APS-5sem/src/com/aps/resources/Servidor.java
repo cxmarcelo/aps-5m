@@ -12,10 +12,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
-
 public class Servidor extends Thread{
 
 	private static ArrayList<BufferedWriter>clientes;           
@@ -26,7 +22,7 @@ public class Servidor extends Thread{
 	private InputStreamReader inr;  
 	private BufferedReader bfr;
 
-
+	
 	public Servidor(Socket con) {
 		this.con = con;
 		try {
@@ -69,18 +65,11 @@ public class Servidor extends Thread{
 	  }          
 	}
 	
-	
-	public static void main(String[] args) {
+	public void iniciarServidor(int porta) {
 		try{
-		    JLabel lblMessage = new JLabel("Porta do Servidor:");
-		    JTextField txtPorta = new JTextField("12345");
-		    Object[] texts = {lblMessage, txtPorta };  
-		    JOptionPane.showMessageDialog(null, texts);
-		    server = new ServerSocket(Integer.parseInt(txtPorta.getText()));
+		    server = new ServerSocket(porta);
 		    clientes = new ArrayList<BufferedWriter>();
-		    JOptionPane.showMessageDialog(null,"Servidor ativo na porta: "+         
-		    txtPorta.getText());
-		    
+		    System.out.println("Servidor aberto na porta: " + porta);
 		     while(true){
 		       System.out.println("Aguardando conexão...");
 		       Socket con = server.accept();
@@ -89,9 +78,28 @@ public class Servidor extends Thread{
 		        t.start();   
 		    }
 		  }catch (Exception e) {
-		    
 		    e.printStackTrace();
-		  }                       
+		  } 
+	}
+	
+	public static void main(String[] args) {
+		try{
+			int porta = 12445;
+		    server = new ServerSocket(porta);
+		    clientes = new ArrayList<BufferedWriter>();
+		    System.out.println("Servidor aberto na porta: " + porta);
+		     while(true){
+		       System.out.println("Aguardando conexão...");
+		       Socket con = server.accept();
+		       System.out.println("Cliente conectado...");
+		       Thread t = new Servidor(con);
+		        t.start();   
+		    }
+		  }catch (Exception e) {
+		    e.printStackTrace();
+		  } 
+		
+	
 	}
 
 }
