@@ -137,6 +137,10 @@ public class PrincipalCliente {
 		txtMsg.setText("");        
 	}
 
+	public Socket getSocket() {
+		return socket;
+	}
+	
 	public static void main(String []args) throws IOException{
 
 		Cliente app = new Cliente();

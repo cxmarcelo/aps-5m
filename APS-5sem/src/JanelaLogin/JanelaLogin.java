@@ -10,7 +10,10 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -18,8 +21,12 @@ import javax.swing.JOptionPane;
 import java.awt.Font;
 import javax.swing.SwingConstants;
 
+import com.aps.dominio.Usuario;
+import com.aps.dominio.enums.Comandos;
 import com.aps.resources.Cliente;
 import com.aps.resources.PrincipalCliente;
+
+import JanelaSalas.JanelaSalas;
 
 import javax.swing.JButton;
 import javax.swing.JTextArea;
@@ -121,13 +128,13 @@ public class JanelaLogin extends JFrame {
 		lblTitulo.setBounds(149, 25, 298, 35);
 		contentPane.add(lblTitulo);
 
-		
+
 		//Logo
 		JLabel lblLogo = new JLabel(imagem);
 		lblLogo.setBounds(97, 120, 420, 229);
 		contentPane.add(lblLogo);
 
-		
+
 		//TextAreaGambi
 		JTextArea textAreaGambi = new JTextArea();
 		textAreaGambi.setBackground(new Color(46,84,143));
@@ -139,13 +146,13 @@ public class JanelaLogin extends JFrame {
 		JButton btnConectar = new JButton("Conectar");
 		btnConectar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+
 			}
 		});
 		btnConectar.setBounds(248, 482, 97, 25);
 		contentPane.add(btnConectar);
-	
-		
+
+
 		lblMensagem = new JLabel("");
 		lblMensagem.setForeground(Color.RED);
 		lblMensagem.setBounds(200, 360, 193, 22);
@@ -153,8 +160,8 @@ public class JanelaLogin extends JFrame {
 		//cliConect = new PrincipalCliente();
 		//conectarServer();
 	}
-	
-	
+
+
 	private void conectarServer() {
 		try {
 			cliConect.conectar();
@@ -168,10 +175,36 @@ public class JanelaLogin extends JFrame {
 			}
 		}
 	}
-	
+
+	public void escutar() throws IOException{
+
+		InputStream in = cliConect.getSocket().getInputStream();
+		InputStreamReader inr = new InputStreamReader(in);
+		BufferedReader bfr = new BufferedReader(inr);
+		String msg = "";
+
+		while(!Comandos.SAIR.getCodigo().equalsIgnoreCase(msg))
+
+			if(bfr.ready()){
+				msg = bfr.readLine();
+				//dividir msg
+				if(msg.equals(Comandos.RETORNO_AUTENTICACAO.getCodigo())) {
+					Usuario user = new Usuario();
+					//pegar informações do servidor que estará no retorno
+					
+					new JanelaSalas(user).setVisible(true);
+					dispose();
+				}
+				else {
+					//erro para logar
+				}
+			}
+	}
+
+
 	/*
 	private void conectar() {
-		
+
 		if(xxx.autenticar(textFieldLogin.getText(), passField.getPassword().toString())) {
 			//chamar outra função no servidor que retornar um usuario
 			//telalogado(usuario)
@@ -181,5 +214,5 @@ public class JanelaLogin extends JFrame {
 			passField.setText("");
 		}
 	}
-	*/
+	 */
 }

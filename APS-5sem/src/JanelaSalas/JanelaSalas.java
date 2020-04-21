@@ -15,6 +15,9 @@ import javax.swing.JButton;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.border.LineBorder;
+
+import com.aps.dominio.Usuario;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.ActionListener;
@@ -36,7 +39,8 @@ public class JanelaSalas extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					JanelaSalas frame = new JanelaSalas();
+					Usuario user = new Usuario("erickson199?", "Erickson123", "Erick", null);
+					JanelaSalas frame = new JanelaSalas(user);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -48,7 +52,7 @@ public class JanelaSalas extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public JanelaSalas() {
+	public JanelaSalas(Usuario usuario) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 800, 600);
 		setResizable(false);
@@ -234,6 +238,12 @@ public class JanelaSalas extends JFrame {
 		btnSair.setForeground(Color.RED);
 		btnSair.setBounds(699, 29, 68, 25);
 		contentPane.add(btnSair);
+		
+		JLabel lblNomeUsuario = new JLabel(usuario.getNome());
+		lblNomeUsuario.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		lblNomeUsuario.setForeground(Color.WHITE);
+		lblNomeUsuario.setBounds(12, 11, 90, 25);
+		contentPane.add(lblNomeUsuario);
 
 		//Funções Eventos Mouse Entered/Exited
 		//Containers
@@ -399,5 +409,4 @@ public class JanelaSalas extends JFrame {
 	//Não implementada
 	private void entrarEmSala() {
 	}
-	
 }

@@ -6,7 +6,11 @@ public enum Comandos {
 	AUTENTITCAR("::__AUTENTICAR__::"),
 	LOGAR("::__LOGAR__:"),
 	ENVIAR_MSG("::__MSGTEXT__::"),
-	ENVIAR_ARQUIVO("::__MSGARQUIVO__::");
+	ENVIAR_ARQUIVO("::__MSGARQUIVO__::"),
+	RETORNO_AUTENTICACAO("::__RET_AUT__::"),
+	SEPARAR_DADOS("::__SEP__::");
+	
+	
 	
 	private String codigo;
 	
