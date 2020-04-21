@@ -8,7 +8,8 @@ public enum Comandos {
 	ENVIAR_MSG("::__MSGTEXT__::"),
 	ENVIAR_ARQUIVO("::__MSGARQUIVO__::"),
 	RETORNO_AUTENTICACAO("::__RET_AUT__::"),
-	SEPARAR_DADOS("::__SEP__::");
+	SEPARAR_DADOS("::__SEP__::"),
+	NULL("::__NULL__");
 	
 	
 	

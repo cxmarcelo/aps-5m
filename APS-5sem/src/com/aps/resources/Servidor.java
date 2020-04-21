@@ -12,6 +12,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
+import com.aps.controler.Login;
+import com.aps.dominio.Usuario;
 import com.aps.dominio.enums.Comandos;
 
 
@@ -24,6 +26,7 @@ public class Servidor extends Thread{
 	private InputStream in;  
 	private InputStreamReader inr;  
 	private BufferedReader bfr;
+	private Login checarLogin = new Login();
 
 	public Servidor(Socket con) {
 		this.con = con;
@@ -49,7 +52,7 @@ public class Servidor extends Thread{
 			{           
 				msg = bfr.readLine();
 				
-				separarMsg(msg);
+				separarMsg(msg, bfw);
 				
 				
 				
@@ -74,6 +77,18 @@ public class Servidor extends Thread{
 			}
 		}          
 	}
+	
+	public void retorno(BufferedWriter bwSaida, String msg) throws  IOException {
+		BufferedWriter bwS;
+		for(BufferedWriter bw : clientes){
+			bwS = (BufferedWriter)bw;
+			if((bwSaida == bwS)){
+				bw.write(nome + " -> " + msg+"\r\n");
+				bw.flush(); 
+			}
+		}          
+	}
+	
 
 	public void iniciarServidor(int porta) {
 		try{
@@ -101,19 +116,31 @@ public class Servidor extends Thread{
 		}
 	}
 
-	private void separarMsg(String msg) {
+	private void separarMsg(String msg, BufferedWriter bfw) {
 		String[] dados = msg.split(Comandos.SEPARAR_DADOS.getCodigo());
 		for (int x = 0; x < dados.length; x++) {
-			executarComando(dados, x);
+			executarComando(dados, x, bfw);
 		}
 
 
 	}
 
-	private void executarComando(String[] dados, int atual) {
+	private void executarComando(String[] dados, int atual, BufferedWriter bfw) {
 		if(dados[atual].equals(Comandos.AUTENTITCAR.getCodigo())) {
 			//função autenticar
-			//enviar retorno
+			Usuario us = checarLogin.logar(dados[atual+1], dados[atual+2]);
+			String msg;
+			String sp = Comandos.SEPARAR_DADOS.getCodigo();
+			msg = Comandos.RETORNO_AUTENTICACAO.getCodigo() + sp + us.getLogin() + sp + us.getNome() + sp + us.getSenha() + sp + us.getTipo(); 
+			try {
+				retorno(bfw, msg);
+				
+			} catch (Exception e) {
+				System.out.println("Erro para retornar a mensagem. Servidor/executarComando/retorno");
+			}
+			
+			
+		
 		}
 		else if(dados[atual].equals(Comandos.ENVIAR_MSG.getCodigo())) {
 
