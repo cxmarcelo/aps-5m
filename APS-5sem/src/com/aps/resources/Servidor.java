@@ -12,6 +12,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
+import com.aps.dominio.enums.Comandos;
+
 public class Servidor extends Thread{
 
 	private static ArrayList<BufferedWriter>clientes;           
@@ -43,7 +45,7 @@ public class Servidor extends Thread{
 		    clientes.add(bfw);
 		    nome = msg = bfr.readLine();
 		               
-		    while(!"Sair".equalsIgnoreCase(msg) && msg != null)
+		    while(!Comandos.SAIR.getCodigo().equalsIgnoreCase(msg) && msg != null)
 		      {           
 		       msg = bfr.readLine();
 		       sendToAll(bfw, msg);

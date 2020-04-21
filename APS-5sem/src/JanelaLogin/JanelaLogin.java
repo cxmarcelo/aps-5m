@@ -10,9 +10,17 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.io.IOException;
+
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.SwingConstants;
+
+import com.aps.resources.Cliente;
+import com.aps.resources.PrincipalCliente;
+
 import javax.swing.JButton;
 import javax.swing.JTextArea;
 import java.awt.event.ActionListener;
@@ -27,6 +35,7 @@ public class JanelaLogin extends JFrame {
 	private ImageIcon imagem = new ImageIcon(getClass().getResource("../com/aps/imgs/logoaps.png"));
 	private JLabel lblTitulo;
 	private JLabel lblMensagem;
+	private PrincipalCliente cliConect;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -86,14 +95,12 @@ public class JanelaLogin extends JFrame {
 		textFieldLogin.setText("Login");
 		textFieldLogin.setForeground(Color.GRAY);
 		textFieldLogin.addFocusListener(new FocusAdapter() {
-			@Override
 			public void focusGained(FocusEvent e) {
 				if("Login".equals(textFieldLogin.getText())) {
 					textFieldLogin.setForeground(Color.BLACK);
 					textFieldLogin.setText("");
 				}
 			}
-			@Override
 			public void focusLost(FocusEvent e) {
 				if("".equals(textFieldLogin.getText())) {
 					textFieldLogin.setForeground(Color.GRAY);
@@ -132,7 +139,7 @@ public class JanelaLogin extends JFrame {
 		JButton btnConectar = new JButton("Conectar");
 		btnConectar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//conectar();
+				
 			}
 		});
 		btnConectar.setBounds(248, 482, 97, 25);
@@ -143,12 +150,28 @@ public class JanelaLogin extends JFrame {
 		lblMensagem.setForeground(Color.RED);
 		lblMensagem.setBounds(200, 360, 193, 22);
 		contentPane.add(lblMensagem);
+		//cliConect = new PrincipalCliente();
+		//conectarServer();
+	}
 	
+	
+	private void conectarServer() {
+		try {
+			cliConect.conectar();
+		} catch (IOException e) {
+			e.printStackTrace();
+			JOptionPane.showConfirmDialog(null, "Não foi possível conectar ao servidor");
+			try {
+				cliConect.sair();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		}
 	}
 	
 	/*
 	private void conectar() {
-		//funçao autenticar do servidor
+		
 		if(xxx.autenticar(textFieldLogin.getText(), passField.getPassword().toString())) {
 			//chamar outra função no servidor que retornar um usuario
 			//telalogado(usuario)
@@ -159,5 +182,4 @@ public class JanelaLogin extends JFrame {
 		}
 	}
 	*/
-	
 }
