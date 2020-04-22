@@ -194,6 +194,7 @@ public class JanelaLogin extends JFrame {
 				}
 				else if(msg.contains(Comandos.RETORNO_NULL.getCodigo())){
 					System.out.println("Usuario null");
+					break;
 				}
 			}
 		}while (!msg.equals(Comandos.RETORNO_AUTENTICACAO.getCodigo()) || !msg.equals(Comandos.RETORNO_NULL.getCodigo()));

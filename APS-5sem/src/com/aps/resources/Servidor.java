@@ -26,6 +26,7 @@ public class Servidor extends Thread{
 	//private Socket sala1;
 	//private Socket sala2;
 	//private Socket sala3;
+	//private Socket sala4;
 	private InputStream in;  
 	private InputStreamReader inr;  
 	private BufferedReader bfr;
@@ -43,11 +44,14 @@ public class Servidor extends Thread{
 	}
 
 	public void run() {
+		iniciarCon(this.con);
+	}
+
+	private void iniciarCon(Socket con) {
 		try {
 			String msg;
-			OutputStream ou =  this.con.getOutputStream();
+			OutputStream ou =  con.getOutputStream();
 			Writer ouw = new OutputStreamWriter(ou);
-
 			BufferedWriter bfw = new BufferedWriter(ouw); 
 
 			clientes.add(bfw);
@@ -68,7 +72,9 @@ public class Servidor extends Thread{
 			e.printStackTrace();
 		}
 	}
-
+	
+	
+	
 	public void sendToAll(BufferedWriter bwSaida, String msg) throws  IOException {
 		BufferedWriter bwS;
 		for(BufferedWriter bw : clientes){
@@ -91,25 +97,6 @@ public class Servidor extends Thread{
 		}          
 	}
 
-
-	public void iniciarServidor(int porta) {
-		try{
-			server = new ServerSocket(porta);
-			clientes = new ArrayList<BufferedWriter>();
-			System.out.println("Servidor aberto na porta: " + porta);
-			while(true){
-				System.out.println("Aguardando conexão...");
-				Socket con = server.accept();
-				System.out.println("Cliente conectado...");
-				Thread t = new Servidor(con);
-				t.start();   
-			}
-		}catch (Exception e) {
-			e.printStackTrace();
-		} 
-	}
-
-	
 	private void separarMsg(String msg, BufferedWriter bfw) {
 		System.out.println("ENTREI NO METODO QUE QUERIA SERVIDOR SEPARAR MSG");
 		System.out.println(msg + "-");
@@ -122,13 +109,11 @@ public class Servidor extends Thread{
 	}
 
 	private void executarComando(String[] dados, int atual, BufferedWriter bfw) {
-		System.out.println("dados:");
-		for (String teste : dados) {
-			System.out.println(teste);
-		}
-		// aqui pode estar voltando null corrigir
+		//System.out.println("dados:");
+		//for (String teste : dados) {
+			//System.out.println(teste);
+		//}
 		if(dados[atual].equals(Comandos.AUTENTITCAR.getCodigo())) {
-			//função autenticar
 			Usuario us = checarLogin.logar(dados[atual+1], dados[atual+2]);
 			String msg;
 			String sp = Comandos.SEPARAR_DADOS.getCodigo();
