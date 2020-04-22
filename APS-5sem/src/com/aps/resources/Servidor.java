@@ -23,6 +23,9 @@ public class Servidor extends Thread{
 	private static ServerSocket server; 
 	private String nome;
 	private Socket con;
+	//private Socket sala1;
+	//private Socket sala2;
+	//private Socket sala3;
 	private InputStream in;  
 	private InputStreamReader inr;  
 	private BufferedReader bfr;
@@ -44,23 +47,22 @@ public class Servidor extends Thread{
 			String msg;
 			OutputStream ou =  this.con.getOutputStream();
 			Writer ouw = new OutputStreamWriter(ou);
+
 			BufferedWriter bfw = new BufferedWriter(ouw); 
+
 			clientes.add(bfw);
 			nome = msg = bfr.readLine();
 
 			while(!Comandos.SAIR.getCodigo().equalsIgnoreCase(msg) && msg != null)
 			{           
+				System.out.println(msg);
+				System.out.println("Entrei no escutar do servidor");
 				msg = bfr.readLine();
-				
-				separarMsg(msg, bfw);
-				
-				
-				
-				//sendToAll(bfw, msg);
-				
-				
-				
 				System.out.println(msg);                                              
+				separarMsg(msg, bfw);
+
+				sendToAll(bfw, msg);
+
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -77,18 +79,18 @@ public class Servidor extends Thread{
 			}
 		}          
 	}
-	
+
 	public void retorno(BufferedWriter bwSaida, String msg) throws  IOException {
 		BufferedWriter bwS;
 		for(BufferedWriter bw : clientes){
 			bwS = (BufferedWriter)bw;
 			if((bwSaida == bwS)){
-				bw.write(nome + " -> " + msg+"\r\n");
+				bw.write(msg+"\r\n");
 				bw.flush(); 
 			}
 		}          
 	}
-	
+
 
 	public void iniciarServidor(int porta) {
 		try{
@@ -117,6 +119,8 @@ public class Servidor extends Thread{
 	}
 
 	private void separarMsg(String msg, BufferedWriter bfw) {
+		System.out.println("ENTREI NO METODO QUE QUERIA SERVIDOR SEPARAR MSG");
+		System.out.println(msg + "-");
 		String[] dados = msg.split(Comandos.SEPARAR_DADOS.getCodigo());
 		for (int x = 0; x < dados.length; x++) {
 			executarComando(dados, x, bfw);
@@ -126,24 +130,36 @@ public class Servidor extends Thread{
 	}
 
 	private void executarComando(String[] dados, int atual, BufferedWriter bfw) {
+		System.out.println("dados:");
+		for (String teste : dados) {
+			System.out.println(teste);
+		}
+		// aqui pode estar voltando null corrigir
 		if(dados[atual].equals(Comandos.AUTENTITCAR.getCodigo())) {
 			//função autenticar
 			Usuario us = checarLogin.logar(dados[atual+1], dados[atual+2]);
-			String msg;
-			String sp = Comandos.SEPARAR_DADOS.getCodigo();
-			msg = Comandos.RETORNO_AUTENTICACAO.getCodigo() + sp + us.getLogin() + sp + us.getNome() + sp + us.getSenha() + sp + us.getTipo(); 
-			try {
-				retorno(bfw, msg);
-				
-			} catch (Exception e) {
-				System.out.println("Erro para retornar a mensagem. Servidor/executarComando/retorno");
+			if(us != null) {
+				String msg;
+				String sp = Comandos.SEPARAR_DADOS.getCodigo();
+				msg = Comandos.RETORNO_AUTENTICACAO.getCodigo() + sp + us.getLogin() + sp + us.getNome() + sp + us.getSenha() + sp + us.getTipo() + "\r\n"; 
+				System.out.println("---------------------");
+				System.out.println(msg);
+				System.out.println("---------------------");
+				try {
+					retorno(bfw, msg);
+
+				} catch (Exception e) {
+					System.out.println("Erro para retornar a mensagem. Servidor/executarComando/retorno");
+				}
 			}
-			
-			
-		
 		}
 		else if(dados[atual].equals(Comandos.ENVIAR_MSG.getCodigo())) {
-
+			try {
+				sendToAll(bfw, dados[atual+1]);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		else if(dados[atual].equals(Comandos.SAIR.getCodigo())) {
 
@@ -152,7 +168,12 @@ public class Servidor extends Thread{
 
 		}
 		else {
-			return;
+			try {
+				sendToAll(bfw, dados.toString());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -160,7 +181,7 @@ public class Servidor extends Thread{
 
 	public static void main(String[] args) {
 		try{
-			int porta = 12445;
+			int porta = 12345;
 			server = new ServerSocket(porta);
 			clientes = new ArrayList<BufferedWriter>();
 			System.out.println("Servidor aberto na porta: " + porta);

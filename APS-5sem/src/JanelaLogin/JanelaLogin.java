@@ -23,7 +23,6 @@ import javax.swing.SwingConstants;
 
 import com.aps.dominio.Usuario;
 import com.aps.dominio.enums.Comandos;
-import com.aps.resources.Cliente;
 import com.aps.resources.PrincipalCliente;
 
 import JanelaSalas.JanelaSalas;
@@ -142,11 +141,11 @@ public class JanelaLogin extends JFrame {
 		textAreaGambi.setBounds(69, 13, 4, 22);
 		contentPane.add(textAreaGambi);
 
-		//botão conectar
+		//botão conectar --------------------------------------------------------------------------------------------
 		JButton btnConectar = new JButton("Conectar");
 		btnConectar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
+				tentarLogar();
 			}
 		});
 		btnConectar.setBounds(248, 482, 97, 25);
@@ -157,8 +156,9 @@ public class JanelaLogin extends JFrame {
 		lblMensagem.setForeground(Color.RED);
 		lblMensagem.setBounds(200, 360, 193, 22);
 		contentPane.add(lblMensagem);
-		//cliConect = new PrincipalCliente();
-		//conectarServer();
+		cliConect = new PrincipalCliente();
+		conectarServer();
+		
 	}
 
 
@@ -176,43 +176,52 @@ public class JanelaLogin extends JFrame {
 		}
 	}
 
-	public void escutar() throws IOException{
-
-		InputStream in = cliConect.getSocket().getInputStream();
+	/*
+	private Usuario escutar() throws IOException{
+		//InputStream in = cliConect.getSocket().getInputStream();
 		InputStreamReader inr = new InputStreamReader(in);
 		BufferedReader bfr = new BufferedReader(inr);
 		String msg = "";
-
-		while(!Comandos.SAIR.getCodigo().equalsIgnoreCase(msg))
-
+		Usuario user = null;
+		//while (msg) {
+			System.out.println("aqui foi / Metodo Escutar Janela Login ");
 			if(bfr.ready()){
 				msg = bfr.readLine();
-				//dividir msg
-				if(msg.equals(Comandos.RETORNO_AUTENTICACAO.getCodigo())) {
-					Usuario user = new Usuario();
-					//pegar informações do servidor que estará no retorno
-					
-					new JanelaSalas(user).setVisible(true);
-					dispose();
+				System.out.println(msg);
+				if(msg.contains(Comandos.RETORNO_AUTENTICACAO.getCodigo())) {
+					//Divide a msg e cria um usuario
+					user = cliConect.toUsuario(msg);
+					System.out.println("Criei um usuario");
 				}
 				else {
-					//erro para logar
-				}
+					System.out.println("Não tem retorno");
+			//	}
 			}
-	}
-
-
-	/*
-	private void conectar() {
-
-		if(xxx.autenticar(textFieldLogin.getText(), passField.getPassword().toString())) {
-			//chamar outra função no servidor que retornar um usuario
-			//telalogado(usuario)
-			//dispose();
-		}else {
-			lblMensagem.setText("Usúario ou senha inválido");
-			passField.setText("");
 		}
+		return user;
 	}
-	 */
+	*/
+
+	private void tentarLogar() {
+		Usuario us = null;
+		String msg;
+		String sp = Comandos.SEPARAR_DADOS.getCodigo();
+		msg = Comandos.AUTENTITCAR.getCodigo() + sp + textFieldLogin.getText() + sp + (new String(passField.getPassword()));  
+		try {
+			cliConect.enviarMensagem(msg);
+			//us = escutar();
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("Erro para enviar msg e recebela do servidor JanelaLogin/tentarLogar");
+		} 
+		/*
+		if(us != null) {
+			new JanelaSalas(us).setVisible(true);
+			dispose();
+		}else {
+			lblMensagem.setText("Usúario ou senha incompátiveis");
+		}
+		*/
+	}
+
 }

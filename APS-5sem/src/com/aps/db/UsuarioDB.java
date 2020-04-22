@@ -36,7 +36,7 @@ public class UsuarioDB {
 		ArrayList<Usuario> lista = new ArrayList<Usuario>();
 
 		try {
-			stmt = con.prepareStatement("Select * from Tartarugas");
+			stmt = con.prepareStatement("Select * from usuario");
 			rs = stmt.executeQuery();
 			while(rs.next()) {
 				Usuario user = new Usuario();
@@ -63,7 +63,7 @@ public class UsuarioDB {
 		ResultSet rs = null;
 		ArrayList<Usuario> lista = new ArrayList<Usuario>();
 		try {
-			stmt = con.prepareStatement("Select * from tartarugas where tipo = %?%;");
+			stmt = con.prepareStatement("Select * from usuario where tipo = %?%;");
 			stmt.setString(1, tipo);
 			rs = stmt.executeQuery();
 			while(rs.next()) {
@@ -91,7 +91,7 @@ public class UsuarioDB {
 		ResultSet rs = null;
 		ArrayList<Usuario> lista = new ArrayList<Usuario>();
 		try {
-			stmt = con.prepareStatement("Select * from tartarugas where id = ?");
+			stmt = con.prepareStatement("Select * from usuario where login = ?");
 			stmt.setString(1, login);
 			rs = stmt.executeQuery();
 			while(rs.next()) {

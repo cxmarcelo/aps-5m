@@ -22,6 +22,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+
+import com.aps.dominio.enums.Comandos;
+
 import java.awt.Color;
 
 
@@ -137,7 +140,7 @@ public class Cliente extends JFrame implements ActionListener, KeyListener{
 	            
 	    try {
 	       if(e.getActionCommand().equals(btnSend.getActionCommand()))
-	          enviarMensagem(txtMsg.getText());
+	          enviarMensagem2(txtMsg.getText());
 	       else
 	          if(e.getActionCommand().equals(btnSair.getActionCommand()))
 	          sair();
@@ -176,6 +179,19 @@ public class Cliente extends JFrame implements ActionListener, KeyListener{
 	      bfw.flush();
 	      txtMsg.setText("");        
 	 }
+	   
+		public void enviarMensagem2(String msg) throws IOException{
+			if(msg.equals(Comandos.SAIR.getCodigo())){
+				bfw.write("Desconectado \r\n");
+			}else{
+				System.out.println(msg + "metodo enviarMensagem PrincipalCliente");
+				bfw.write(msg+"\r\n");
+				System.out.println(msg + "PrincipalCliente/enviarmsg");
+				System.out.println("Mensagem enviada");
+			}
+			bfw.flush();
+			System.out.println("Dei flush PrincipalCliente");
+		}
 	  @Override
 	  public void keyReleased(KeyEvent arg0) {
 	    // TODO Auto-generated method stub               

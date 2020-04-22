@@ -11,15 +11,12 @@ import java.io.Writer;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
 
+import com.aps.dominio.Usuario;
 import com.aps.dominio.enums.Comandos;
 
 public class PrincipalCliente {
 
-	private JTextArea texto;
-	private JTextField txtMsg;
 	private Socket socket;
 	private OutputStream ou ;
 	private Writer ouw; 
@@ -27,7 +24,7 @@ public class PrincipalCliente {
 
 
 	private String iP = "127.0.0.1";
-	private int porta = 8483;
+	private int porta = 12345;
 
 	public PrincipalCliente() {                  
 	}
@@ -41,8 +38,7 @@ public class PrincipalCliente {
 			ou = socket.getOutputStream();
 			ouw = new OutputStreamWriter(ou);
 			bfw = new BufferedWriter(ouw);
-			//bfw.write("NOME DO USUARIO" +"\r\n");
-			//bfw.flush();
+			bfw.flush();
 	}
 
 	/**
@@ -61,9 +57,9 @@ public class PrincipalCliente {
 			if(bfr.ready()){
 				msg = bfr.readLine();
 				if(msg.equals("Sair"))
-					texto.append("Servidor caiu! \r\n");
+					System.out.println("Servidor caiu PrincipalCliente");
 				else
-					texto.append(msg+"\r\n");         
+					System.out.println("recebi uma msg PrincipalCliente" + msg);
 			}
 	}
 
@@ -79,18 +75,17 @@ public class PrincipalCliente {
 		socket.close();
 	}
 
-	//gambiarra fodaci
-	public String validarMSG(String msg) {
-		for (Comandos comand : Comandos.values()) {
-			if(msg.equals(comand.getCodigo())) {
-				msg = msg + " ";
-			}
-		}
-		return msg;
+	
+	
+	public Usuario toUsuario(String msg) {
+		Usuario us = new Usuario();
+		String[] dados = msg.split(Comandos.SEPARAR_DADOS.getCodigo());
+		us.setLogin(dados[1]);
+		us.setNome(dados[2]);
+		us.setSenha(dados[3]);
+		us.setTipo(dados[4]);
+		return us;
 	}
-	
-	
-	
 	
 	
 	/*
@@ -128,23 +123,31 @@ public class PrincipalCliente {
 	public void enviarMensagem(String msg) throws IOException{
 		if(msg.equals(Comandos.SAIR.getCodigo())){
 			bfw.write("Desconectado \r\n");
-			texto.append("Desconectado \r\n");
 		}else{
+			System.out.println(msg + "metodo enviarMensagem PrincipalCliente");
 			bfw.write(msg+"\r\n");
-			texto.append("NOME DO USUARIO" + " diz -> " + "MENSAGEM" +"\r\n");
+			System.out.println(msg + "PrincipalCliente/enviarmsg");
+			System.out.println("Mensagem enviada");
 		}
 		bfw.flush();
-		txtMsg.setText("");        
+		System.out.println("Dei flush PrincipalCliente");
 	}
 
-	public Socket getSocket() {
-		return socket;
-	}
-	
+	   public void enviarMensagem2(String msg) throws IOException{
+           
+		     if(msg.equals("Sair")){
+		       bfw.write("Desconectado \r\n");
+		     }else{
+		       bfw.write(msg+"\r\n");
+		     }
+		      bfw.flush();
+		 }
+	   
 	public static void main(String []args) throws IOException{
 
-		Cliente app = new Cliente();
+		PrincipalCliente app = new PrincipalCliente();
 		app.conectar();
+		app.enviarMensagem2(Comandos.ENVIAR_MSG.getCodigo() + Comandos.SEPARAR_DADOS.getCodigo() + "Não esta funcionando essa bosta do krl");
 		app.escutar();
 	}
 
