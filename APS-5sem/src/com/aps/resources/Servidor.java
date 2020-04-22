@@ -20,7 +20,9 @@ import com.aps.dominio.enums.Comandos;
 public class Servidor extends Thread{
 
 	private static ArrayList<BufferedWriter>clientes;           
+	private static ArrayList<BufferedWriter>clientesSala2;           
 	private static ServerSocket server; 
+	private static ServerSocket chat2; 
 	private String nome;
 	private Socket con;
 	//private Socket sala1;
@@ -53,8 +55,16 @@ public class Servidor extends Thread{
 			OutputStream ou =  con.getOutputStream();
 			Writer ouw = new OutputStreamWriter(ou);
 			BufferedWriter bfw = new BufferedWriter(ouw); 
+			System.out.println(con.getLocalPort() + "porta -------------------------------");
+			if(con.getPort() == 12345) {
+				clientes.add(bfw);
+				System.out.println("Clientes: " + clientes.size());
+			}else {
+				clientesSala2.add(bfw);
+				System.out.println("Sala 2 : " + clientesSala2.size());
+			}
 
-			clientes.add(bfw);
+
 			nome = msg = bfr.readLine();
 
 			while(!Comandos.SAIR.getCodigo().equalsIgnoreCase(msg) && msg != null)
@@ -66,18 +76,30 @@ public class Servidor extends Thread{
 				System.out.println(msg);                                              
 
 				sendToAll(bfw, msg);
+				sendToAll2(bfw, msg);
 
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
-	
-	
+
+
+
 	public void sendToAll(BufferedWriter bwSaida, String msg) throws  IOException {
 		BufferedWriter bwS;
 		for(BufferedWriter bw : clientes){
+			bwS = (BufferedWriter)bw;
+			if(!(bwSaida == bwS)){
+				bw.write(nome + " -> " + msg+"\r\n");
+				bw.flush(); 
+			}
+		}          
+	}
+
+	public void sendToAll2(BufferedWriter bwSaida, String msg) throws  IOException {
+		BufferedWriter bwS;
+		for(BufferedWriter bw : clientesSala2){
 			bwS = (BufferedWriter)bw;
 			if(!(bwSaida == bwS)){
 				bw.write(nome + " -> " + msg+"\r\n");
@@ -97,6 +119,8 @@ public class Servidor extends Thread{
 		}          
 	}
 
+
+
 	private void separarMsg(String msg, BufferedWriter bfw) {
 		System.out.println("ENTREI NO METODO QUE QUERIA SERVIDOR SEPARAR MSG");
 		System.out.println(msg + "-");
@@ -111,7 +135,7 @@ public class Servidor extends Thread{
 	private void executarComando(String[] dados, int atual, BufferedWriter bfw) {
 		//System.out.println("dados:");
 		//for (String teste : dados) {
-			//System.out.println(teste);
+		//System.out.println(teste);
 		//}
 		if(dados[atual].equals(Comandos.AUTENTITCAR.getCodigo())) {
 			Usuario us = checarLogin.logar(dados[atual+1], dados[atual+2]);
@@ -161,16 +185,45 @@ public class Servidor extends Thread{
 	public static void main(String[] args) {
 		try{
 			int porta = 12345;
+			int porta2 = 12347;
 			server = new ServerSocket(porta);
+			chat2 = new ServerSocket(porta2);
 			clientes = new ArrayList<BufferedWriter>();
+			clientesSala2 = new ArrayList<BufferedWriter>();
 			System.out.println("Servidor aberto na porta: " + porta);
-			while(true){
-				System.out.println("Aguardando conex�o...");
-				Socket con = server.accept();
-				System.out.println("Cliente conectado...");
-				Thread t = new Servidor(con);
-				t.start();   
-			}
+			new Thread() {
+				public void run() {
+					try {
+						while(true) {
+							System.out.println("Aguardando conexão...");
+							Socket con;
+							con = server.accept();
+							System.out.println("Cliente conectado...");
+							Thread t = new Servidor(con);
+							t.start();   
+						}
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}.start();
+
+			new Thread() {
+				public void run() {
+					try {
+						while(true) {
+							System.out.println("Aguardando conexão...");
+							Socket con2;
+							con2 = chat2.accept();
+							System.out.println("Cliente conectado...");
+							Thread t = new Servidor(con2);
+							t.start();   
+						}
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}.start();
 		}catch (Exception e) {
 			e.printStackTrace();
 		} 

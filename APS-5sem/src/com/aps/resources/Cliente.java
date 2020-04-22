@@ -140,7 +140,7 @@ public class Cliente extends JFrame implements ActionListener, KeyListener{
 	            
 	    try {
 	       if(e.getActionCommand().equals(btnSend.getActionCommand()))
-	          enviarMensagem2(txtMsg.getText());
+	          enviarMensagem(txtMsg.getText());
 	       else
 	          if(e.getActionCommand().equals(btnSair.getActionCommand()))
 	          sair();
