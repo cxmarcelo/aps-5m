@@ -143,6 +143,10 @@ public class PrincipalCliente {
 		      bfw.flush();
 		 }
 	   
+	public Socket getSocket() {
+		return socket;
+	}
+	
 	public static void main(String []args) throws IOException{
 
 		PrincipalCliente app = new PrincipalCliente();

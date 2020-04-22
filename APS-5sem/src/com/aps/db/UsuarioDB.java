@@ -98,8 +98,8 @@ public class UsuarioDB {
 				Usuario user = new Usuario();
 				user.setLogin(rs.getString("login"));
 				user.setSenha(rs.getString("senha"));
-				user.setSenha(rs.getString("nome"));
-				user.setSenha(rs.getString("tipo"));
+				user.setNome(rs.getString("nome"));
+				user.setTipo(rs.getString("tipo"));
 				lista.add(user);
 			}
 		} catch (SQLException e) {

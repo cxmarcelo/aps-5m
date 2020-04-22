@@ -158,7 +158,7 @@ public class JanelaLogin extends JFrame {
 		contentPane.add(lblMensagem);
 		cliConect = new PrincipalCliente();
 		conectarServer();
-		
+
 	}
 
 
@@ -176,31 +176,29 @@ public class JanelaLogin extends JFrame {
 		}
 	}
 
-	/*
 	private Usuario escutar() throws IOException{
-		//InputStream in = cliConect.getSocket().getInputStream();
+		InputStream in = cliConect.getSocket().getInputStream();
 		InputStreamReader inr = new InputStreamReader(in);
 		BufferedReader bfr = new BufferedReader(inr);
 		String msg = "";
 		Usuario user = null;
-		//while (msg) {
+		do {
 			System.out.println("aqui foi / Metodo Escutar Janela Login ");
 			if(bfr.ready()){
 				msg = bfr.readLine();
 				System.out.println(msg);
 				if(msg.contains(Comandos.RETORNO_AUTENTICACAO.getCodigo())) {
-					//Divide a msg e cria um usuario
 					user = cliConect.toUsuario(msg);
 					System.out.println("Criei um usuario");
+					break;
 				}
-				else {
-					System.out.println("Não tem retorno");
-			//	}
+				else if(msg.contains(Comandos.RETORNO_NULL.getCodigo())){
+					System.out.println("Usuario null");
+				}
 			}
-		}
+		}while (!msg.equals(Comandos.RETORNO_AUTENTICACAO.getCodigo()) || !msg.equals(Comandos.RETORNO_NULL.getCodigo()));
 		return user;
 	}
-	*/
 
 	private void tentarLogar() {
 		Usuario us = null;
@@ -209,19 +207,17 @@ public class JanelaLogin extends JFrame {
 		msg = Comandos.AUTENTITCAR.getCodigo() + sp + textFieldLogin.getText() + sp + (new String(passField.getPassword()));  
 		try {
 			cliConect.enviarMensagem(msg);
-			//us = escutar();
+			us = escutar();
+			if(us != null) {
+				new JanelaSalas(us).setVisible(true);
+				dispose();
+			}else {
+				lblMensagem.setText("Usúario ou senha incompátiveis");
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Erro para enviar msg e recebela do servidor JanelaLogin/tentarLogar");
 		} 
-		/*
-		if(us != null) {
-			new JanelaSalas(us).setVisible(true);
-			dispose();
-		}else {
-			lblMensagem.setText("Usúario ou senha incompátiveis");
-		}
-		*/
 	}
 
 }

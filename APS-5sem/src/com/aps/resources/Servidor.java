@@ -55,11 +55,11 @@ public class Servidor extends Thread{
 
 			while(!Comandos.SAIR.getCodigo().equalsIgnoreCase(msg) && msg != null)
 			{           
-				System.out.println(msg);
+				separarMsg(msg, bfw);
+				System.out.println(msg + "  Teste");
 				System.out.println("Entrei no escutar do servidor");
 				msg = bfr.readLine();
 				System.out.println(msg);                                              
-				separarMsg(msg, bfw);
 
 				sendToAll(bfw, msg);
 
@@ -109,15 +109,7 @@ public class Servidor extends Thread{
 		} 
 	}
 
-
-	private void decifrarMsg(String msg) {
-		for (Comandos comando : Comandos.values()) {
-			if(msg.contains(comando.getCodigo())){
-				break;
-			}
-		}
-	}
-
+	
 	private void separarMsg(String msg, BufferedWriter bfw) {
 		System.out.println("ENTREI NO METODO QUE QUERIA SERVIDOR SEPARAR MSG");
 		System.out.println(msg + "-");
@@ -138,19 +130,21 @@ public class Servidor extends Thread{
 		if(dados[atual].equals(Comandos.AUTENTITCAR.getCodigo())) {
 			//função autenticar
 			Usuario us = checarLogin.logar(dados[atual+1], dados[atual+2]);
+			String msg;
+			String sp = Comandos.SEPARAR_DADOS.getCodigo();
 			if(us != null) {
-				String msg;
-				String sp = Comandos.SEPARAR_DADOS.getCodigo();
 				msg = Comandos.RETORNO_AUTENTICACAO.getCodigo() + sp + us.getLogin() + sp + us.getNome() + sp + us.getSenha() + sp + us.getTipo() + "\r\n"; 
-				System.out.println("---------------------");
-				System.out.println(msg);
-				System.out.println("---------------------");
-				try {
-					retorno(bfw, msg);
+			}else {
+				msg = Comandos.RETORNO_NULL.getCodigo();
+			}
+			System.out.println("---------------------");
+			System.out.println(msg);
+			System.out.println("---------------------");
+			try {
+				retorno(bfw, msg);
 
-				} catch (Exception e) {
-					System.out.println("Erro para retornar a mensagem. Servidor/executarComando/retorno");
-				}
+			} catch (Exception e) {
+				System.out.println("Erro para retornar a mensagem. Servidor/executarComando/retorno");
 			}
 		}
 		else if(dados[atual].equals(Comandos.ENVIAR_MSG.getCodigo())) {

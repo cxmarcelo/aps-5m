@@ -10,7 +10,7 @@ public class Login {
 	public Usuario logar(String login, String senha) {
 		Usuario us = userDB.buscarLogin(login).get(0);
 		if (us != null) {
-			if(us.getLogin() == login && us.getSenha() == senha) {
+			if(us.getLogin().equals(login) && us.getSenha().equals(senha)) {
 				return us;
 			}
 		}
