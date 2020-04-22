@@ -12,6 +12,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
+import com.aps.controler.Decodificadores;
 import com.aps.controler.Login;
 import com.aps.dominio.Usuario;
 import com.aps.dominio.enums.Comandos;
@@ -20,15 +21,14 @@ import com.aps.dominio.enums.Comandos;
 public class Servidor extends Thread{
 
 	private static ArrayList<BufferedWriter>clientes;           
+	private static ArrayList<BufferedWriter>clientesSala1;           
 	private static ArrayList<BufferedWriter>clientesSala2;           
+	private static ArrayList<BufferedWriter>clientesSala3;           
+	private static ArrayList<BufferedWriter>clientesSala4;           
 	private static ServerSocket server; 
 	private static ServerSocket chat2; 
 	private String nome;
 	private Socket con;
-	//private Socket sala1;
-	//private Socket sala2;
-	//private Socket sala3;
-	//private Socket sala4;
 	private InputStream in;  
 	private InputStreamReader inr;  
 	private BufferedReader bfr;
@@ -55,28 +55,49 @@ public class Servidor extends Thread{
 			OutputStream ou =  con.getOutputStream();
 			Writer ouw = new OutputStreamWriter(ou);
 			BufferedWriter bfw = new BufferedWriter(ouw); 
-			System.out.println(con.getLocalPort() + "porta -------------------------------");
-			if(con.getPort() == 12345) {
+			
+			switch (con.getLocalPort()) {
+			case 12345:
 				clientes.add(bfw);
-				System.out.println("Clientes: " + clientes.size());
-			}else {
+				System.out.println("Entrei no clientes");
+				break;
+
+			case 12346:
+				clientesSala1.add(bfw);
+				break;
+
+			case 12347:
 				clientesSala2.add(bfw);
-				System.out.println("Sala 2 : " + clientesSala2.size());
+				System.out.println("entrei no clientesSala2");
+				break;
+
+			case 12348:
+				clientesSala3.add(bfw);
+				break;
+
+			case 12349:
+				clientesSala4.add(bfw);
+				break;
+				
+			default:
+				clientes.add(bfw);
+				System.out.println("CAI NO DEFAULT");
+				break;
 			}
-
-
-			nome = msg = bfr.readLine();
+			nome = 
+			msg = bfr.readLine();
 
 			while(!Comandos.SAIR.getCodigo().equalsIgnoreCase(msg) && msg != null)
 			{           
-				separarMsg(msg, bfw);
-				System.out.println(msg + "  Teste");
-				System.out.println("Entrei no escutar do servidor");
 				msg = bfr.readLine();
-				System.out.println(msg);                                              
+				//decodificarMsg(msg, bfw);
+				//System.out.println(msg + "  Teste");
+				//System.out.println("Entrei no escutar do servidor");
+				//System.out.println(msg);                                              
 
-				sendToAll(bfw, msg);
-				sendToAll2(bfw, msg);
+				//sendToAll(bfw, msg);
+				sendToAllChat(bfw, msg);
+				//sendToAll2(bfw, msg);
 
 			}
 		} catch (Exception e) {
@@ -85,7 +106,68 @@ public class Servidor extends Thread{
 	}
 
 
+	public void sendToAllChat(BufferedWriter bwSaida, String msg) throws  IOException {
+		BufferedWriter bwS;
+		
+		switch (con.getLocalPort()) {
+		case 12345:
+			for(BufferedWriter bw : clientes){
+				bwS = (BufferedWriter)bw;
+				if(!(bwSaida == bwS)){
+					bw.write(nome + " -> " + msg+"\r\n");
+					bw.flush(); 
+				}
+			}   
+			break;
 
+		case 12346:
+			for(BufferedWriter bw : clientesSala1){
+				bwS = (BufferedWriter)bw;
+				if(!(bwSaida == bwS)){
+					bw.write(nome + " -> " + msg+"\r\n");
+					bw.flush(); 
+				}
+			}   
+			break;
+
+		case 12347:
+			for(BufferedWriter bw : clientesSala2){
+				bwS = (BufferedWriter)bw;
+				if(!(bwSaida == bwS)){
+					bw.write(nome + " -> " + msg+"\r\n");
+					bw.flush(); 
+				}
+			} 
+			break;
+
+		case 12348:
+			for(BufferedWriter bw : clientesSala3){
+				bwS = (BufferedWriter)bw;
+				if(!(bwSaida == bwS)){
+					bw.write(nome + " -> " + msg+"\r\n");
+					bw.flush(); 
+				}
+			} 
+			break;
+
+		case 12349:
+			for(BufferedWriter bw : clientesSala4){
+				bwS = (BufferedWriter)bw;
+				if(!(bwSaida == bwS)){
+					bw.write(nome + " -> " + msg+"\r\n");
+					bw.flush(); 
+				}
+			} 
+			break;
+			
+		default:
+			System.out.println("CAI NO DEFAULT");
+			break;
+		}
+	}
+	
+	
+	
 	public void sendToAll(BufferedWriter bwSaida, String msg) throws  IOException {
 		BufferedWriter bwS;
 		for(BufferedWriter bw : clientes){
@@ -115,40 +197,31 @@ public class Servidor extends Thread{
 			if((bwSaida == bwS)){
 				bw.write(msg+"\r\n");
 				bw.flush(); 
+				return;
 			}
 		}          
 	}
 
 
 
-	private void separarMsg(String msg, BufferedWriter bfw) {
-		System.out.println("ENTREI NO METODO QUE QUERIA SERVIDOR SEPARAR MSG");
-		System.out.println(msg + "-");
+	private void decodificarMsg(String msg, BufferedWriter bfw) {
+		//System.out.println("ENTREI NO METODO QUE QUERIA SERVIDOR SEPARAR MSG");
+		//System.out.println(msg + "-");
 		String[] dados = msg.split(Comandos.SEPARAR_DADOS.getCodigo());
 		for (int x = 0; x < dados.length; x++) {
 			executarComando(dados, x, bfw);
 		}
-
-
 	}
 
 	private void executarComando(String[] dados, int atual, BufferedWriter bfw) {
-		//System.out.println("dados:");
-		//for (String teste : dados) {
-		//System.out.println(teste);
-		//}
 		if(dados[atual].equals(Comandos.AUTENTITCAR.getCodigo())) {
 			Usuario us = checarLogin.logar(dados[atual+1], dados[atual+2]);
 			String msg;
-			String sp = Comandos.SEPARAR_DADOS.getCodigo();
 			if(us != null) {
-				msg = Comandos.RETORNO_AUTENTICACAO.getCodigo() + sp + us.getLogin() + sp + us.getNome() + sp + us.getSenha() + sp + us.getTipo() + "\r\n"; 
+				msg = Comandos.RETORNO_AUTENTICACAO.getCodigo() + Decodificadores.usuarioToMsg(us); 
 			}else {
 				msg = Comandos.RETORNO_NULL.getCodigo();
 			}
-			System.out.println("---------------------");
-			System.out.println(msg);
-			System.out.println("---------------------");
 			try {
 				retorno(bfw, msg);
 
@@ -171,12 +244,7 @@ public class Servidor extends Thread{
 
 		}
 		else {
-			try {
-				sendToAll(bfw, dados.toString());
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			return;
 		}
 	}
 
@@ -227,8 +295,5 @@ public class Servidor extends Thread{
 		}catch (Exception e) {
 			e.printStackTrace();
 		} 
-
-
 	}
-
 }
