@@ -89,7 +89,7 @@ public class JanelaLogin extends JFrame {
 			}
 		});
 
-		passField.setBounds(200, 438, 193, 22);
+		passField.setBounds(187, 438, 206, 22);
 		passField.setColumns(10);	
 		contentPane.add(passField);
 
@@ -114,7 +114,7 @@ public class JanelaLogin extends JFrame {
 				}
 			}
 		});
-		textFieldLogin.setBounds(200, 403, 193, 22);
+		textFieldLogin.setBounds(187, 403, 206, 22);
 		textFieldLogin.setColumns(10);
 		contentPane.add(textFieldLogin);
 
@@ -148,7 +148,7 @@ public class JanelaLogin extends JFrame {
 				tentarLogar();
 			}
 		});
-		btnConectar.setBounds(248, 482, 97, 25);
+		btnConectar.setBounds(296, 488, 97, 25);
 		contentPane.add(btnConectar);
 
 
@@ -156,6 +156,10 @@ public class JanelaLogin extends JFrame {
 		lblMensagem.setForeground(Color.RED);
 		lblMensagem.setBounds(200, 360, 193, 22);
 		contentPane.add(lblMensagem);
+		
+		JButton btnNewButton = new JButton("Cadastrar");
+		btnNewButton.setBounds(187, 488, 97, 25);
+		contentPane.add(btnNewButton);
 		cliConect = new PrincipalCliente();
 		conectarServer();
 
@@ -220,5 +224,4 @@ public class JanelaLogin extends JFrame {
 			System.out.println("Erro para enviar msg e recebela do servidor JanelaLogin/tentarLogar");
 		} 
 	}
-
 }
