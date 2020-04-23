@@ -18,6 +18,8 @@ import javax.swing.border.LineBorder;
 
 import com.aps.dominio.Usuario;
 
+import JanelaChat.JanelaChat;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.ActionListener;
@@ -161,7 +163,7 @@ public class JanelaSalas extends JFrame {
 		JButton btnPoluidoresRio = new JButton("Entrar");
 		btnPoluidoresRio.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				entrarEmSala();
+				entrarEmSala(1,  usuario);
 			}
 		});
 		btnPoluidoresRio.setBounds(149, 271, 97, 25);
@@ -170,7 +172,7 @@ public class JanelaSalas extends JFrame {
 		JButton btnRemanejamentoEsgoto = new JButton("Entrar");
 		btnRemanejamentoEsgoto.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				entrarEmSala();
+				entrarEmSala(2,  usuario);
 			}
 		});
 		btnRemanejamentoEsgoto.setBounds(544, 271, 97, 25);
@@ -179,7 +181,7 @@ public class JanelaSalas extends JFrame {
 		JButton btnUrbana = new JButton("Entrar");
 		btnUrbana.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				entrarEmSala();
+				entrarEmSala(3,  usuario);
 			}
 		});
 		btnUrbana.setBounds(544, 507, 97, 25);
@@ -188,7 +190,7 @@ public class JanelaSalas extends JFrame {
 		JButton btnEstacoes = new JButton("Entrar");
 		btnEstacoes.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				entrarEmSala();
+				entrarEmSala(4,  usuario);
 			}
 		});
 		btnEstacoes.setBounds(149, 507, 97, 25);
@@ -238,7 +240,7 @@ public class JanelaSalas extends JFrame {
 		btnSair.setForeground(Color.RED);
 		btnSair.setBounds(699, 29, 68, 25);
 		contentPane.add(btnSair);
-		
+
 		JLabel lblNomeUsuario = new JLabel(usuario.getNome());
 		lblNomeUsuario.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		lblNomeUsuario.setForeground(Color.WHITE);
@@ -406,7 +408,8 @@ public class JanelaSalas extends JFrame {
 		});
 	}
 
-	//Não implementada
-	private void entrarEmSala() {
+	private void entrarEmSala(int sala, Usuario us) {
+		new JanelaChat(us, sala).setVisible(true);
+		dispose();
 	}
 }

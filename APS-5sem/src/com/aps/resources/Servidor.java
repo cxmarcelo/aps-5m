@@ -84,20 +84,21 @@ public class Servidor extends Thread{
 				System.out.println("CAI NO DEFAULT");
 				break;
 			}
-			nome = 
-			msg = bfr.readLine();
-
+			msg = "";
 			while(!Comandos.SAIR.getCodigo().equalsIgnoreCase(msg) && msg != null)
 			{           
+				System.out.println("recebimsg");
+				System.out.println(msg);
 				msg = bfr.readLine();
-				//decodificarMsg(msg, bfw);
-				//System.out.println(msg + "  Teste");
+				decodificarMsg(msg, bfw);
+				System.out.println(msg + "  Teste---------------");
 				//System.out.println("Entrei no escutar do servidor");
 				//System.out.println(msg);                                              
 
 				//sendToAll(bfw, msg);
-				sendToAllChat(bfw, msg);
+				//sendToAllChat(bfw, msg);
 				//sendToAll2(bfw, msg);
+				msg = "";
 
 			}
 		} catch (Exception e) {
@@ -166,29 +167,6 @@ public class Servidor extends Thread{
 		}
 	}
 	
-	
-	
-	public void sendToAll(BufferedWriter bwSaida, String msg) throws  IOException {
-		BufferedWriter bwS;
-		for(BufferedWriter bw : clientes){
-			bwS = (BufferedWriter)bw;
-			if(!(bwSaida == bwS)){
-				bw.write(nome + " -> " + msg+"\r\n");
-				bw.flush(); 
-			}
-		}          
-	}
-
-	public void sendToAll2(BufferedWriter bwSaida, String msg) throws  IOException {
-		BufferedWriter bwS;
-		for(BufferedWriter bw : clientesSala2){
-			bwS = (BufferedWriter)bw;
-			if(!(bwSaida == bwS)){
-				bw.write(nome + " -> " + msg+"\r\n");
-				bw.flush(); 
-			}
-		}          
-	}
 
 	public void retorno(BufferedWriter bwSaida, String msg) throws  IOException {
 		BufferedWriter bwS;
@@ -205,20 +183,22 @@ public class Servidor extends Thread{
 
 
 	private void decodificarMsg(String msg, BufferedWriter bfw) {
-		//System.out.println("ENTREI NO METODO QUE QUERIA SERVIDOR SEPARAR MSG");
-		//System.out.println(msg + "-");
+		System.out.println("Cheguei ate decodificar");
 		String[] dados = msg.split(Comandos.SEPARAR_DADOS.getCodigo());
 		for (int x = 0; x < dados.length; x++) {
+			//ideia if executou?qual?
 			executarComando(dados, x, bfw);
 		}
 	}
 
+	
 	private void executarComando(String[] dados, int atual, BufferedWriter bfw) {
 		if(dados[atual].equals(Comandos.AUTENTITCAR.getCodigo())) {
 			Usuario us = checarLogin.logar(dados[atual+1], dados[atual+2]);
 			String msg;
 			if(us != null) {
-				msg = Comandos.RETORNO_AUTENTICACAO.getCodigo() + Decodificadores.usuarioToMsg(us); 
+				System.out.println("Entrei pra enviar a msg de retorno");
+				msg = Comandos.RETORNO_AUTENTICACAO.getCodigo() + Comandos.SEPARAR_DADOS.getCodigo() + Decodificadores.usuarioToMsg(us); 
 			}else {
 				msg = Comandos.RETORNO_NULL.getCodigo();
 			}
@@ -231,7 +211,7 @@ public class Servidor extends Thread{
 		}
 		else if(dados[atual].equals(Comandos.ENVIAR_MSG.getCodigo())) {
 			try {
-				sendToAll(bfw, dados[atual+1]);
+				sendToAllChat(bfw, dados[atual+1]);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -242,6 +222,8 @@ public class Servidor extends Thread{
 		}
 		else if(dados[atual].equals(Comandos.ENVIAR_ARQUIVO.getCodigo())) {
 
+		}else if(dados[atual].equals(Comandos.NOME_USUARIO.getCodigo())) {
+			this.nome = dados[atual+1];
 		}
 		else {
 			return;

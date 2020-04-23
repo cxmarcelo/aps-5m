@@ -33,11 +33,17 @@ public class PrincipalCliente {
 	 * @throws UnknownHostException 
 	 * @throws IOException
 	 */
-	public void conectar() throws UnknownHostException, IOException {
+	public void conectar(int port, Usuario us) throws UnknownHostException, IOException {
 			socket = new Socket(iP,porta);
 			ou = socket.getOutputStream();
 			ouw = new OutputStreamWriter(ou);
 			bfw = new BufferedWriter(ouw);
+			if(us != null) {
+				System.out.println("Passei por aqui -------------------------------");
+				enviarMensagem(Comandos.NOME_USUARIO.getCodigo() + Comandos.SEPARAR_DADOS.getCodigo() + us.getNome());
+			}
+			else
+				bfw.write("");
 			bfw.flush();
 	}
 
@@ -150,7 +156,7 @@ public class PrincipalCliente {
 	public static void main(String []args) throws IOException{
 
 		PrincipalCliente app = new PrincipalCliente();
-		app.conectar();
+		app.conectar(1, new Usuario("marcelo123", "marcelo2000", "Marcelo C", "ADM"));
 		app.enviarMensagem2(Comandos.ENVIAR_MSG.getCodigo() + Comandos.SEPARAR_DADOS.getCodigo() + "Não esta funcionando essa bosta do krl");
 		app.escutar();
 	}

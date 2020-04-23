@@ -9,7 +9,8 @@ public enum Comandos {
 	ENVIAR_ARQUIVO("::__MSGARQUIVO__::"),
 	RETORNO_AUTENTICACAO("::__RET_AUT__::"),
 	SEPARAR_DADOS("::__SEP__::"),
-	RETORNO_NULL("::__RETORNO_NULL__");
+	RETORNO_NULL("::__RETORNO_NULL__"),
+	NOME_USUARIO("::_NOME_USER__");
 	
 	
 	
