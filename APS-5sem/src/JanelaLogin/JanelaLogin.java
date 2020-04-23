@@ -58,7 +58,7 @@ public class JanelaLogin extends JFrame {
 
 	public JanelaLogin() {
 		setTitle("Login");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setBounds(100, 100, 600, 600);
 		setResizable(false);
 		contentPane = new JPanel();
@@ -170,6 +170,14 @@ public class JanelaLogin extends JFrame {
 
 	}
 
+	private void sair() {
+		String msg = Comandos.SAIR.getCodigo();
+		try {
+			cliConect.enviarMensagem(msg);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 	private void conectarServer() {
 		try {
@@ -219,6 +227,7 @@ public class JanelaLogin extends JFrame {
 			cliConect.enviarMensagem(msg);
 			us = escutar();
 			if(us != null) {
+				sair();
 				new JanelaSalas(us).setVisible(true);
 				dispose();
 			}else {

@@ -17,11 +17,14 @@ import javax.swing.Box;
 import javax.swing.border.LineBorder;
 
 import com.aps.dominio.Usuario;
+import com.aps.dominio.enums.Comandos;
 
 import JanelaChat.JanelaChat;
+import JanelaLogin.JanelaLogin;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -237,6 +240,12 @@ public class JanelaSalas extends JFrame {
 		contentPane.add(ContainerUrbana);
 
 		JButton btnSair = new JButton("Sair");
+		btnSair.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new JanelaLogin().setVisible(true);
+				dispose();
+			}
+		});
 		btnSair.setForeground(Color.RED);
 		btnSair.setBounds(699, 29, 68, 25);
 		contentPane.add(btnSair);

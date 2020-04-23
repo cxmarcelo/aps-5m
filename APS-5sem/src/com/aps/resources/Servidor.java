@@ -229,7 +229,39 @@ public class Servidor extends Thread{
 
 
 		else if(dados[atual].equals(Comandos.SAIR.getCodigo())) {
+			switch (con.getLocalPort()) {
+			
+			case 12345:
+				clientes.remove(bfw);
+				sair();
+				break;
 
+			case 12346:
+				clientesSala1.remove(bfw);
+				sair();
+				break;
+
+			case 12347:
+				clientesSala2.remove(bfw);
+				sair();
+				break;
+
+			case 12348:
+				clientesSala3.remove(bfw);
+				sair();
+				break;
+
+			
+			case 12349:
+				clientesSala4.remove(bfw);
+				sair();
+				break;
+
+			default:
+				sair();
+				break;
+			}
+		
 		}
 
 
@@ -252,6 +284,7 @@ public class Servidor extends Thread{
 			user.setSenha(dados[atual+2]);
 			user.setNome(dados[atual+3]);
 			//trocar tipo por email futuramente
+			//user.setEmail(dados[atual+4]);
 			user.setTipo(dados[atual+4]);
 			String msg = "";
 
@@ -269,7 +302,15 @@ public class Servidor extends Thread{
 		}
 	}
 
-
+	private void sair() {
+		try {
+			con.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("Erro ao fechar a conexão");
+		}
+		
+	}
 
 	public static void main(String[] args) {
 		try{

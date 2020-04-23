@@ -4,7 +4,10 @@ import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -16,7 +19,10 @@ import javax.swing.border.EmptyBorder;
 
 import com.aps.controler.Decodificadores;
 import com.aps.dominio.Usuario;
+import com.aps.dominio.enums.Comandos;
 import com.aps.resources.PrincipalCliente;
+
+import JanelaLogin.JanelaLogin;
 
 import javax.swing.JTextField;
 import javax.swing.JButton;
@@ -162,7 +168,9 @@ public class JanelaCadastro extends JFrame {
 		JButton btnVoltar = new JButton("Voltar");
 		btnVoltar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				sair();
+				new JanelaLogin().setVisible(true);
+				dispose();
 			}
 		});
 		btnVoltar.setBounds(191, 463, 97, 25);
@@ -177,22 +185,37 @@ public class JanelaCadastro extends JFrame {
 		conectar();
 	}
 	
+	private void sair() {
+		String msg = Comandos.SAIR.getCodigo();
+		try {
+			servConnect.enviarMensagem(msg);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	private void conectar() {
 		try {
 			servConnect.conectar(12345, null);
 		} catch (IOException e) {
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(null, "Erro ao conectar ao servidor");
+			try {
+				servConnect.sair();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+			
 		}
 	}
 	
-	// NAO IMPLEMENTADO
 	private void criarUsuario() {
 		String msg = "";
 		Usuario us = new Usuario(textFieldLogin.getText(), new String(passFieldSenha.getPassword()), textFieldNome.getText(), textFieldEmail.getText());
 		msg = Decodificadores.msgCriarUsuario(us);
 		try {
 			servConnect.enviarMensagem(msg);
+			escutar();
 			
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -201,7 +224,34 @@ public class JanelaCadastro extends JFrame {
 		
 	}
 	
-	
+	private boolean escutar() throws IOException{
+		InputStream in = servConnect.getSocket().getInputStream();
+		InputStreamReader inr = new InputStreamReader(in);
+		BufferedReader bfr = new BufferedReader(inr);
+		String msg = "";
+		boolean retorno = false;
+		do {
+			System.out.println("aqui foi / Metodo Escutar Janela Login ");
+			if(bfr.ready()){
+				msg = bfr.readLine();
+				if(msg.contains(Comandos.RETORNO_TRUE.getCodigo())) {
+					retorno = true;
+					JOptionPane.showMessageDialog(null, "Usuário Criado");
+					textFieldLogin.setText("");
+					textFieldEmail.setText("");
+					textFieldNome.setText("");
+					passFieldSenha.setText("");
+					break;
+				}
+				else if(msg.contains(Comandos.RETORNO_FALSE.getCodigo()) || msg.contains(Comandos.RETORNO_NULL.getCodigo())){
+					JOptionPane.showMessageDialog(null, "Erro ao criar usuário, tente novamente");
+					retorno = false;
+					break;
+				}
+			}
+		}while (!msg.equals(Comandos.RETORNO_TRUE.getCodigo()) || !msg.equals(Comandos.RETORNO_FALSE.getCodigo()));
+		return retorno;
+	}
 	
 	
 	
