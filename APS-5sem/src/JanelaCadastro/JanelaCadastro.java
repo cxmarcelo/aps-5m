@@ -1,36 +1,40 @@
 package JanelaCadastro;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.io.IOException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.border.EmptyBorder;
+
+import com.aps.controler.Decodificadores;
+import com.aps.dominio.Usuario;
+import com.aps.resources.PrincipalCliente;
+
 import javax.swing.JTextField;
 import javax.swing.JButton;
-import javax.swing.SwingConstants;
-import java.awt.Font;
 import javax.swing.JTextArea;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class JanelaCadastro extends JFrame {
+	private static final long serialVersionUID = 1L;
 
 	private JPanel contentPane;
-	private ImageIcon imagem = new ImageIcon(getClass().getResource("logoaps.png"));
+	private ImageIcon imagem = new ImageIcon(getClass().getResource("../com/aps/imgs/logoaps.png"));
 	private JTextField textFieldNome;
 	private JTextField textFieldLogin;
-	private JTextField passFieldSenha;
+	private JPasswordField passFieldSenha;
 	private JTextField textFieldEmail;
+	private PrincipalCliente servConnect;
 
-
-	/**
-	 * Launch the application.
-	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -108,16 +112,14 @@ public class JanelaCadastro extends JFrame {
 		passFieldSenha.setForeground(Color.GRAY);
 		passFieldSenha.setText("Senha");
 		passFieldSenha.addFocusListener(new FocusAdapter() {
-			@Override
 			public void focusGained(FocusEvent e) {
-				if("Senha".equals(passFieldSenha.getText())) {
+				if("Senha".equals(new String(passFieldSenha.getPassword()))) {
 					passFieldSenha.setForeground(Color.BLACK);
 					passFieldSenha.setText("");
 				}
 			}
-			@Override
 			public void focusLost(FocusEvent e) {
-				if("".equals(passFieldSenha.getText())) {
+				if("".equals(new String(passFieldSenha.getPassword()))) {
 					passFieldSenha.setForeground(Color.GRAY);
 					passFieldSenha.setText("Senha");
 				}
@@ -149,10 +151,20 @@ public class JanelaCadastro extends JFrame {
 		textFieldEmail.setColumns(10);
 		
 		JButton btnCadastrar = new JButton("Cadastrar");
+		btnCadastrar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				criarUsuario();
+			}
+		});
 		btnCadastrar.setBounds(310, 463, 97, 25);
 		contentPane.add(btnCadastrar);
 		
 		JButton btnVoltar = new JButton("Voltar");
+		btnVoltar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
 		btnVoltar.setBounds(191, 463, 97, 25);
 		contentPane.add(btnVoltar);
 		
@@ -161,7 +173,42 @@ public class JanelaCadastro extends JFrame {
 		textAreaGambi.setEditable(false);
 		textAreaGambi.setBackground(new Color(46,84,143));
 		contentPane.add(textAreaGambi);
-		
+		servConnect = new PrincipalCliente();
+		conectar();
+	}
+	
+	private void conectar() {
+		try {
+			servConnect.conectar(12345, null);
+		} catch (IOException e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Erro ao conectar ao servidor");
+		}
+	}
+	
+	// NAO IMPLEMENTADO
+	private void criarUsuario() {
+		String msg = "";
+		Usuario us = new Usuario(textFieldLogin.getText(), new String(passFieldSenha.getPassword()), textFieldNome.getText(), textFieldEmail.getText());
+		msg = Decodificadores.msgCriarUsuario(us);
+		try {
+			servConnect.enviarMensagem(msg);
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("Erro para criar usuário");
+		}
 		
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

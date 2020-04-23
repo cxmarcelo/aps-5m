@@ -10,8 +10,10 @@ public enum Comandos {
 	RETORNO_AUTENTICACAO("::__RET_AUT__::"),
 	SEPARAR_DADOS("::__SEP__::"),
 	RETORNO_NULL("::__RETORNO_NULL__"),
-	NOME_USUARIO("::_NOME_USER__");
-	
+	NOME_USUARIO("::_NOME_USER__"),
+	CRIAR_USUARIO("::__CRIAR_USUARIO__::"),
+	RETORNO_TRUE("::__TRUE__::"),
+	RETORNO_FALSE("::__FALSE__::");
 	
 	
 	private String codigo;

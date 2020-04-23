@@ -158,6 +158,11 @@ public class JanelaLogin extends JFrame {
 		contentPane.add(lblMensagem);
 		
 		JButton btnNewButton = new JButton("Cadastrar");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			
+			}
+		});
 		btnNewButton.setBounds(187, 488, 97, 25);
 		contentPane.add(btnNewButton);
 		cliConect = new PrincipalCliente();
@@ -171,7 +176,7 @@ public class JanelaLogin extends JFrame {
 			cliConect.conectar(1, null);
 		} catch (IOException e) {
 			e.printStackTrace();
-			JOptionPane.showConfirmDialog(null, "Não foi possível conectar ao servidor");
+			JOptionPane.showMessageDialog(null, "Não foi possível conectar ao servidor");
 			try {
 				cliConect.sair();
 			} catch (IOException e1) {

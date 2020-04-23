@@ -7,6 +7,7 @@ import com.aps.dominio.enums.Comandos;
 public class Decodificadores {
 	
 	public static Usuario toUsuario(String msg) {
+		if(contemComando(msg)) {
 		Usuario us = new Usuario();
 		String[] dados = msg.split(Comandos.SEPARAR_DADOS.getCodigo());
 		us.setLogin(dados[1]);
@@ -14,6 +15,7 @@ public class Decodificadores {
 		us.setSenha(dados[3]);
 		us.setTipo(dados[4]);
 		return us;
+		}else return null;
 	}
 	
 	public static String usuarioToMsg(Usuario us) {
@@ -22,6 +24,24 @@ public class Decodificadores {
 		return msg;
 	}
 	
+	
+	private static boolean contemComando(String msg) {
+		for (Comandos comando : Comandos.values()) {
+			if(msg.contains(comando.getCodigo())) {
+				return true;
+			}
+		}
+		return false;
+	
+	}
+	
+	public static String msgCriarUsuario(Usuario us) {
+		String msg = "";
+		//Usuario us = new Usuario(login, senha, nome, tipo);
+		String sp = Comandos.SEPARAR_DADOS.getCodigo();
+		msg = Comandos.CRIAR_USUARIO.getCodigo() + sp + us.getLogin() + sp + us.getSenha() + sp + us.getNome()  + sp + us.getTipo();
+		return msg;
+	}
 	
 	// Terminar de implementar essa funçao se considerar q pode mandar mais de um comando
 	/*

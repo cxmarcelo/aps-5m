@@ -18,6 +18,13 @@ public class Login {
 		}
 		return null;
 	}
+	
+	
+	
+	//NAO IMPLEMENTADO
+	public boolean criarUsuario(Usuario user) {
+		return false;
+	}
 
 
 }
