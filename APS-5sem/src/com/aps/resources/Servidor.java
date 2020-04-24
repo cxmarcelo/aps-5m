@@ -261,14 +261,12 @@ public class Servidor extends Thread{
 				sair();
 				break;
 			}
-		
 		}
 
 
 
-
 		else if(dados[atual].equals(Comandos.ENVIAR_ARQUIVO.getCodigo())) {
-
+			
 		}
 
 
@@ -288,7 +286,7 @@ public class Servidor extends Thread{
 			user.setTipo(dados[atual+4]);
 			String msg = "";
 
-			//Nao implementado
+			//Nao implementado --------------------------------
 			if(checarLogin.criarUsuario(user)) {
 				msg = Comandos.RETORNO_TRUE.getCodigo();
 				retorno(bfw, msg);
