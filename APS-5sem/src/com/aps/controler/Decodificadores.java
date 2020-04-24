@@ -24,6 +24,12 @@ public class Decodificadores {
 		return msg;
 	}
 	
+	public static String msgToString(String msg) {
+		if(contemComando(msg)) {
+			return msg.split(Comandos.SEPARAR_DADOS.getCodigo())[1];
+		}
+		else return null;
+	}
 	
 	private static boolean contemComando(String msg) {
 		for (Comandos comando : Comandos.values()) {

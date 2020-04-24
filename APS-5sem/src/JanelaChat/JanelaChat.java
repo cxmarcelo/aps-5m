@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import com.aps.controler.Decodificadores;
 import com.aps.dominio.Usuario;
 import com.aps.dominio.enums.Comandos;
 import com.aps.resources.PrincipalCliente;
@@ -36,7 +37,8 @@ public class JanelaChat extends JFrame {
 	private PrincipalCliente servConect;
 	private JTextPane txtPanel;
 	private Usuario user;
-
+	private JTextArea txtIntegrantes;
+	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -128,7 +130,7 @@ public class JanelaChat extends JFrame {
 		lblIntegrantes.setBounds(579, 11, 119, 31);
 		contentPane.add(lblIntegrantes);
 
-		JTextArea txtIntegrantes = new JTextArea();
+		txtIntegrantes = new JTextArea();
 		txtIntegrantes.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 17));
 		txtIntegrantes.setForeground(Color.WHITE);
 		txtIntegrantes.setEditable(false);
@@ -160,16 +162,19 @@ public class JanelaChat extends JFrame {
 		InputStreamReader inr = new InputStreamReader(in);
 		BufferedReader bfr = new BufferedReader(inr);
 		String msg = "";
-		while(!"Sair".equalsIgnoreCase(msg))
+		while(!Comandos.SAIR.getCodigo().equalsIgnoreCase(msg))
 			if(bfr.ready()){
 				msg = bfr.readLine();
-				System.out.println("Entrei aqui");
+				
 				if(msg.equals("Sair"))
 					txtPanel.setText("Sai aqui meu");
-				else {
-					txtPanel.setText(txtPanel.getText() + "\r\n" + msg);
+				else if(msg.contains(Comandos.ENVIAR_MSG.getCodigo())) {
+					msg = Decodificadores.msgToString(msg);
+					txtPanel.setText(txtPanel.getText() + "\r\n" + (msg != null ? msg : ""));
 					repaint();
 					revalidate();
+				}else if(msg.contains(Comandos.ENVIAR_ARQUIVO.getCodigo())) {
+					//nao implementado
 				}
 				
 			}
