@@ -25,6 +25,10 @@ public class Servidor extends Thread{
 	private static ArrayList<BufferedWriter>clientesSala2;           
 	private static ArrayList<BufferedWriter>clientesSala3;           
 	private static ArrayList<BufferedWriter>clientesSala4;           
+	private static ArrayList<String>conectadosSala1 = new ArrayList<String>();     
+	private static ArrayList<String>conectadosSala2 = new ArrayList<String>();     
+	private static ArrayList<String>conectadosSala3 = new ArrayList<String>();     
+	private static ArrayList<String>conectadosSala4 = new ArrayList<String>();     
 	private static ServerSocket server; 
 	private static ServerSocket chat1; 
 	private static ServerSocket chat2; 
@@ -36,6 +40,7 @@ public class Servidor extends Thread{
 	private InputStreamReader inr;  
 	private BufferedReader bfr;
 	private Login checarLogin = new Login();
+	private String ultimoComando = "";
 
 	public Servidor(Socket con) {
 		this.con = con;
@@ -101,7 +106,9 @@ public class Servidor extends Thread{
 				//sendToAll(bfw, msg);
 				//sendToAllChat(bfw, msg);
 				//sendToAll2(bfw, msg);
+				ultimoComando = msg;
 				msg = "";
+
 
 			}
 		} catch (Exception e) {
@@ -230,7 +237,7 @@ public class Servidor extends Thread{
 
 		else if(dados[atual].equals(Comandos.SAIR.getCodigo())) {
 			switch (con.getLocalPort()) {
-			
+
 			case 12345:
 				clientes.remove(bfw);
 				sair();
@@ -251,7 +258,7 @@ public class Servidor extends Thread{
 				sair();
 				break;
 
-			
+
 			case 12349:
 				clientesSala4.remove(bfw);
 				sair();
@@ -266,12 +273,13 @@ public class Servidor extends Thread{
 
 
 		else if(dados[atual].equals(Comandos.ENVIAR_ARQUIVO.getCodigo())) {
-			
+
 		}
 
 
 		else if(dados[atual].equals(Comandos.NOME_USUARIO.getCodigo())) {
 			this.nome = dados[atual+1];
+			adicionarUsuarioASala();
 		}
 
 
@@ -294,20 +302,81 @@ public class Servidor extends Thread{
 				msg = Comandos.RETORNO_FALSE.getCodigo();
 				retorno(bfw, msg);
 			}
+		}else if(dados[atual].equals(Comandos.TODOS_USUARIOS_SALA.getCodigo())) {
+				retorno(bfw, retNomeUsuarios());
 		}
 		else {
 			return;
 		}
 	}
 
+
+
+	private void adicionarUsuarioASala() {
+		switch (con.getLocalPort()) {
+		case 12346:
+			conectadosSala1.add(nome);
+			break;
+
+		case 12347:
+			conectadosSala2.add(nome);
+			break;
+
+		case 12348:
+			conectadosSala3.add(nome);
+			break;
+
+		case 12349:
+			conectadosSala4.add(nome);
+			break;
+
+		default:
+			break;
+		}
+	}
+
+	private String retNomeUsuarios() {
+		switch (con.getLocalPort()) {
+		case 12346:
+			return listaNomes(conectadosSala1);
+
+		case 12347:
+			return listaNomes(conectadosSala2);
+
+		case 12348:
+			return listaNomes(conectadosSala3);
+
+		case 12349:
+			return listaNomes(conectadosSala1);
+
+		default:
+			return listaNomes(null);
+		}
+	}
+
+	private String listaNomes(ArrayList<String> listaNomes) {
+		if(listaNomes != null ) {
+			String msg = Comandos.TODOS_USUARIOS_SALA_RET.getCodigo() + Comandos.SEPARAR_DADOS + Decodificadores.nomesToString(listaNomes);
+			return msg;
+		}
+		return Comandos.TODOS_USUARIOS_SALA_RET.getCodigo();
+	}
+
+
 	private void sair() {
 		try {
+			notificarTodos();
 			con.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Erro ao fechar a conexão");
 		}
-		
+
+	}
+
+	
+	//NAO IMPLEMENTADO
+	private void notificarTodos() {
 	}
 
 	public static void main(String[] args) {
@@ -328,7 +397,7 @@ public class Servidor extends Thread{
 			clientesSala3 = new ArrayList<BufferedWriter>();
 			clientesSala4 = new ArrayList<BufferedWriter>();
 			System.out.println("Servidor Iniciado");
-			
+
 			new Thread() {
 				public void run() {
 					try {
@@ -362,8 +431,8 @@ public class Servidor extends Thread{
 					}
 				}
 			}.start();
-			
-			
+
+
 			new Thread() {
 				public void run() {
 					try {
@@ -380,7 +449,7 @@ public class Servidor extends Thread{
 					}
 				}
 			}.start();
-			
+
 			new Thread() {
 				public void run() {
 					try {
@@ -397,7 +466,7 @@ public class Servidor extends Thread{
 					}
 				}
 			}.start();
-			
+
 			new Thread() {
 				public void run() {
 					try {
@@ -414,7 +483,7 @@ public class Servidor extends Thread{
 					}
 				}
 			}.start();
-			
+
 		}catch (Exception e) {
 			e.printStackTrace();
 		} 

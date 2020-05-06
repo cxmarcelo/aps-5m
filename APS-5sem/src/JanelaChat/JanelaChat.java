@@ -5,6 +5,7 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.aps.controler.Decodificadores;
 import com.aps.dominio.Usuario;
@@ -13,6 +14,8 @@ import com.aps.resources.PrincipalCliente;
 import com.aps.resources.Servidor;
 
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
@@ -28,16 +31,19 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.ArrayList;
+import javax.swing.SwingConstants;
 
 public class JanelaChat extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	//private ArrayList<Usuario> conectados = new ArrayList<Usuario>();
+	private ArrayList<String> conectados = new ArrayList<String>();
 	private JTextArea textArea;
 	private PrincipalCliente servConect;
 	private JTextPane txtPanel;
 	private Usuario user;
-	private JTextArea txtIntegrantes;
+	private JLabel[] lblIntegrantes;
+	private int paginas = 1;
+	private int paginaAtual = 1;
 	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -81,8 +87,7 @@ public class JanelaChat extends JFrame {
 		JButton btnAnexar = new JButton("Anexar");
 		btnAnexar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//Funçao para enviar arquivo
-
+				anexar();
 			}
 		});
 		btnAnexar.setBounds(453, 448, 97, 38);
@@ -124,30 +129,98 @@ public class JanelaChat extends JFrame {
 		textArea.setBounds(32, 402, 407, 83);
 		contentPane.add(textArea);
 
-		JLabel lblIntegrantes = new JLabel("Integrantes");
-		lblIntegrantes.setFont(new Font("Tahoma", Font.BOLD, 17));
-		lblIntegrantes.setForeground(Color.WHITE);
-		lblIntegrantes.setBounds(579, 11, 119, 31);
-		contentPane.add(lblIntegrantes);
-
-		txtIntegrantes = new JTextArea();
-		txtIntegrantes.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 17));
-		txtIntegrantes.setForeground(Color.WHITE);
-		txtIntegrantes.setEditable(false);
-		txtIntegrantes.setBackground(new Color(46,84,143));
-		txtIntegrantes.setBounds(579, 45, 119, 441);
-		contentPane.add(txtIntegrantes);
+		JLabel lblIntegrantesCabe = new JLabel("Integrantes");
+		lblIntegrantesCabe.setFont(new Font("Tahoma", Font.BOLD, 17));
+		lblIntegrantesCabe.setForeground(Color.WHITE);
+		lblIntegrantesCabe.setBounds(579, 11, 119, 31);
+		contentPane.add(lblIntegrantesCabe);
+		
+		JLabel lblQtdConectados = new JLabel("x Online");
+		lblQtdConectados.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lblQtdConectados.setForeground(Color.GREEN);
+		lblQtdConectados.setHorizontalAlignment(SwingConstants.CENTER);
+		lblQtdConectados.setBounds(579, 45, 119, 24);
+		contentPane.add(lblQtdConectados);
+		
+		JButton btnConecPagAnt = new JButton("<");
+		btnConecPagAnt.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				paginaAnterior();
+			}
+		});
+		btnConecPagAnt.setBounds(589, 341, 41, 23);
+		contentPane.add(btnConecPagAnt);
+		
+		JButton btnConecPagSeg = new JButton(">");
+		btnConecPagSeg.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				paginaSeguinte();
+			}
+		});
+		btnConecPagSeg.setBounds(657, 341, 41, 23);
+		contentPane.add(btnConecPagSeg);
+		
+		lblIntegrantes = new JLabel[10];
+		for (int x = 0; x < lblIntegrantes.length; x++) {
+			lblIntegrantes[x] = new JLabel("");
+			lblIntegrantes[x].setBounds(579, 80 + (x * 25), 120, 20);
+			lblIntegrantes[x].setFont(new Font("Tahoma", Font.PLAIN, 16));
+			lblIntegrantes[x].setForeground(Color.WHITE);
+			lblIntegrantes[x].setHorizontalAlignment(SwingConstants.CENTER);			
+			contentPane.add(lblIntegrantes[x]);
+		}
+		
+		
 		servConect = new PrincipalCliente();
 		conectar(1, usuario);
 		user = usuario;
 	}
 
+	private void anexar() {
+		JFileChooser arquivo = new JFileChooser();
+		FileNameExtensionFilter filtroPDF = new FileNameExtensionFilter("Arquivos PDF", "pdf");  
+		arquivo.addChoosableFileFilter(filtroPDF);
+		arquivo.setAcceptAllFileFilterUsed(false);
+		if(arquivo.showOpenDialog(this) == JFileChooser.APPROVE_OPTION){
+			//.setText(arquivo.getSelectedFile().getAbsolutePath());
+			//arquivo.getSelectedFile();
+		
+		}
+	}
+	
+	private void paginaAnterior() {
+		if(paginaAtual > 1) {
+			paginaAtual--;
+			for(int x =0; x <10; x++) {
+				int y = x + 10 *( paginaAtual -1) ;
+				lblIntegrantes[x].setText(conectados.get(y));
+			}
+		}
+	}
+	private void paginaSeguinte() {
+		if(paginaAtual < paginas) {
+			paginaAtual++;
+			for(int x = 0 ; x < 10 ; x++) {
+				int y = x + 10 *( paginaAtual -1) ;
+				if(y >= conectados.size()) {
+					lblIntegrantes[x] .setText("");
+				}else {
+					lblIntegrantes[x].setText(conectados.get(y));
+				}
+				repaint();
+				revalidate();
+			}
+		}
+		uparUsuariosConectados();
+		System.out.println(conectados.size());
+	}
 
 	private void conectar(int chat, Usuario us) {
 		new Thread() {
 			public void run() {
 				try {
 					servConect.conectar(1, us);
+					uparUsuariosConectados();
 					escutar();
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -175,12 +248,66 @@ public class JanelaChat extends JFrame {
 					revalidate();
 				}else if(msg.contains(Comandos.ENVIAR_ARQUIVO.getCodigo())) {
 					//nao implementado
+					
+					
+					//*****
+				}else if(msg.contains(Comandos.TODOS_USUARIOS_SALA_RET.getCodigo())) {
+					conectados = Decodificadores.nomesUsuarios(msg);
+					atualizarConectados();
+					usuariosConectados();
 				}
-				
 			}
 	}
 
+	//Nao implementado
+	private void uparMsgs() {
+		/*
+		 * Enviar msg ao servidor para trazer todas as mensagens
+		 */
+	}
 
+	//
+	private void uparUsuariosConectados() {
+		try {
+			servConect.enviarMensagem(Comandos.TODOS_USUARIOS_SALA.getCodigo());
+		} catch (IOException e) {
+			System.out.println("erro para pedir todos usuarios da sala");
+			e.printStackTrace();
+		}
+	}
+	
+	private void usuariosConectados() {
+		paginas = 1;
+		paginaAtual = 1;
+		int contador = conectados.size();
+		
+		if(conectados.size() > 10) {
+			paginas =  (int) Math.ceil(((double) conectados.size() / 10));
+			contador = 10;
+		}
+
+		for(int x =0; x < contador; x++) {
+			if(conectados.get(x) == null) {
+				break;
+				//continue ?
+			}
+			lblIntegrantes[x].setText(conectados.get(x));
+		}
+		validate();
+		repaint();
+	}
+
+	private void atualizarConectados() {
+		for (int x = 0; x < lblIntegrantes.length; x++) {
+			if(conectados.get(x) != null ) {
+				lblIntegrantes[x].setText(conectados.get(x));
+			}else {
+				break;
+			}
+		}
+	}
+	
+	
 	private void enviarMsg() {
 		String msg = Comandos.ENVIAR_MSG.getCodigo() + Comandos.SEPARAR_DADOS.getCodigo() + textArea.getText();
 		try {
@@ -192,6 +319,4 @@ public class JanelaChat extends JFrame {
 		}
 		textArea.setText("");
 	}
-
-
 }

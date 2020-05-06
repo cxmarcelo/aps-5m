@@ -13,7 +13,9 @@ public enum Comandos {
 	NOME_USUARIO("::_NOME_USER__"),
 	CRIAR_USUARIO("::__CRIAR_USUARIO__::"),
 	RETORNO_TRUE("::__TRUE__::"),
-	RETORNO_FALSE("::__FALSE__::");
+	RETORNO_FALSE("::__FALSE__::"),
+	TODOS_USUARIOS_SALA("::__TODOS_USUARIOS_SALA__::"),
+	TODOS_USUARIOS_SALA_RET("::__TODOS_USUARIOS_SALA_RET__::");
 	
 	
 	private String codigo;
