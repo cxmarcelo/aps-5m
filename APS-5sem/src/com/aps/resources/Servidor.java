@@ -67,7 +67,6 @@ public class Servidor extends Thread{
 			switch (con.getLocalPort()) {
 			case 12345:
 				clientes.add(bfw);
-				System.out.println("Entrei no clientes");
 				break;
 
 			case 12346:
@@ -76,7 +75,6 @@ public class Servidor extends Thread{
 
 			case 12347:
 				clientesSala2.add(bfw);
-				System.out.println("entrei no clientesSala2");
 				break;
 
 			case 12348:
@@ -99,7 +97,7 @@ public class Servidor extends Thread{
 				//System.out.println(msg);
 				msg = bfr.readLine();
 				decodificarMsg(msg, bfw);
-				System.out.println(msg + "  Teste---------------");
+				System.out.println(msg + "Teste---------------");
 				//System.out.println("Entrei no escutar do servidor");
 				//System.out.println(msg);                                              
 
@@ -119,23 +117,23 @@ public class Servidor extends Thread{
 
 	public void sendToAllChat(BufferedWriter bwSaida, String msg) throws  IOException {
 		BufferedWriter bwS;
-
 		switch (con.getLocalPort()) {
 		case 12345:
 			for(BufferedWriter bw : clientes){
 				bwS = (BufferedWriter)bw;
 				if(!(bwSaida == bwS)){
-					bw.write(nome + " -> " + msg+"\r\n");
+					bw.write(msg+"\r\n");
 					bw.flush(); 
 				}
 			}   
 			break;
 
 		case 12346:
+			System.out.println("ENTREI NO CASE 12346");
 			for(BufferedWriter bw : clientesSala1){
 				bwS = (BufferedWriter)bw;
 				if(!(bwSaida == bwS)){
-					bw.write(nome + " -> " + msg+"\r\n");
+					bw.write(msg+"\r\n");
 					bw.flush(); 
 				}
 			}   
@@ -155,7 +153,8 @@ public class Servidor extends Thread{
 			for(BufferedWriter bw : clientesSala3){
 				bwS = (BufferedWriter)bw;
 				if(!(bwSaida == bwS)){
-					bw.write(nome + " -> " + msg+"\r\n");
+					bw.write(msg+"\r\n");
+					//bw.write(nome + " -> " + msg+"\r\n");
 					bw.flush(); 
 				}
 			} 
@@ -165,7 +164,7 @@ public class Servidor extends Thread{
 			for(BufferedWriter bw : clientesSala4){
 				bwS = (BufferedWriter)bw;
 				if(!(bwSaida == bwS)){
-					bw.write(nome + " -> " + msg+"\r\n");
+					bw.write(msg+"\r\n");
 					bw.flush(); 
 				}
 			} 
@@ -184,9 +183,8 @@ public class Servidor extends Thread{
 			bwS = (BufferedWriter)bw;
 			if((bwSaida == bwS)){
 				try {
-					bw.write(msg+"\r\n");
+					bw.write(msg+"");
 					bw.flush(); 
-					return;
 				} catch (IOException e) {
 					e.printStackTrace();
 					System.out.println("Erro: não foi possível enviar retorno. Servidor/retorno");
@@ -226,7 +224,11 @@ public class Servidor extends Thread{
 
 		else if(dados[atual].equals(Comandos.ENVIAR_MSG.getCodigo())) {
 			try {
-				sendToAllChat(bfw, dados[atual+1]);
+				String msg = Comandos.ENVIAR_MSG.getCodigo() + Comandos.SEPARAR_DADOS.getCodigo() +  dados[atual +1];
+				//retorno(bfw, msg);
+				System.out.println("MEENSAGEM EDITADAAAAA" +  msg);
+				System.out.println("DADOS + 1 " +  dados[atual+1]);
+				sendToAllChat(bfw, msg);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -304,9 +306,16 @@ public class Servidor extends Thread{
 			}
 		}else if(dados[atual].equals(Comandos.TODOS_USUARIOS_SALA.getCodigo())) {
 				retorno(bfw, retNomeUsuarios());
+				System.out.println(retNomeUsuarios());
 		}
 		else {
-			return;
+			try {
+				sendToAllChat(bfw, dados[0]);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 		}
 	}
 
@@ -331,6 +340,8 @@ public class Servidor extends Thread{
 			break;
 
 		default:
+			System.out.println("Estou caindo no default para adicionar nomes");
+			System.out.println("Minha porta:" +  con.getLocalPort());
 			break;
 		}
 	}
@@ -356,7 +367,7 @@ public class Servidor extends Thread{
 
 	private String listaNomes(ArrayList<String> listaNomes) {
 		if(listaNomes != null ) {
-			String msg = Comandos.TODOS_USUARIOS_SALA_RET.getCodigo() + Comandos.SEPARAR_DADOS + Decodificadores.nomesToString(listaNomes);
+			String msg = Comandos.TODOS_USUARIOS_SALA_RET.getCodigo() + Comandos.SEPARAR_DADOS.getCodigo() + Decodificadores.nomesToString(listaNomes);
 			return msg;
 		}
 		return Comandos.TODOS_USUARIOS_SALA_RET.getCodigo();

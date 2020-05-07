@@ -34,7 +34,7 @@ public class PrincipalCliente {
 	 * @throws IOException
 	 */
 	public void conectar(int port, Usuario us) throws UnknownHostException, IOException {
-			socket = new Socket(iP,porta);
+			socket = new Socket(iP,port);
 			ou = socket.getOutputStream();
 			ouw = new OutputStreamWriter(ou);
 			bfw = new BufferedWriter(ouw);

@@ -12,6 +12,17 @@ public class Mensagem {
 	public Mensagem() {
 	}
 	
+	
+	
+	public Mensagem(Date data, String nome, String mensagem) {
+		super();
+		this.data = data;
+		this.nome = nome;
+		this.mensagem = mensagem;
+	}
+
+
+
 	public Date getData() {
 		return data;
 	}

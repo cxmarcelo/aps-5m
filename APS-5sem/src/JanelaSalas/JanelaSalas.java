@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JTextArea;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import java.awt.Font;
 import javax.swing.JButton;
@@ -418,7 +419,30 @@ public class JanelaSalas extends JFrame {
 	}
 
 	private void entrarEmSala(int sala, Usuario us) {
-		new JanelaChat(us, sala).setVisible(true);
-		dispose();
+		switch (sala) {
+		case 1:
+			new JanelaChat(us, 12346).setVisible(true);
+			dispose();
+			break;
+
+			
+		case 2:
+			new JanelaChat(us, 12347).setVisible(true);
+			dispose();
+			break;
+			
+		case 3:
+			new JanelaChat(us, 12348).setVisible(true);
+			dispose();
+			break;
+		case 4:
+			new JanelaChat(us, 12349).setVisible(true);
+			dispose();
+			break;
+			
+		default:
+			JOptionPane.showMessageDialog(null, "Erro ao entrar na sala");
+			break;
+		}
 	}
 }

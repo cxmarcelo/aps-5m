@@ -181,7 +181,7 @@ public class JanelaLogin extends JFrame {
 
 	private void conectarServer() {
 		try {
-			cliConect.conectar(1, null);
+			cliConect.conectar(12345, null);
 		} catch (IOException e) {
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(null, "Não foi possível conectar ao servidor");

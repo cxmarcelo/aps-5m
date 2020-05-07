@@ -7,7 +7,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Date;
 
+import com.aps.dominio.Mensagem;
 import com.aps.dominio.Usuario;
 import com.aps.dominio.enums.Comandos;
 
@@ -53,7 +55,8 @@ public class Decodificadores {
 		if(contemComando(msg)) {
 			ArrayList<String> listaNomes = new ArrayList<String>();
 			String[] dados = msg.split(Comandos.SEPARAR_DADOS.getCodigo());
-			for (int x = 1; x < dados.length; x++) {
+			for (int x = 0; x < dados.length; x++) {
+				System.out.println(dados[x] + "DECODIFICADOR ----------------------------------------");
 				listaNomes.add(dados[x]);
 			}
 			return listaNomes;
@@ -68,9 +71,36 @@ public class Decodificadores {
 		return msg;
 	}
 	
+	public static String mensagemToString(Mensagem msg) {
+		String ret = "";
+		String sep = Comandos.SEPARAR_DADOS.getCodigo();
+		ret =  msg.getData() + sep + msg.getNome() + msg.getMensagem();
+		return ret;
+	}
+	
+	//CORRIGIR
+	public static Mensagem stringToMensagem(String msg) {
+		if(contemComando(msg)) {
+			String dados[] = msg.split(Comandos.SEPARAR_DADOS.getCodigo());
+			if(dados.length > 4) {
+				Mensagem mensagem = new Mensagem();
+				mensagem.setData(new Date(dados[1]));
+				mensagem.setNome(dados[1]);
+				mensagem.setMensagem(dados[1]);
+			}
+		}
+		return null;
+	}
+	
+	
 	public static String msgToString(String msg) {
 		if(contemComando(msg)) {
-			return msg.split(Comandos.SEPARAR_DADOS.getCodigo())[1];
+			String mensg[] = msg.split(Comandos.SEPARAR_DADOS.getCodigo());
+			if(mensg.length < 2) {
+				return null;
+			}else {
+				return mensg[1];
+			}
 		}
 		else return null;
 	}

@@ -21,6 +21,8 @@ import java.awt.event.ActionEvent;
 import java.awt.Color;
 import javax.swing.JTextPane;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.JTextArea;
 import java.awt.event.FocusAdapter;
@@ -50,7 +52,7 @@ public class JanelaChat extends JFrame {
 			public void run() {
 				try {
 					Usuario user = new Usuario("erickson199?", "Erickson123", "Erick", null);
-					JanelaChat frame = new JanelaChat(user, 1);
+					JanelaChat frame = new JanelaChat(user, 12346);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -172,10 +174,12 @@ public class JanelaChat extends JFrame {
 		
 		
 		servConect = new PrincipalCliente();
-		conectar(1, usuario);
+		conectar(chat, usuario);
 		user = usuario;
 	}
 
+	
+	//NAO IMPLEMENTADO
 	private void anexar() {
 		JFileChooser arquivo = new JFileChooser();
 		FileNameExtensionFilter filtroPDF = new FileNameExtensionFilter("Arquivos PDF", "pdf");  
@@ -219,8 +223,9 @@ public class JanelaChat extends JFrame {
 		new Thread() {
 			public void run() {
 				try {
-					servConect.conectar(1, us);
-					uparUsuariosConectados();
+					System.out.println("Antes de conectar");
+					servConect.conectar(chat, us);
+					System.out.println("Depois de conectar");
 					escutar();
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -228,6 +233,7 @@ public class JanelaChat extends JFrame {
 				}
 			}
 		}.start();
+		//uparUsuariosConectados();
 	}
 
 	private void escutar() throws IOException{
@@ -242,7 +248,10 @@ public class JanelaChat extends JFrame {
 				if(msg.equals("Sair"))
 					txtPanel.setText("Sai aqui meu");
 				else if(msg.contains(Comandos.ENVIAR_MSG.getCodigo())) {
+					System.out.println("RECEBI O LIXO DA MSG COM INDEX ERROR A SEGUIR" + msg);
 					msg = Decodificadores.msgToString(msg);
+					if(msg == null) return;
+					System.out.println("RECEBI O LIXO DA MENSAGEM AQUI KRL SO NAO QUERO PRINTAR");
 					txtPanel.setText(txtPanel.getText() + "\r\n" + (msg != null ? msg : ""));
 					repaint();
 					revalidate();
@@ -252,6 +261,7 @@ public class JanelaChat extends JFrame {
 					
 					//*****
 				}else if(msg.contains(Comandos.TODOS_USUARIOS_SALA_RET.getCodigo())) {
+					JOptionPane.showMessageDialog(null, "Recebi os usúarios");
 					conectados = Decodificadores.nomesUsuarios(msg);
 					atualizarConectados();
 					usuariosConectados();
@@ -292,12 +302,15 @@ public class JanelaChat extends JFrame {
 				//continue ?
 			}
 			lblIntegrantes[x].setText(conectados.get(x));
+			validate();
+			repaint();
 		}
-		validate();
-		repaint();
 	}
 
 	private void atualizarConectados() {
+		if(conectados.size() == 0) {
+			return;
+		}
 		for (int x = 0; x < lblIntegrantes.length; x++) {
 			if(conectados.get(x) != null ) {
 				lblIntegrantes[x].setText(conectados.get(x));
