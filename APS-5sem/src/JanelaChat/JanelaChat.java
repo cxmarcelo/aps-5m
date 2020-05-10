@@ -8,10 +8,10 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.aps.controler.Decodificadores;
+import com.aps.dominio.Mensagem;
 import com.aps.dominio.Usuario;
 import com.aps.dominio.enums.Comandos;
 import com.aps.resources.PrincipalCliente;
-import com.aps.resources.Servidor;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.util.Date;
 import java.util.ArrayList;
 import javax.swing.SwingConstants;
 
@@ -247,14 +248,20 @@ public class JanelaChat extends JFrame {
 				
 				if(msg.equals("Sair"))
 					txtPanel.setText("Sai aqui meu");
+				
 				else if(msg.contains(Comandos.ENVIAR_MSG.getCodigo())) {
-					System.out.println("RECEBI O LIXO DA MSG COM INDEX ERROR A SEGUIR" + msg);
-					msg = Decodificadores.msgToString(msg);
-					if(msg == null) return;
-					System.out.println("RECEBI O LIXO DA MENSAGEM AQUI KRL SO NAO QUERO PRINTAR");
-					txtPanel.setText(txtPanel.getText() + "\r\n" + (msg != null ? msg : ""));
-					repaint();
-					revalidate();
+					try {
+						Mensagem aux = Decodificadores.stringToMensagem(msg);
+						System.out.println("nome " +  aux.getNome() + "        ---" + aux.getMensagem());
+						String msgPersonalizada = "[" + aux.getHora() +"]" + aux.getNome() + ": " + aux.getMensagem();
+						txtPanel.setText(txtPanel.getText() + "\r\n" + (msgPersonalizada != null ? msgPersonalizada : ""));
+						repaint();
+						revalidate();
+						msg = "";
+					} catch (Exception e) {
+						System.out.println("Erro");
+					}
+				
 				}else if(msg.contains(Comandos.ENVIAR_ARQUIVO.getCodigo())) {
 					//nao implementado
 					
@@ -322,10 +329,15 @@ public class JanelaChat extends JFrame {
 	
 	
 	private void enviarMsg() {
-		String msg = Comandos.ENVIAR_MSG.getCodigo() + Comandos.SEPARAR_DADOS.getCodigo() + textArea.getText();
+		Mensagem mensagem = new Mensagem();
+		mensagem.setData(new Date(System.currentTimeMillis()));
+		System.out.println("ESCUSE  ME WTF " + new Date(System.currentTimeMillis()).toString());
+		mensagem.setNome(user.getNome());
+		mensagem.setMensagem(textArea.getText());
+		String msg = Comandos.ENVIAR_MSG.getCodigo() + Comandos.SEPARAR_DADOS.getCodigo() + Decodificadores.mensagemToString(mensagem);
 		try {
 			servConect.enviarMensagem(msg);
-			txtPanel.setText(txtPanel.getText() + "/r/n" + user.getNome() + textArea.getText() );
+			txtPanel.setText(txtPanel.getText() + "\r\n" + "[" + mensagem.getHora()+ "]"+ mensagem.getNome() + ": " + mensagem.getMensagem());
 		} catch (IOException e) {
 			System.out.println("erro ao enviar msg janelaChat");
 			e.printStackTrace();

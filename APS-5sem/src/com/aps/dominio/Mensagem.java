@@ -22,6 +22,14 @@ public class Mensagem {
 	}
 
 
+	public String getHora() {
+		if(data != null) {
+			System.out.println(data.toString());
+			String[] aux = data.toString().split(" ")[3].split(":");
+			return (aux[0] + ":" + aux[1]);
+		}
+		return "";
+	}
 
 	public Date getData() {
 		return data;

@@ -74,19 +74,26 @@ public class Decodificadores {
 	public static String mensagemToString(Mensagem msg) {
 		String ret = "";
 		String sep = Comandos.SEPARAR_DADOS.getCodigo();
-		ret =  msg.getData() + sep + msg.getNome() + msg.getMensagem();
+		ret =  msg.getData().getTime() + sep + msg.getNome() + sep +  msg.getMensagem();
 		return ret;
 	}
 	
-	//CORRIGIR
+
 	public static Mensagem stringToMensagem(String msg) {
 		if(contemComando(msg)) {
 			String dados[] = msg.split(Comandos.SEPARAR_DADOS.getCodigo());
-			if(dados.length > 4) {
+			if(dados.length > 3) {
 				Mensagem mensagem = new Mensagem();
-				mensagem.setData(new Date(dados[1]));
-				mensagem.setNome(dados[1]);
-				mensagem.setMensagem(dados[1]);
+				try {
+					long aux = Long.parseLong(dados[1]);
+					mensagem.setData(new Date(aux));
+					
+				} catch (Exception e) {
+					System.out.println("Erro ao converter a data");
+				}
+				mensagem.setNome(dados[2]);
+				mensagem.setMensagem(dados[3]);
+				return mensagem;
 			}
 		}
 		return null;

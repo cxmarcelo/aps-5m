@@ -14,6 +14,7 @@ import java.util.ArrayList;
 
 import com.aps.controler.Decodificadores;
 import com.aps.controler.Login;
+import com.aps.dominio.Mensagem;
 import com.aps.dominio.Usuario;
 import com.aps.dominio.enums.Comandos;
 
@@ -224,11 +225,20 @@ public class Servidor extends Thread{
 
 		else if(dados[atual].equals(Comandos.ENVIAR_MSG.getCodigo())) {
 			try {
-				String msg = Comandos.ENVIAR_MSG.getCodigo() + Comandos.SEPARAR_DADOS.getCodigo() +  dados[atual +1];
-				//retorno(bfw, msg);
-				System.out.println("MEENSAGEM EDITADAAAAA" +  msg);
+				String aux = "";
+				for (String msg : dados) {
+					aux += msg + Comandos.SEPARAR_DADOS.getCodigo();
+				}
+				System.out.println("DADOS: " + aux);
+				Mensagem mensagemRecebida = Decodificadores.stringToMensagem(aux);
+				//banco.salvar(mensagemRecebida);
+				
+				String msgRetorno = Comandos.ENVIAR_MSG.getCodigo() + Comandos.SEPARAR_DADOS.getCodigo() +  Decodificadores.mensagemToString(mensagemRecebida);
+				System.out.println("MEENSAGEM EDITADAAAAA" +  msgRetorno);
 				System.out.println("DADOS + 1 " +  dados[atual+1]);
-				sendToAllChat(bfw, msg);
+				sendToAllChat(bfw, msgRetorno);
+				
+				
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
