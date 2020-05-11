@@ -42,9 +42,15 @@ public class Teste2 {
 
 	public static void main(String[] args) {
 	
+		long longteste = System.currentTimeMillis();
 
-		Date teste = new Date(System.currentTimeMillis());
-		String[] teste2 = teste.toString().split(" ");
+		Date teste = new Date(longteste);
+		
+		System.out.println(teste.getTime());
+		System.out.println(longteste);
+		
+		
+		/*String[] teste2 = teste.toString().split(" ");
 		String[] teste3 = teste.toString().split(" ")[3].split(":");
 		
 		for (String string : teste3) {

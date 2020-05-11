@@ -25,6 +25,7 @@ import com.aps.dominio.Usuario;
 import com.aps.dominio.enums.Comandos;
 import com.aps.resources.PrincipalCliente;
 
+import JanelaCadastro.JanelaCadastro;
 import JanelaSalas.JanelaSalas;
 
 import javax.swing.JButton;
@@ -160,7 +161,8 @@ public class JanelaLogin extends JFrame {
 		JButton btnNewButton = new JButton("Cadastrar");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-			
+				new JanelaCadastro().setVisible(true);
+				dispose();
 			}
 		});
 		btnNewButton.setBounds(187, 488, 97, 25);

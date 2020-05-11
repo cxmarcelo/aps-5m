@@ -18,14 +18,12 @@ import javax.swing.Box;
 import javax.swing.border.LineBorder;
 
 import com.aps.dominio.Usuario;
-import com.aps.dominio.enums.Comandos;
 
 import JanelaChat.JanelaChat;
 import JanelaLogin.JanelaLogin;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 

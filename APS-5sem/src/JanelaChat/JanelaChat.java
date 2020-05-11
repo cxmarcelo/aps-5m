@@ -63,7 +63,8 @@ public class JanelaChat extends JFrame {
 	}
 
 	public JanelaChat(Usuario usuario, int chat) {
-		setTitle("Sala 1");
+		setTitle("Sala");
+		//setTitle("Sala " + numero);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 750, 600);
 		setResizable(false);
@@ -216,8 +217,6 @@ public class JanelaChat extends JFrame {
 				revalidate();
 			}
 		}
-		uparUsuariosConectados();
-		System.out.println(conectados.size());
 	}
 
 	private void conectar(int chat, Usuario us) {
@@ -242,6 +241,7 @@ public class JanelaChat extends JFrame {
 		InputStreamReader inr = new InputStreamReader(in);
 		BufferedReader bfr = new BufferedReader(inr);
 		String msg = "";
+		String ultimaMsg = "-1";
 		while(!Comandos.SAIR.getCodigo().equalsIgnoreCase(msg))
 			if(bfr.ready()){
 				msg = bfr.readLine();
@@ -251,6 +251,7 @@ public class JanelaChat extends JFrame {
 				
 				else if(msg.contains(Comandos.ENVIAR_MSG.getCodigo())) {
 					try {
+						System.out.println("RECEBI MSG DE TEXTO AQUI");
 						Mensagem aux = Decodificadores.stringToMensagem(msg);
 						System.out.println("nome " +  aux.getNome() + "        ---" + aux.getMensagem());
 						String msgPersonalizada = "[" + aux.getHora() +"]" + aux.getNome() + ": " + aux.getMensagem();
@@ -268,11 +269,17 @@ public class JanelaChat extends JFrame {
 					
 					//*****
 				}else if(msg.contains(Comandos.TODOS_USUARIOS_SALA_RET.getCodigo())) {
-					JOptionPane.showMessageDialog(null, "Recebi os usúarios");
+					System.out.println("RECEBI OS USUARIOS AQUI NESSE CARALEO");
 					conectados = Decodificadores.nomesUsuarios(msg);
 					atualizarConectados();
 					usuariosConectados();
+					revalidate();
+					repaint();
+				}else if(msg.equals("") || msg != null || msg.equals(ultimaMsg)) {
+					System.out.println("MENSAGEM RECEBIDA FOI: " + msg);
+					ultimaMsg = msg;
 				}
+					
 			}
 	}
 
@@ -284,14 +291,6 @@ public class JanelaChat extends JFrame {
 	}
 
 	//
-	private void uparUsuariosConectados() {
-		try {
-			servConect.enviarMensagem(Comandos.TODOS_USUARIOS_SALA.getCodigo());
-		} catch (IOException e) {
-			System.out.println("erro para pedir todos usuarios da sala");
-			e.printStackTrace();
-		}
-	}
 	
 	private void usuariosConectados() {
 		paginas = 1;
@@ -319,9 +318,10 @@ public class JanelaChat extends JFrame {
 			return;
 		}
 		for (int x = 0; x < lblIntegrantes.length; x++) {
-			if(conectados.get(x) != null ) {
+			try {
 				lblIntegrantes[x].setText(conectados.get(x));
-			}else {
+				
+			} catch (Exception e) {
 				break;
 			}
 		}
@@ -331,7 +331,6 @@ public class JanelaChat extends JFrame {
 	private void enviarMsg() {
 		Mensagem mensagem = new Mensagem();
 		mensagem.setData(new Date(System.currentTimeMillis()));
-		System.out.println("ESCUSE  ME WTF " + new Date(System.currentTimeMillis()).toString());
 		mensagem.setNome(user.getNome());
 		mensagem.setMensagem(textArea.getText());
 		String msg = Comandos.ENVIAR_MSG.getCodigo() + Comandos.SEPARAR_DADOS.getCodigo() + Decodificadores.mensagemToString(mensagem);

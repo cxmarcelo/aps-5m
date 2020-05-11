@@ -55,11 +55,12 @@ public class Decodificadores {
 		if(contemComando(msg)) {
 			ArrayList<String> listaNomes = new ArrayList<String>();
 			String[] dados = msg.split(Comandos.SEPARAR_DADOS.getCodigo());
-			for (int x = 0; x < dados.length; x++) {
-				System.out.println(dados[x] + "DECODIFICADOR ----------------------------------------");
-				listaNomes.add(dados[x]);
+			if(dados.length > 1) {
+				for (int x = 1; x < dados.length; x++) {
+					listaNomes.add(dados[x]);
+				}
+				return listaNomes;
 			}
-			return listaNomes;
 		}
 		return null;
 	}

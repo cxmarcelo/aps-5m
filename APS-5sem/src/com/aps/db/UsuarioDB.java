@@ -10,7 +10,7 @@ import com.aps.dominio.Usuario;
 
 public class UsuarioDB {
 
-	public void criarUsario(Usuario user) {
+	public boolean criarUsario(Usuario user) {
 		Connection con = ConnectionFactory.getConnection();
 		PreparedStatement stmt = null;
 		try {
@@ -19,10 +19,12 @@ public class UsuarioDB {
 			stmt.setString(2, user.getSenha());
 			stmt.setString(3, user.getNome());
 			stmt.setString(4, user.getTipo());
-			stmt.executeUpdate();
+			int resul = stmt.executeUpdate();
+			return resul == 1 ? true : false ;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println("Erro ao gravar no banco de dados");
+			return false;
 		}finally {
 			ConnectionFactory.closeConnection(con, stmt);
 		}

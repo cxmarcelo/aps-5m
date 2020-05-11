@@ -98,7 +98,6 @@ public class Servidor extends Thread{
 				//System.out.println(msg);
 				msg = bfr.readLine();
 				decodificarMsg(msg, bfw);
-				System.out.println(msg + "Teste---------------");
 				//System.out.println("Entrei no escutar do servidor");
 				//System.out.println(msg);                                              
 
@@ -184,7 +183,7 @@ public class Servidor extends Thread{
 			bwS = (BufferedWriter)bw;
 			if((bwSaida == bwS)){
 				try {
-					bw.write(msg+"");
+					bw.write(msg+"\n\r");
 					bw.flush(); 
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -229,13 +228,13 @@ public class Servidor extends Thread{
 				for (String msg : dados) {
 					aux += msg + Comandos.SEPARAR_DADOS.getCodigo();
 				}
-				System.out.println("DADOS: " + aux);
+				//System.out.println("DADOS: " + aux);
 				Mensagem mensagemRecebida = Decodificadores.stringToMensagem(aux);
+				
 				//banco.salvar(mensagemRecebida);
+				System.out.println(checarLogin.criarMensgaem(mensagemRecebida, con.getLocalPort()) ? "Mensagem Criada" : "Mensagem nao foi criada caraleo");
 				
 				String msgRetorno = Comandos.ENVIAR_MSG.getCodigo() + Comandos.SEPARAR_DADOS.getCodigo() +  Decodificadores.mensagemToString(mensagemRecebida);
-				System.out.println("MEENSAGEM EDITADAAAAA" +  msgRetorno);
-				System.out.println("DADOS + 1 " +  dados[atual+1]);
 				sendToAllChat(bfw, msgRetorno);
 				
 				
@@ -313,11 +312,20 @@ public class Servidor extends Thread{
 			}else {
 				msg = Comandos.RETORNO_FALSE.getCodigo();
 				retorno(bfw, msg);
+				
 			}
-		}else if(dados[atual].equals(Comandos.TODOS_USUARIOS_SALA.getCodigo())) {
-				retorno(bfw, retNomeUsuarios());
-				System.out.println(retNomeUsuarios());
 		}
+		/*else if(dados[atual].equals(Comandos.TODOS_USUARIOS_SALA.getCodigo())) {
+				try {
+					sendToAllChat(bfw, retNomeUsuarios());
+					retorno(bfw, retNomeUsuarios());
+					System.out.println(retNomeUsuarios());
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		}*/
+		/*
 		else {
 			try {
 				sendToAllChat(bfw, dados[0]);
@@ -327,6 +335,7 @@ public class Servidor extends Thread{
 			}
 			
 		}
+		*/
 	}
 
 
@@ -335,18 +344,42 @@ public class Servidor extends Thread{
 		switch (con.getLocalPort()) {
 		case 12346:
 			conectadosSala1.add(nome);
+			try {
+				sendToAllChat(null, retNomeUsuarios());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			break;
 
 		case 12347:
 			conectadosSala2.add(nome);
+			try {
+				sendToAllChat(null, retNomeUsuarios());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			break;
 
 		case 12348:
 			conectadosSala3.add(nome);
+			try {
+				sendToAllChat(null, retNomeUsuarios());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			break;
 
 		case 12349:
 			conectadosSala4.add(nome);
+			try {
+				sendToAllChat(null, retNomeUsuarios());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			break;
 
 		default:
@@ -368,7 +401,7 @@ public class Servidor extends Thread{
 			return listaNomes(conectadosSala3);
 
 		case 12349:
-			return listaNomes(conectadosSala1);
+			return listaNomes(conectadosSala4);
 
 		default:
 			return listaNomes(null);
