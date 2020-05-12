@@ -169,6 +169,39 @@ public class Decodificadores {
 		return msg;
 	}
 	
+
+	public static String listaMsgToString(ArrayList<Mensagem> lista) {
+		String ret = "";
+		String sep = Comandos.SEPARAR_DADOS.getCodigo();
+		for (Mensagem mensagem : lista) {
+			ret += mensagem.getData().getTime() + sep + mensagem.getNome() + sep + mensagem.getMensagem() + sep;
+		}
+		return ret;
+	}
+	
+	public static ArrayList<Mensagem> msgToListaMsg(String msg){
+		if(contemComando(msg)) {
+			ArrayList<Mensagem> lista = new ArrayList<Mensagem>();
+			String[] dadosAux = msg.split(Comandos.SEPARAR_DADOS.getCodigo());
+			String[] dados = new String[dadosAux.length-1];
+			for (int x = 1; x < dadosAux.length; x++) {
+				dados[x-1] = dadosAux[x];
+			}
+			int qtsMensagens = (dados.length) / 3;
+			for (int x = 0;  x < qtsMensagens; x++) {
+				int y = x * 3;
+				Mensagem aux = new Mensagem();
+				long longAux = Long.parseLong(dados[y]);
+				aux.setData(new Date(longAux));
+				aux.setNome(dados[y+1]);
+				aux.setMensagem(dados[y+2]);
+				lista.add(aux);
+			}
+			return lista;
+		}
+		return null;
+	}
+	
 	// Terminar de implementar essa funçao se considerar q pode mandar mais de um comando
 	/*
 	public static void decodificar(String msg) {

@@ -275,6 +275,13 @@ public class JanelaChat extends JFrame {
 					usuariosConectados();
 					revalidate();
 					repaint();
+				}else if(msg.contains(Comandos.UPAR_MENSAGENS.getCodigo())) {
+					String msgs = "";
+					ArrayList<Mensagem> lista = Decodificadores.msgToListaMsg(msg);
+					for (Mensagem auxMsg : lista) {
+						msgs += "[" + auxMsg.getHora() +"]" + auxMsg.getNome() + ": " + auxMsg.getMensagem() + "\n\r";
+					}
+					txtPanel.setText(msgs);
 				}else if(msg.equals("") || msg != null || msg.equals(ultimaMsg)) {
 					System.out.println("MENSAGEM RECEBIDA FOI: " + msg);
 					ultimaMsg = msg;

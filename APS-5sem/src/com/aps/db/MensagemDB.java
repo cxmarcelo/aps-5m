@@ -43,6 +43,7 @@ public class MensagemDB {
 		try {
 			stmt = con.prepareStatement("Select * from chat? order by id asc limit 100 offset ?");
 			stmt.setInt(1, chat);
+			stmt.setInt(2, pagina);
 			rs = stmt.executeQuery();
 			while(rs.next()) {
 				Mensagem msg = new Mensagem();

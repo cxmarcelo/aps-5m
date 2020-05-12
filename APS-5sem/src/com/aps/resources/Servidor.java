@@ -179,18 +179,88 @@ public class Servidor extends Thread{
 
 	public void retorno(BufferedWriter bwSaida, String msg) {
 		BufferedWriter bwS;
-		for(BufferedWriter bw : clientes){
-			bwS = (BufferedWriter)bw;
-			if((bwSaida == bwS)){
-				try {
-					bw.write(msg+"\n\r");
-					bw.flush(); 
-				} catch (IOException e) {
-					e.printStackTrace();
-					System.out.println("Erro: não foi possível enviar retorno. Servidor/retorno");
+		switch (con.getLocalPort()) {
+		
+		case 12345:
+			for(BufferedWriter bw : clientes){
+				bwS = (BufferedWriter)bw;
+				if((bwSaida == bwS)){
+					try {
+						bw.write(msg+"\n\r");
+						bw.flush(); 
+					} catch (IOException e) {
+						e.printStackTrace();
+						System.out.println("Erro: não foi possível enviar retorno. Servidor/retorno");
+					}
 				}
-			}
-		}          
+			}         			
+			break;
+
+		case 12346:
+			for(BufferedWriter bw : clientesSala1){
+				bwS = (BufferedWriter)bw;
+				if((bwSaida == bwS)){
+					try {
+						bw.write(msg+"\n\r");
+						bw.flush(); 
+					} catch (IOException e) {
+						e.printStackTrace();
+						System.out.println("Erro: não foi possível enviar retorno. Servidor/retorno");
+					}
+				}
+			}         			
+			break;
+
+
+		case 12347:
+			for(BufferedWriter bw : clientesSala2){
+				bwS = (BufferedWriter)bw;
+				if((bwSaida == bwS)){
+					try {
+						bw.write(msg+"\n\r");
+						bw.flush(); 
+					} catch (IOException e) {
+						e.printStackTrace();
+						System.out.println("Erro: não foi possível enviar retorno. Servidor/retorno");
+					}
+				}
+			}         			
+			break;
+			
+		case 12348:
+			for(BufferedWriter bw : clientesSala3){
+				bwS = (BufferedWriter)bw;
+				if((bwSaida == bwS)){
+					try {
+						bw.write(msg+"\n\r");
+						bw.flush(); 
+					} catch (IOException e) {
+						e.printStackTrace();
+						System.out.println("Erro: não foi possível enviar retorno. Servidor/retorno");
+					}
+				}
+			}         			
+			break;
+			
+		case 12349:
+			for(BufferedWriter bw : clientesSala4){
+				bwS = (BufferedWriter)bw;
+				if((bwSaida == bwS)){
+					try {
+						bw.write(msg+"\n\r");
+						bw.flush(); 
+					} catch (IOException e) {
+						e.printStackTrace();
+						System.out.println("Erro: não foi possível enviar retorno. Servidor/retorno");
+					}
+				}
+			}         			
+			break;
+			
+		default:
+			break;
+		}
+		
 	}
 
 
@@ -291,6 +361,7 @@ public class Servidor extends Thread{
 		else if(dados[atual].equals(Comandos.NOME_USUARIO.getCodigo())) {
 			this.nome = dados[atual+1];
 			adicionarUsuarioASala();
+			uparMensagens(con.getLocalPort(), bfw);
 		}
 
 
@@ -314,6 +385,10 @@ public class Servidor extends Thread{
 				retorno(bfw, msg);
 				
 			}
+		}
+		/*else if(dados[atual].contains(Comandos.UPAR_MENSAGENS.getCodigo())) {
+			
+			
 		}
 		/*else if(dados[atual].equals(Comandos.TODOS_USUARIOS_SALA.getCodigo())) {
 				try {
@@ -339,6 +414,12 @@ public class Servidor extends Thread{
 	}
 
 
+	private void uparMensagens(int chat, BufferedWriter bfw) {
+		ArrayList<Mensagem> listaMsg = checarLogin.todasMensagens(chat, 0);
+		String msg = Comandos.UPAR_MENSAGENS.getCodigo() + Comandos.SEPARAR_DADOS.getCodigo() + Decodificadores.listaMsgToString(listaMsg);
+		retorno(bfw, msg);
+		
+	}
 
 	private void adicionarUsuarioASala() {
 		switch (con.getLocalPort()) {
