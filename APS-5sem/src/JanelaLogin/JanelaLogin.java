@@ -10,6 +10,8 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -59,7 +61,7 @@ public class JanelaLogin extends JFrame {
 
 	public JanelaLogin() {
 		setTitle("Login");
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		setBounds(100, 100, 600, 600);
 		setResizable(false);
 		contentPane = new JPanel();
@@ -93,7 +95,6 @@ public class JanelaLogin extends JFrame {
 		passField.setBounds(187, 438, 206, 22);
 		passField.setColumns(10);	
 		contentPane.add(passField);
-
 
 
 
@@ -157,7 +158,7 @@ public class JanelaLogin extends JFrame {
 		lblMensagem.setForeground(Color.RED);
 		lblMensagem.setBounds(200, 360, 193, 22);
 		contentPane.add(lblMensagem);
-		
+
 		JButton btnNewButton = new JButton("Cadastrar");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -169,6 +170,14 @@ public class JanelaLogin extends JFrame {
 		contentPane.add(btnNewButton);
 		cliConect = new PrincipalCliente();
 		conectarServer();
+		
+		
+		addWindowListener(new WindowAdapter() { 
+			public void windowClosing(WindowEvent evt){ 
+				sair();
+				System.exit(0);
+			} 
+		});
 
 	}
 
@@ -180,6 +189,7 @@ public class JanelaLogin extends JFrame {
 			e.printStackTrace();
 		}
 	}
+
 
 	private void conectarServer() {
 		try {

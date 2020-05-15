@@ -94,23 +94,17 @@ public class Servidor extends Thread{
 			msg = "";
 			while(!Comandos.SAIR.getCodigo().equalsIgnoreCase(msg) && msg != null)
 			{           
-				//System.out.println("recebimsg");
-				//System.out.println(msg);
 				msg = bfr.readLine();
 				decodificarMsg(msg, bfw);
-				//System.out.println("Entrei no escutar do servidor");
-				//System.out.println(msg);                                              
-
-				//sendToAll(bfw, msg);
-				//sendToAllChat(bfw, msg);
-				//sendToAll2(bfw, msg);
 				ultimoComando = msg;
 				msg = "";
-
-
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			try {
+				con.close();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
 		}
 	}
 
@@ -143,7 +137,7 @@ public class Servidor extends Thread{
 			for(BufferedWriter bw : clientesSala2){
 				bwS = (BufferedWriter)bw;
 				if(!(bwSaida == bwS)){
-					bw.write(nome + " -> " + msg+"\r\n");
+					bw.write(msg+"\r\n");
 					bw.flush(); 
 				}
 			} 
@@ -154,7 +148,6 @@ public class Servidor extends Thread{
 				bwS = (BufferedWriter)bw;
 				if(!(bwSaida == bwS)){
 					bw.write(msg+"\r\n");
-					//bw.write(nome + " -> " + msg+"\r\n");
 					bw.flush(); 
 				}
 			} 
@@ -180,7 +173,7 @@ public class Servidor extends Thread{
 	public void retorno(BufferedWriter bwSaida, String msg) {
 		BufferedWriter bwS;
 		switch (con.getLocalPort()) {
-		
+
 		case 12345:
 			for(BufferedWriter bw : clientes){
 				bwS = (BufferedWriter)bw;
@@ -226,7 +219,7 @@ public class Servidor extends Thread{
 				}
 			}         			
 			break;
-			
+
 		case 12348:
 			for(BufferedWriter bw : clientesSala3){
 				bwS = (BufferedWriter)bw;
@@ -241,7 +234,7 @@ public class Servidor extends Thread{
 				}
 			}         			
 			break;
-			
+
 		case 12349:
 			for(BufferedWriter bw : clientesSala4){
 				bwS = (BufferedWriter)bw;
@@ -256,11 +249,11 @@ public class Servidor extends Thread{
 				}
 			}         			
 			break;
-			
+
 		default:
 			break;
 		}
-		
+
 	}
 
 
@@ -269,12 +262,11 @@ public class Servidor extends Thread{
 		System.out.println("Cheguei ate decodificar");
 		String[] dados = msg.split(Comandos.SEPARAR_DADOS.getCodigo());
 		for (int x = 0; x < dados.length; x++) {
-			//ideia if executou?qual?
 			executarComando(dados, x, bfw);
 		}
 	}
 
-
+	// Metodo Principal ---------------------------------------------------------------------------------
 	private void executarComando(String[] dados, int atual, BufferedWriter bfw) {
 		if(dados[atual].equals(Comandos.AUTENTITCAR.getCodigo())) {
 			Usuario us = checarLogin.logar(dados[atual+1], dados[atual+2]);
@@ -300,14 +292,14 @@ public class Servidor extends Thread{
 				}
 				//System.out.println("DADOS: " + aux);
 				Mensagem mensagemRecebida = Decodificadores.stringToMensagem(aux);
-				
+
 				//banco.salvar(mensagemRecebida);
 				System.out.println(checarLogin.criarMensgaem(mensagemRecebida, con.getLocalPort()) ? "Mensagem Criada" : "Mensagem nao foi criada caraleo");
-				
+
 				String msgRetorno = Comandos.ENVIAR_MSG.getCodigo() + Comandos.SEPARAR_DADOS.getCodigo() +  Decodificadores.mensagemToString(mensagemRecebida);
 				sendToAllChat(bfw, msgRetorno);
-				
-				
+
+
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -316,7 +308,8 @@ public class Servidor extends Thread{
 
 
 
-		else if(dados[atual].equals(Comandos.SAIR.getCodigo())) {
+		else if(dados[atual].contains(Comandos.SAIR.getCodigo())) {
+			System.out.println("Eu deveria ter saido");
 			switch (con.getLocalPort()) {
 
 			case 12345:
@@ -359,9 +352,12 @@ public class Servidor extends Thread{
 
 
 		else if(dados[atual].equals(Comandos.NOME_USUARIO.getCodigo())) {
+			if(dados[atual +1].contains(Comandos.NULL.getCodigo())   || dados == null) {
+				return;
+			}
 			this.nome = dados[atual+1];
-			adicionarUsuarioASala();
 			uparMensagens(con.getLocalPort(), bfw);
+			adicionarUsuarioASala();
 		}
 
 
@@ -383,12 +379,12 @@ public class Servidor extends Thread{
 			}else {
 				msg = Comandos.RETORNO_FALSE.getCodigo();
 				retorno(bfw, msg);
-				
+
 			}
 		}
 		/*else if(dados[atual].contains(Comandos.UPAR_MENSAGENS.getCodigo())) {
-			
-			
+
+
 		}
 		/*else if(dados[atual].equals(Comandos.TODOS_USUARIOS_SALA.getCodigo())) {
 				try {
@@ -408,9 +404,9 @@ public class Servidor extends Thread{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+
 		}
-		*/
+		 */
 	}
 
 
@@ -418,7 +414,7 @@ public class Servidor extends Thread{
 		ArrayList<Mensagem> listaMsg = checarLogin.todasMensagens(chat, 0);
 		String msg = Comandos.UPAR_MENSAGENS.getCodigo() + Comandos.SEPARAR_DADOS.getCodigo() + Decodificadores.listaMsgToString(listaMsg);
 		retorno(bfw, msg);
-		
+
 	}
 
 	private void adicionarUsuarioASala() {
@@ -464,8 +460,6 @@ public class Servidor extends Thread{
 			break;
 
 		default:
-			System.out.println("Estou caindo no default para adicionar nomes");
-			System.out.println("Minha porta:" +  con.getLocalPort());
 			break;
 		}
 	}
@@ -502,6 +496,7 @@ public class Servidor extends Thread{
 		try {
 			notificarTodos();
 			con.close();
+			System.out.println("saiu");
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Erro ao fechar a conexão");
@@ -509,9 +504,46 @@ public class Servidor extends Thread{
 
 	}
 
-	
-	//NAO IMPLEMENTADO
+
 	private void notificarTodos() {
+		System.out.println("ENTREI NO NOTIFICAR TODOS");
+		switch (con.getLocalPort()) {
+		case 12346:
+			try {
+				sendToAllChat(null, retNomeUsuarios());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			break;
+
+		case 12347:
+			try {
+				sendToAllChat(null, retNomeUsuarios());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			break;
+
+		case 12348:
+			try {
+				sendToAllChat(null, retNomeUsuarios());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			break;
+
+		case 12349:
+			conectadosSala4.add(nome);
+			try {
+				sendToAllChat(null, retNomeUsuarios());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			break;
+
+		default: 
+			break;
+		}
 	}
 
 	public static void main(String[] args) {
@@ -545,6 +577,7 @@ public class Servidor extends Thread{
 							t.start();   
 						}
 					} catch (IOException e) {
+						System.out.println("Cai no e.prirjie sei la erro");
 						e.printStackTrace();
 					}
 				}
@@ -562,6 +595,7 @@ public class Servidor extends Thread{
 							t.start();   
 						}
 					} catch (IOException e) {
+						System.out.println("Cai no e.prirjie sei la erro");
 						e.printStackTrace();
 					}
 				}

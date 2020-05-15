@@ -17,6 +17,7 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentListener;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
 import javax.swing.JTextPane;
@@ -27,6 +28,8 @@ import java.awt.Font;
 import javax.swing.JTextArea;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,6 +38,8 @@ import java.net.Socket;
 import java.util.Date;
 import java.util.ArrayList;
 import javax.swing.SwingConstants;
+import javax.swing.JScrollPane;
+import java.awt.Scrollbar;
 
 public class JanelaChat extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -42,7 +47,7 @@ public class JanelaChat extends JFrame {
 	private ArrayList<String> conectados = new ArrayList<String>();
 	private JTextArea textArea;
 	private PrincipalCliente servConect;
-	private JTextPane txtPanel;
+	private JTextArea txtPanel;
 	private Usuario user;
 	private JLabel[] lblIntegrantes;
 	private int paginas = 1;
@@ -74,9 +79,9 @@ public class JanelaChat extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
-		txtPanel = new JTextPane();
+		txtPanel = new JTextArea();
 		txtPanel.setEditable(false);
-		txtPanel.setBounds(32, 45, 518, 332);
+		txtPanel.setBounds(32, 45, 520, 330);
 		contentPane.add(txtPanel);
 
 		JButton btnEnviar = new JButton("Enviar");
@@ -100,7 +105,6 @@ public class JanelaChat extends JFrame {
 		JButton btnVoltar = new JButton("Voltar as Salas");
 		btnVoltar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//Função Voltar
 			}
 		});
 		btnVoltar.setBounds(291, 509, 150, 31);
@@ -164,6 +168,7 @@ public class JanelaChat extends JFrame {
 		btnConecPagSeg.setBounds(657, 341, 41, 23);
 		contentPane.add(btnConecPagSeg);
 		
+		
 		lblIntegrantes = new JLabel[10];
 		for (int x = 0; x < lblIntegrantes.length; x++) {
 			lblIntegrantes[x] = new JLabel("");
@@ -178,18 +183,38 @@ public class JanelaChat extends JFrame {
 		servConect = new PrincipalCliente();
 		conectar(chat, usuario);
 		user = usuario;
+		
+		addWindowListener(new WindowAdapter() { 
+			public void windowClosing(WindowEvent evt){ 
+				try {
+					sair();
+					System.exit(0);
+				} catch (Exception e) {
+					System.exit(0);
+				}
+			} 
+		});
 	}
 
+	private void sair() {
+		String msg = Comandos.SAIR.getCodigo();
+		try {
+			servConect.enviarMensagem(msg);
+			servConect.sair();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	//NAO IMPLEMENTADO
 	private void anexar() {
 		JFileChooser arquivo = new JFileChooser();
-		FileNameExtensionFilter filtroPDF = new FileNameExtensionFilter("Arquivos PDF", "pdf");  
+		FileNameExtensionFilter filtroPDF = new FileNameExtensionFilter("Arquivos PDF, TXT, ODT", "pdf", "odt", "txt");  
 		arquivo.addChoosableFileFilter(filtroPDF);
-		arquivo.setAcceptAllFileFilterUsed(false);
 		if(arquivo.showOpenDialog(this) == JFileChooser.APPROVE_OPTION){
+			String teste =arquivo.getSelectedFile().getAbsolutePath();
 			//.setText(arquivo.getSelectedFile().getAbsolutePath());
-			//arquivo.getSelectedFile();
+			arquivo.getSelectedFile();
 		
 		}
 	}
@@ -233,7 +258,6 @@ public class JanelaChat extends JFrame {
 				}
 			}
 		}.start();
-		//uparUsuariosConectados();
 	}
 
 	private void escutar() throws IOException{
@@ -271,17 +295,14 @@ public class JanelaChat extends JFrame {
 				}else if(msg.contains(Comandos.TODOS_USUARIOS_SALA_RET.getCodigo())) {
 					System.out.println("RECEBI OS USUARIOS AQUI NESSE CARALEO");
 					conectados = Decodificadores.nomesUsuarios(msg);
+					zerarLabelsConectados();
 					atualizarConectados();
 					usuariosConectados();
 					revalidate();
 					repaint();
 				}else if(msg.contains(Comandos.UPAR_MENSAGENS.getCodigo())) {
-					String msgs = "";
-					ArrayList<Mensagem> lista = Decodificadores.msgToListaMsg(msg);
-					for (Mensagem auxMsg : lista) {
-						msgs += "[" + auxMsg.getHora() +"]" + auxMsg.getNome() + ": " + auxMsg.getMensagem() + "\n\r";
-					}
-					txtPanel.setText(msgs);
+					uparMsgs(Decodificadores.msgToListaMsg(msg));
+					
 				}else if(msg.equals("") || msg != null || msg.equals(ultimaMsg)) {
 					System.out.println("MENSAGEM RECEBIDA FOI: " + msg);
 					ultimaMsg = msg;
@@ -290,14 +311,14 @@ public class JanelaChat extends JFrame {
 			}
 	}
 
-	//Nao implementado
-	private void uparMsgs() {
-		/*
-		 * Enviar msg ao servidor para trazer todas as mensagens
-		 */
+	private void uparMsgs(ArrayList<Mensagem> lista) {
+		String msgs = "";
+		for (Mensagem auxMsg : lista) {
+			msgs += "[" + auxMsg.getHora() +"]" + auxMsg.getNome() + ": " + auxMsg.getMensagem() + "\n\r";
+		}
+		txtPanel.setText(msgs);
 	}
 
-	//
 	
 	private void usuariosConectados() {
 		paginas = 1;
@@ -320,6 +341,13 @@ public class JanelaChat extends JFrame {
 		}
 	}
 
+	
+	private void zerarLabelsConectados() {
+		for (JLabel conectados : lblIntegrantes) {
+			conectados.setText("");
+		}
+	}
+	
 	private void atualizarConectados() {
 		if(conectados.size() == 0) {
 			return;

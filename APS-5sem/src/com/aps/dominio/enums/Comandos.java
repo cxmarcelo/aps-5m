@@ -17,7 +17,8 @@ public enum Comandos {
 	TODOS_USUARIOS_SALA("::__TODOS_USUARIOS_SALA__::"),
 	TODOS_USUARIOS_SALA_RET("::__TODOS_USUARIOS_SALA_RET__::"),
 	LISTA_DE_MENSAGENS("::__LISTA_DE_MENSAGENS__::"),
-	UPAR_MENSAGENS("::__UPAR_MENSAGENS__::");
+	UPAR_MENSAGENS("::__UPAR_MENSAGENS__::"),
+	NULL("::__NULL__::");
 	
 	private String codigo;
 	
