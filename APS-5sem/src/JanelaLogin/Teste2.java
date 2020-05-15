@@ -5,9 +5,14 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.Instant;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 import com.aps.controler.Login;
+import com.aps.dominio.ArquivoDTO;
 import com.aps.dominio.enums.Comandos;
 
 public class Teste2 {
@@ -42,14 +47,18 @@ public class Teste2 {
 
 	public static void main(String[] args) {
 	
+		ArquivoDTO teste = new ArquivoDTO();
+		teste.setData(new Date(System.currentTimeMillis()));
+		System.out.println(teste.getDiaMes());
+		
+		/*
 		long longteste = System.currentTimeMillis();
-
+		Calendar teste2 = Calendar.getInstance();
+		GregorianCalendar cal = new GregorianCalendar(TimeZone.getDefault());
 		Date teste = new Date(longteste);
-		
-		System.out.println(teste.getTime());
-		System.out.println(longteste);
-		
-		
+		String[] te = teste.toString().split(" ");
+		System.out.println(teste.toString());
+		*/
 		/*String[] teste2 = teste.toString().split(" ");
 		String[] teste3 = teste.toString().split(" ")[3].split(":");
 		

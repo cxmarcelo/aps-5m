@@ -169,6 +169,11 @@ public class JanelaChat extends JFrame {
 		contentPane.add(btnConecPagSeg);
 		
 		JButton btnArquivos = new JButton("Arquivos");
+		btnArquivos.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				new JanelaArquivos(servConect);
+			}
+		});
 		btnArquivos.setBounds(32, 509, 150, 31);
 		contentPane.add(btnArquivos);
 		

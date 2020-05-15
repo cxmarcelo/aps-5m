@@ -43,7 +43,7 @@ public class PrincipalCliente {
 				enviarMensagem(Comandos.NOME_USUARIO.getCodigo() + Comandos.SEPARAR_DADOS.getCodigo() + us.getNome());
 			}
 			else
-				bfw.write(Comandos.NULL.getCodigo());
+				bfw.write("");
 			bfw.flush();
 	}
 

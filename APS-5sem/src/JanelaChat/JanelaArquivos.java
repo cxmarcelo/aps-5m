@@ -12,9 +12,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.SwingConstants;
 
+import com.aps.controler.Decodificadores;
+import com.aps.dominio.ArquivoDTO;
 import com.aps.dominio.enums.Comandos;
 import com.aps.resources.PrincipalCliente;
 import java.awt.Font;
@@ -24,12 +27,19 @@ public class JanelaArquivos extends JFrame {
 
 	private JPanel contentPane;
 	private PrincipalCliente cliConect;
+	private ArrayList<ArquivoDTO> listaArquivos = new ArrayList<ArquivoDTO>();
+	JLabel lblQuemEnviou[];
+	JLabel[] lblArquivoNome;
+	JLabel[] lblData;
+	JButton[] btnBaixar;
 	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					JanelaArquivos frame = new JanelaArquivos(12346);
+					PrincipalCliente a = new PrincipalCliente();
+					a.conectar(12346, null);
+					JanelaArquivos frame = new JanelaArquivos(a);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -40,8 +50,9 @@ public class JanelaArquivos extends JFrame {
 
 	/**
 	 * Create the frame.
+	 * @param servConect 
 	 */
-	public JanelaArquivos(int porta) {
+	public JanelaArquivos(PrincipalCliente servConect) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 500, 384);
 		setResizable(false);
@@ -68,23 +79,23 @@ public class JanelaArquivos extends JFrame {
 		btnSair.setBounds(350, 285, 90, 23);
 		contentPane.add(btnSair);
 		
-		JLabel lblQuemEnviou[] = new JLabel[8];
-		JLabel[] lblArquivoNome = new JLabel[8];
-		JLabel[] lblData = new JLabel[8];
-		JButton[] btnBaixar = new JButton[8];
+		lblQuemEnviou = new JLabel[8];
+		lblArquivoNome = new JLabel[8];
+		lblData = new JLabel[8];
+		btnBaixar = new JButton[8];
 
 		for (int x = 0; x < lblArquivoNome.length; x++) {
-			lblQuemEnviou[x] = new JLabel("por: Nome" + x);
+			lblQuemEnviou[x] = new JLabel("" + x);
 			lblQuemEnviou[x].setBounds(5, 0 + (35 * x), 125, 30);
 			contentPane.add(lblQuemEnviou[x]);
 			
-			lblArquivoNome[x] = new JLabel("Nome"+ x + ".pdf");
+			lblArquivoNome[x] = new JLabel(""+ x + "");
 			lblArquivoNome[x].setHorizontalAlignment(SwingConstants.CENTER);
 			lblArquivoNome[x].setBounds(130, 0 + (35 * x), 100, 30);
 			contentPane.add(lblArquivoNome[x]);
 
 		
-			lblData[x] = new JLabel("01/01/0000");
+			lblData[x] = new JLabel("");
 			lblData[x].setHorizontalAlignment(SwingConstants.CENTER);
 			lblData[x].setBounds(250, 0 + (35 * x), 100 , 30);
 			contentPane.add(lblData[x]);
@@ -95,20 +106,28 @@ public class JanelaArquivos extends JFrame {
 				public void actionPerformed(ActionEvent arg0) {
 				}
 			});
+			btnBaixar[x].setVisible(false);
 			btnBaixar[x].setBounds(360, 0 + (35 * x), 75, 30);
 			contentPane.add(btnBaixar[x]);
-		
-			cliConect = new PrincipalCliente();
-			conectar();
 		}
 		
+		
+		cliConect = servConect; 
+		ouvir();
 	}
-	private void conectar() {
-		try {
-			cliConect.conectar(12346, null);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+
+	
+	private void ouvir() {
+		new Thread() {
+			public void run() {
+				try {
+					escutar();
+				} catch (IOException e) {
+					System.out.println("Erro para ouvir mensagens do servidor /JanelaArquivos");
+					e.printStackTrace();
+				}
+			}
+		}.start();
 	}
 	
 	
@@ -122,8 +141,19 @@ public class JanelaArquivos extends JFrame {
 			if(bfr.ready()){
 				msg = bfr.readLine();
 				if(msg.equals("Sair")){
-				}else if(msg.contains(Comandos.ENVIAR_ARQUIVO.getCodigo())) {
-				}else if(msg.contains(Comandos.UPAR_MENSAGENS.getCodigo())) {
+					//sair
+					
+				}else if(msg.contains(Comandos.RETORNAR_ARQUIVO.getCodigo())) {
+					
+					//Baixar o arquivo;
+					//listaArquivos = Decodificadores.
+					
+					
+				}else if(msg.contains(Comandos.TODOS_ARQUIVOS_NOMES.getCodigo())) {
+					//arraylist nomes arquivos(dto)
+					listaArquivos = Decodificadores.msgToListaArquivosDTO(msg);
+					uparArquivos();
+					
 				}else if(msg.equals("") || msg != null || msg.equals(ultimaMsg)) {
 					System.out.println("MENSAGEM RECEBIDA FOI: " + msg);
 					ultimaMsg = msg;
@@ -132,4 +162,22 @@ public class JanelaArquivos extends JFrame {
 			}
 	}
 
+	
+	private void uparArquivos() {
+		for (int x = 0; x < btnBaixar.length; x++) {
+			try {
+				ArquivoDTO aux = listaArquivos.get(x);
+				lblQuemEnviou[x].setText(aux.getNomeRemetente());
+				lblArquivoNome[x].setText(aux.getNomeArquivo());
+				lblData[x].setText(aux.getDiaMes());
+				btnBaixar[x].setVisible(true);
+			} catch (Exception e) {
+				lblQuemEnviou[x].setText("");
+				lblArquivoNome[x].setText("");
+				lblData[x].setText("");
+				btnBaixar[x].setVisible(false);
+			}
+		}
+	}
+	
 }

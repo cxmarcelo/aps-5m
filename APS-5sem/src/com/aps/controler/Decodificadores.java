@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 
+import com.aps.dominio.ArquivoDTO;
 import com.aps.dominio.Mensagem;
 import com.aps.dominio.Usuario;
 import com.aps.dominio.enums.Comandos;
@@ -121,6 +122,48 @@ public class Decodificadores {
 		}
 		return msg;
 	}
+	
+	
+	
+	//lista para msg
+	public static String listaArquivosToMsg(ArrayList<ArquivoDTO> lista) {
+		String msg = "";
+		String sep = Comandos.SEPARAR_DADOS.getCodigo();
+		for (ArquivoDTO arquivo : lista) {
+			msg += arquivo.getId() + sep + arquivo.getNomeArquivo() + sep + arquivo.getNomeRemetente() + sep + arquivo.getData().getTime() + sep;
+		}
+		return msg;
+	}
+	
+	
+	
+	
+	
+	//msg to list<arquivosDTO>
+	public static ArrayList<ArquivoDTO> msgToListaArquivosDTO(String msg) {
+		if(contemComando(msg)) {
+			String[] dados = msg.split(Comandos.SEPARAR_DADOS.getCodigo());
+			ArrayList<ArquivoDTO> listaArquivos = new ArrayList<ArquivoDTO>();
+			int contadorArquivos = ( dados.length - 1 ) /4;
+			for (int x = 0; x < contadorArquivos; x++) {
+				ArquivoDTO aux = new ArquivoDTO();
+				int id= Integer.parseInt(dados[(x * 4) + 1]);
+				aux.setId(id);
+				aux.setNomeArquivo(dados[(x*4) + 2]);
+				aux.setNomeRemetente(dados[(x*4) + 3]);
+				Long dataLong = Long.parseLong(dados[(x * 4) +4]);
+				aux.setData(new Date(dataLong));
+				listaArquivos.add(aux);
+			}
+			return listaArquivos;
+		}
+		return null;
+	}
+	
+	
+	
+	
+	
 	
 	// NÃO IMPLEMENTADO
 	private static void fileToString(File f) {

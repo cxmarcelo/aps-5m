@@ -269,6 +269,7 @@ public class Servidor extends Thread{
 	// Metodo Principal ---------------------------------------------------------------------------------
 	private void executarComando(String[] dados, int atual, BufferedWriter bfw) {
 		if(dados[atual].equals(Comandos.AUTENTITCAR.getCodigo())) {
+			System.out.println("AUTENTICAR");
 			Usuario us = checarLogin.logar(dados[atual+1], dados[atual+2]);
 			String msg;
 			if(us != null) {
@@ -290,10 +291,7 @@ public class Servidor extends Thread{
 				for (String msg : dados) {
 					aux += msg + Comandos.SEPARAR_DADOS.getCodigo();
 				}
-				//System.out.println("DADOS: " + aux);
 				Mensagem mensagemRecebida = Decodificadores.stringToMensagem(aux);
-
-				//banco.salvar(mensagemRecebida);
 				System.out.println(checarLogin.criarMensgaem(mensagemRecebida, con.getLocalPort()) ? "Mensagem Criada" : "Mensagem nao foi criada caraleo");
 
 				String msgRetorno = Comandos.ENVIAR_MSG.getCodigo() + Comandos.SEPARAR_DADOS.getCodigo() +  Decodificadores.mensagemToString(mensagemRecebida);
@@ -352,9 +350,6 @@ public class Servidor extends Thread{
 
 
 		else if(dados[atual].equals(Comandos.NOME_USUARIO.getCodigo())) {
-			if(dados[atual +1].contains(Comandos.NULL.getCodigo())   || dados == null) {
-				return;
-			}
 			this.nome = dados[atual+1];
 			uparMensagens(con.getLocalPort(), bfw);
 			adicionarUsuarioASala();

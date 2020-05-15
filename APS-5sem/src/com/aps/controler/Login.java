@@ -1,9 +1,11 @@
 package com.aps.controler;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import com.aps.db.MensagemDB;
 import com.aps.db.UsuarioDB;
+import com.aps.dominio.ArquivoDTO;
 import com.aps.dominio.Mensagem;
 import com.aps.dominio.Usuario;
 
@@ -71,6 +73,16 @@ public class Login {
 		default:
 			return new ArrayList<Mensagem>();
 		}
+	}
+	
+	//Nao implementado
+	public File buscarArquivo(int id) {
+		return null;
+	}
+	
+	//Nao implementado
+	public ArrayList<ArquivoDTO> buscarArquivosChat(){
+		return null;
 	}
 	
 }
