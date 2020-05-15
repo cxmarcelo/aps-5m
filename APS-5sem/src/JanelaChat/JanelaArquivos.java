@@ -1,5 +1,6 @@
 package JanelaChat;
 
+import java.awt.Color;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -16,6 +17,7 @@ import javax.swing.SwingConstants;
 
 import com.aps.dominio.enums.Comandos;
 import com.aps.resources.PrincipalCliente;
+import java.awt.Font;
 
 public class JanelaArquivos extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -41,8 +43,10 @@ public class JanelaArquivos extends JFrame {
 	 */
 	public JanelaArquivos(int porta) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 460, 350);
+		setBounds(100, 100, 500, 384);
+		setResizable(false);
 		contentPane = new JPanel();
+		contentPane.setBackground(new Color(46,84,143));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
@@ -51,6 +55,7 @@ public class JanelaArquivos extends JFrame {
 		contentPane.add(btnPagAnt);
 		
 		JLabel lblNewLabel = new JLabel("0/0");
+		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 13));
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel.setBounds(150, 285, 50, 23);
 		contentPane.add(lblNewLabel);

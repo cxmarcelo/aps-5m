@@ -168,6 +168,10 @@ public class JanelaChat extends JFrame {
 		btnConecPagSeg.setBounds(657, 341, 41, 23);
 		contentPane.add(btnConecPagSeg);
 		
+		JButton btnArquivos = new JButton("Arquivos");
+		btnArquivos.setBounds(32, 509, 150, 31);
+		contentPane.add(btnArquivos);
+		
 		
 		lblIntegrantes = new JLabel[10];
 		for (int x = 0; x < lblIntegrantes.length; x++) {
