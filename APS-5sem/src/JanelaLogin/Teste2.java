@@ -54,9 +54,9 @@ public class Teste2 {
 
 	public static void main(String[] args) {
 		ArquivosDB t = new ArquivosDB();
-		Arquivo teste = t.buscarArquivo(1);
+		Arquivo teste = t.buscarArquivo(2);
 	 
-		java.io.File file = new java.io.File("C:\\Users\\Marcelo\\Desktop\\LIVROS/teste7salvando.txt");
+		java.io.File file = new java.io.File("C:\\Users\\Marcelo\\Desktop\\LIVROS/teste0002.txt");
 		try {
 			FileOutputStream in = new FileOutputStream(file) ;  
 			String dados = "";

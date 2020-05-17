@@ -2,6 +2,7 @@ package com.aps.db;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -17,19 +18,26 @@ import com.aps.dominio.ArquivoDTO;
 //NAO IMPLEMENTADO
 public class ArquivosDB {
 
-	public boolean salvarAquivoBD(File f ){
+	public boolean salvarAquivoBD(Arquivo arq ){
 		Connection con = ConnectionFactory.getConnection();
 		try {
 			PreparedStatement ps = con.prepareStatement(
 					"INSERT INTO tabelaArquivos( id, nomeArquivo, nomeRemetente, dataHora, chat, arquivo ) VALUES (null, ?, ?, ?, ?, ?)");
-			InputStream is = new FileInputStream(f);
-
 			
-			ps.setString( 1, f.getName());
-			ps.setString(2, "Erickson");
-			ps.setLong(3, System.currentTimeMillis());
-			ps.setInt(4, 12346);
+			File f = File.createTempFile("temporario", ".tmp");
+			InputStream is = new FileInputStream(f);
+			try {
+				FileOutputStream in = new FileOutputStream(f);
+				in.write(arq.getArquivo());
+				in.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			ps.setBinaryStream(5, (InputStream)is,(int)f.length());
+			ps.setString( 1, arq.getNomeArquivo());
+			ps.setString(2, arq.getNomeRemetente());
+			ps.setLong(3, arq.getDataHora().getTime());
+			ps.setInt(4, arq.getChat());
 			ps.execute();
 			ps.close();
 			con.close();
@@ -44,11 +52,12 @@ public class ArquivosDB {
 		return false;
 	}
 
+	
+	
 	public Arquivo buscarArquivo( int id ){
 		Connection con = ConnectionFactory.getConnection();
 		try {
 			PreparedStatement ps = con.prepareStatement("SELECT * FROM tabelaArquivos WHERE id = ?");
-			//id, nomeArquivo, nomeRemetente, dataHora, chat, arquivo
 			ps.setInt(1, id);
 			ResultSet rs = ps.executeQuery();
 			Arquivo arq = null;

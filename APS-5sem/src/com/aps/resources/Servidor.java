@@ -345,15 +345,30 @@ public class Servidor extends Thread{
 		}
 
 		else if(dados[atual].equals(Comandos.ENVIAR_ARQUIVO.getCodigo())) {
-			//RECEBER ARQUIVO E SALVAR NO BANCO
+			System.out.println("Entrei no enviar arquivo ----------------------");
+			String aux = "";
+			for (String msg : dados) {
+				aux += msg + Comandos.SEPARAR_DADOS.getCodigo();
+			}
+			System.out.println(aux);
+			Arquivo arq = Decodificadores.msgToArquivo(aux);
+			System.out.println("Sai desse loop");
 			
+			
+			
+			System.out.println(checarLogin.salvarArquivo(arq) ? "Salvou" : "Erro");
+			System.out.println("Mas não desse");
 		}
 
 
 		else if(dados[atual].equals(Comandos.NOME_USUARIO.getCodigo())) {
-			this.nome = dados[atual+1];
-			uparMensagens(con.getLocalPort(), bfw);
-			adicionarUsuarioASala();
+			if(dados[atual +1].equals(Comandos.NULL.getCodigo())) {
+				return;
+			}else {
+				this.nome = dados[atual+1];
+				uparMensagens(con.getLocalPort(), bfw);
+				adicionarUsuarioASala();
+			}
 		}
 
 

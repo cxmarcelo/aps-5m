@@ -6,7 +6,7 @@ import java.util.Date;
 public class Arquivo {
 
 	//id, nomeArquivo, nomeRemetente, dataHora, chat, arquivo
-	private int id;
+	private Integer id;
 	private String nomeArquivo;
 	private String nomeRemetente;
 	private Date dataHora;
@@ -94,10 +94,10 @@ public class Arquivo {
 		return "";
 	}
 	
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 	public String getNomeArquivo() {

@@ -1,7 +1,6 @@
 package JanelaChat;
 
 import java.awt.Color;
-import java.awt.Event;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -37,20 +36,20 @@ public class JanelaArquivos extends JFrame {
 	private JPanel contentPane;
 	private PrincipalCliente cliConect;
 	private ArrayList<ArquivoDTO> listaArquivos = new ArrayList<ArquivoDTO>();
-	JLabel lblQuemEnviou[];
-	JLabel[] lblArquivoNome;
-	JLabel[] lblData;
-	JButton[] btnBaixar;
+	private JLabel lblQuemEnviou[];
+	private JLabel[] lblArquivoNome;
+	private JLabel[] lblData;
+	private JButton[] btnBaixar;
+	private JLabel lblNewLabel;
 	private int paginas = 1;
+	private int chat;
 	private int paginaAtual = 1;
 	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					PrincipalCliente a = new PrincipalCliente();
-					a.conectar(12346, null);
-					JanelaArquivos frame = new JanelaArquivos(a);
+					JanelaArquivos frame = new JanelaArquivos(12346);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -63,7 +62,7 @@ public class JanelaArquivos extends JFrame {
 	 * Create the frame.
 	 * @param servConect 
 	 */
-	public JanelaArquivos(PrincipalCliente servConect) {
+	public JanelaArquivos(int chat) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 500, 384);
 		setResizable(false);
@@ -76,7 +75,7 @@ public class JanelaArquivos extends JFrame {
 		btnPagAnt.setBounds(50, 285, 90, 23);
 		contentPane.add(btnPagAnt);
 
-		JLabel lblNewLabel = new JLabel("0/0");
+		lblNewLabel = new JLabel(paginaAtual +"/" + paginas);
 		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 13));
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel.setBounds(150, 285, 50, 23);
@@ -122,11 +121,22 @@ public class JanelaArquivos extends JFrame {
 			btnBaixar[x].setBounds(360, 0 + (35 * x), 75, 30);
 			contentPane.add(btnBaixar[x]);
 		}
-		cliConect = servConect; 
+		this.chat = chat;
+		cliConect = new PrincipalCliente();
+		conectar();
 		ouvir();
 		enviarRequisicao(Comandos.TODOS_ARQUIVOS_NOMES.getCodigo());
 	}
 
+
+	private void conectar() {
+		try {
+			cliConect.conectar(chat, null);
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("Erro para conectar");
+		}
+	}
 
 	private void ouvir() {
 		new Thread() {
@@ -214,7 +224,6 @@ public class JanelaArquivos extends JFrame {
 		InputStreamReader inr = new InputStreamReader(in);
 		BufferedReader bfr = new BufferedReader(inr);
 		String msg = "";
-		String ultimaMsg = "-1";
 		while(!Comandos.SAIR.getCodigo().equalsIgnoreCase(msg))
 			if(bfr.ready()){
 				msg = bfr.readLine();
@@ -225,13 +234,9 @@ public class JanelaArquivos extends JFrame {
 					Arquivo arq = Decodificadores.msgToArquivo(msg);
 					baixar(arq);
 				}else if(msg.contains(Comandos.TODOS_ARQUIVOS_NOMES_RET.getCodigo())) {
-					//arraylist nomes arquivos(dto)
 					listaArquivos = Decodificadores.msgToListaArquivosDTO(msg);
 					uparArquivos();
 
-				}else if(msg.equals("") || msg != null || msg.equals(ultimaMsg)) {
-					System.out.println("MENSAGEM RECEBIDA FOI: " + msg);
-					ultimaMsg = msg;
 				}
 
 			}
@@ -239,6 +244,7 @@ public class JanelaArquivos extends JFrame {
 
 
 	private void uparArquivos() {
+		lblNewLabel = new JLabel(paginaAtual +"/" + paginas);
 		for (int x = 0; x < btnBaixar.length; x++) {
 			try {
 				ArquivoDTO aux = listaArquivos.get(x);

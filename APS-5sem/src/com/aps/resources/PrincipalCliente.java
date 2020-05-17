@@ -24,7 +24,6 @@ public class PrincipalCliente {
 
 
 	private String iP = "127.0.0.1";
-	private int porta = 12345;
 
 	public PrincipalCliente() {                  
 	}
@@ -39,12 +38,11 @@ public class PrincipalCliente {
 			ouw = new OutputStreamWriter(ou);
 			bfw = new BufferedWriter(ouw);
 			if(us != null) {
-				System.out.println("Passei por aqui -------------------------------");
 				enviarMensagem(Comandos.NOME_USUARIO.getCodigo() + Comandos.SEPARAR_DADOS.getCodigo() + us.getNome());
 			}
-			else
-				bfw.write("");
-			bfw.flush();
+			else {
+				enviarMensagem(Comandos.NOME_USUARIO.getCodigo() + Comandos.SEPARAR_DADOS.getCodigo() + Comandos.NULL.getCodigo());
+			}
 	}
 
 	/**

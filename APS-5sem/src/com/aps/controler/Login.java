@@ -86,5 +86,9 @@ public class Login {
 	public ArrayList<ArquivoDTO> buscarArquivosChat(int chat){
 		return arqDB.buscarTodosArquivos(chat);
 	}
+
+	public boolean salvarArquivo(Arquivo arq) {
+		return arqDB.salvarAquivoBD(arq);
+	}
 	
 }

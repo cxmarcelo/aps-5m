@@ -70,8 +70,6 @@ public class JanelaLogin extends JFrame {
 		contentPane.setLayout(null);
 		setContentPane(contentPane);
 
-		//textFieldSenha
-
 		passField = new JPasswordField	();
 		passField.setText("Senha");
 		passField.setForeground(Color.GRAY);

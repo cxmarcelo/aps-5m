@@ -8,6 +8,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.aps.controler.Decodificadores;
+import com.aps.dominio.Arquivo;
 import com.aps.dominio.Mensagem;
 import com.aps.dominio.Usuario;
 import com.aps.dominio.enums.Comandos;
@@ -20,6 +21,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 import java.awt.Font;
 import javax.swing.JTextArea;
@@ -28,6 +30,9 @@ import java.awt.event.FocusEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -44,9 +49,10 @@ public class JanelaChat extends JFrame {
 	private JTextArea txtPanel;
 	private Usuario user;
 	private JLabel[] lblIntegrantes;
+	private int chat;
 	private int paginas = 1;
 	private int paginaAtual = 1;
-	
+
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -136,14 +142,14 @@ public class JanelaChat extends JFrame {
 		lblIntegrantesCabe.setForeground(Color.WHITE);
 		lblIntegrantesCabe.setBounds(579, 11, 119, 31);
 		contentPane.add(lblIntegrantesCabe);
-		
+
 		JLabel lblQtdConectados = new JLabel("x Online");
 		lblQtdConectados.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		lblQtdConectados.setForeground(Color.GREEN);
 		lblQtdConectados.setHorizontalAlignment(SwingConstants.CENTER);
 		lblQtdConectados.setBounds(579, 45, 119, 24);
 		contentPane.add(lblQtdConectados);
-		
+
 		JButton btnConecPagAnt = new JButton("<");
 		btnConecPagAnt.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -152,7 +158,7 @@ public class JanelaChat extends JFrame {
 		});
 		btnConecPagAnt.setBounds(589, 341, 41, 23);
 		contentPane.add(btnConecPagAnt);
-		
+
 		JButton btnConecPagSeg = new JButton(">");
 		btnConecPagSeg.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -161,17 +167,17 @@ public class JanelaChat extends JFrame {
 		});
 		btnConecPagSeg.setBounds(657, 341, 41, 23);
 		contentPane.add(btnConecPagSeg);
-		
+
 		JButton btnArquivos = new JButton("Arquivos");
 		btnArquivos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				new JanelaArquivos(servConect).setVisible(true);;
+				new JanelaArquivos(chat).setVisible(true);;
 			}
 		});
 		btnArquivos.setBounds(32, 509, 150, 31);
 		contentPane.add(btnArquivos);
-		
-		
+
+
 		lblIntegrantes = new JLabel[10];
 		for (int x = 0; x < lblIntegrantes.length; x++) {
 			lblIntegrantes[x] = new JLabel("");
@@ -181,12 +187,13 @@ public class JanelaChat extends JFrame {
 			lblIntegrantes[x].setHorizontalAlignment(SwingConstants.CENTER);			
 			contentPane.add(lblIntegrantes[x]);
 		}
-		
-		
+
+
 		servConect = new PrincipalCliente();
 		conectar(chat, usuario);
 		user = usuario;
-		
+		this.chat = chat;
+
 		addWindowListener(new WindowAdapter() { 
 			public void windowClosing(WindowEvent evt){ 
 				try {
@@ -208,20 +215,50 @@ public class JanelaChat extends JFrame {
 			e.printStackTrace();
 		}
 	}
-	
-	//NAO IMPLEMENTADO
+
 	private void anexar() {
 		JFileChooser arquivo = new JFileChooser();
 		FileNameExtensionFilter filtroPDF = new FileNameExtensionFilter("Arquivos PDF, TXT, ODT", "pdf", "odt", "txt");  
 		arquivo.addChoosableFileFilter(filtroPDF);
 		if(arquivo.showOpenDialog(this) == JFileChooser.APPROVE_OPTION){
-			String teste =arquivo.getSelectedFile().getAbsolutePath();
-			//.setText(arquivo.getSelectedFile().getAbsolutePath());
-			arquivo.getSelectedFile();
-		
+			File file = arquivo.getSelectedFile();
+			FileInputStream inFile  = null;
+			Arquivo arq = new Arquivo();
+			int len = (int)file.length();  
+			byte[] dadosArq = new byte[len];
+			try {
+				inFile = new FileInputStream(file);         
+				inFile.read(dadosArq, 0, len);  
+			} catch (FileNotFoundException fnfex) {
+				System.out.println("Arquivo não encontrado");
+			} catch (IOException ioex) {
+				System.out.println("Erro para ler o arquivo");
+
+			}
+			arq.setNomeArquivo(file.getName());
+			arq.setNomeRemetente(user.getNome());
+			arq.setChat(chat);
+			arq.setDataHora(new Date(System.currentTimeMillis()));
+			arq.setArquivo(dadosArq);
+			
+			
+			if(JOptionPane.showConfirmDialog(null, "Enviar arquivo " +  file.getName()) == 0) {
+				try {
+					String msg = "";
+					msg = Comandos.ENVIAR_ARQUIVO.getCodigo() + Comandos.SEPARAR_DADOS.getCodigo() + Decodificadores.arquivoToMsg(arq);
+					servConect.enviarMensagem(msg);
+					textArea.setText("Enviou um arquivo: " +  file.getName());
+					enviarMsg();
+				} catch (IOException e) {
+					System.out.println("Erro para enviar arquivo ao servidor");
+					e.printStackTrace();
+				}
+				
+				
+			}else return;
 		}
 	}
-	
+
 	private void paginaAnterior() {
 		if(paginaAtual > 1) {
 			paginaAtual--;
@@ -272,10 +309,10 @@ public class JanelaChat extends JFrame {
 		while(!Comandos.SAIR.getCodigo().equalsIgnoreCase(msg))
 			if(bfr.ready()){
 				msg = bfr.readLine();
-				
+
 				if(msg.equals("Sair"))
 					txtPanel.setText("Sai aqui meu");
-				
+
 				else if(msg.contains(Comandos.ENVIAR_MSG.getCodigo())) {
 					try {
 						System.out.println("RECEBI MSG DE TEXTO AQUI");
@@ -289,12 +326,7 @@ public class JanelaChat extends JFrame {
 					} catch (Exception e) {
 						System.out.println("Erro");
 					}
-				
-				}else if(msg.contains(Comandos.ENVIAR_ARQUIVO.getCodigo())) {
-					//nao implementado
-					
-					
-					//*****
+
 				}else if(msg.contains(Comandos.TODOS_USUARIOS_SALA_RET.getCodigo())) {
 					System.out.println("RECEBI OS USUARIOS AQUI NESSE CARALEO");
 					conectados = Decodificadores.nomesUsuarios(msg);
@@ -305,7 +337,7 @@ public class JanelaChat extends JFrame {
 					repaint();
 				}else if(msg.contains(Comandos.UPAR_MENSAGENS.getCodigo())) {
 					uparMsgs(Decodificadores.msgToListaMsg(msg));
-					
+
 				}else if(msg.equals("") || msg != null || msg.equals(ultimaMsg)) {
 					System.out.println("MENSAGEM RECEBIDA FOI: " + msg);
 					ultimaMsg = msg;
@@ -321,12 +353,12 @@ public class JanelaChat extends JFrame {
 		txtPanel.setText(msgs);
 	}
 
-	
+
 	private void usuariosConectados() {
 		paginas = 1;
 		paginaAtual = 1;
 		int contador = conectados.size();
-		
+
 		if(conectados.size() > 10) {
 			paginas =  (int) Math.ceil(((double) conectados.size() / 10));
 			contador = 10;
@@ -335,7 +367,6 @@ public class JanelaChat extends JFrame {
 		for(int x =0; x < contador; x++) {
 			if(conectados.get(x) == null) {
 				break;
-				//continue ?
 			}
 			lblIntegrantes[x].setText(conectados.get(x));
 			validate();
@@ -343,13 +374,13 @@ public class JanelaChat extends JFrame {
 		}
 	}
 
-	
+
 	private void zerarLabelsConectados() {
 		for (JLabel conectados : lblIntegrantes) {
 			conectados.setText("");
 		}
 	}
-	
+
 	private void atualizarConectados() {
 		if(conectados.size() == 0) {
 			return;
@@ -357,14 +388,14 @@ public class JanelaChat extends JFrame {
 		for (int x = 0; x < lblIntegrantes.length; x++) {
 			try {
 				lblIntegrantes[x].setText(conectados.get(x));
-				
+
 			} catch (Exception e) {
 				break;
 			}
 		}
 	}
-	
-	
+
+
 	private void enviarMsg() {
 		Mensagem mensagem = new Mensagem();
 		mensagem.setData(new Date(System.currentTimeMillis()));

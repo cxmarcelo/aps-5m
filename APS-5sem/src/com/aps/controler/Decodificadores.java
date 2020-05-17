@@ -1,11 +1,6 @@
 package com.aps.controler;
 
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -166,7 +161,11 @@ public class Decodificadores {
 		if(contemComando(msg)) {
 			String[] dados = msg.split(Comandos.SEPARAR_DADOS.getCodigo());
 			Arquivo arq = new Arquivo();
-			arq.setId(Integer.parseInt(dados[1]));
+			try {
+				arq.setId(Integer.parseInt(dados[1]));
+			} catch (Exception e) {
+				arq.setId(null);
+			}
 			arq.setNomeArquivo(dados[2]);
 			arq.setNomeRemetente(dados[3]);
 			Long data = Long.parseLong(dados[4]);
@@ -201,8 +200,7 @@ public class Decodificadores {
 			for (int x = 0; x < arq.getArquivo().length; x++) {
 				aux += arq.getArquivo()[x] + "-";
 			}
-			System.out.println(aux);
-			ret = arq.getId() + sep + arq.getNomeArquivo() + sep + arq.getNomeRemetente() + sep + arq.getDataHora().getTime() + sep + arq.getChat() + sep + aux;
+			ret = (arq.getId() == null ? "null" : arq.getId()) + sep + arq.getNomeArquivo() + sep + arq.getNomeRemetente() + sep + arq.getDataHora().getTime() + sep + arq.getChat() + sep + aux;
 		}
 		return ret;
 	}
