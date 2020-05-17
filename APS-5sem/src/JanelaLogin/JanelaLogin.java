@@ -178,7 +178,6 @@ public class JanelaLogin extends JFrame {
 				System.exit(0);
 			} 
 		});
-
 	}
 
 	private void sair() {

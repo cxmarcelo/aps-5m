@@ -1,10 +1,11 @@
 package com.aps.controler;
 
-import java.io.File;
 import java.util.ArrayList;
 
+import com.aps.db.ArquivosDB;
 import com.aps.db.MensagemDB;
 import com.aps.db.UsuarioDB;
+import com.aps.dominio.Arquivo;
 import com.aps.dominio.ArquivoDTO;
 import com.aps.dominio.Mensagem;
 import com.aps.dominio.Usuario;
@@ -13,6 +14,7 @@ public class Login {
 
 	private UsuarioDB userDB = new UsuarioDB();
 	private MensagemDB msgDB = new MensagemDB();
+	private ArquivosDB arqDB = new ArquivosDB();
 
 	public Usuario logar(String login, String senha) {
 		if(userDB.buscarLogin(login).size() != 0) {
@@ -75,14 +77,14 @@ public class Login {
 		}
 	}
 	
-	//Nao implementado
-	public File buscarArquivo(int id) {
-		return null;
+	
+	public Arquivo buscarArquivo(int id) {
+		return arqDB.buscarArquivo(id);
+		
 	}
 	
-	//Nao implementado
-	public ArrayList<ArquivoDTO> buscarArquivosChat(){
-		return null;
+	public ArrayList<ArquivoDTO> buscarArquivosChat(int chat){
+		return arqDB.buscarTodosArquivos(chat);
 	}
 	
 }

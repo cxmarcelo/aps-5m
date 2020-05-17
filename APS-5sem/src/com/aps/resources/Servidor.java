@@ -14,6 +14,8 @@ import java.util.ArrayList;
 
 import com.aps.controler.Decodificadores;
 import com.aps.controler.Login;
+import com.aps.dominio.Arquivo;
+import com.aps.dominio.ArquivoDTO;
 import com.aps.dominio.Mensagem;
 import com.aps.dominio.Usuario;
 import com.aps.dominio.enums.Comandos;
@@ -268,6 +270,8 @@ public class Servidor extends Thread{
 
 	// Metodo Principal ---------------------------------------------------------------------------------
 	private void executarComando(String[] dados, int atual, BufferedWriter bfw) {
+		
+		
 		if(dados[atual].equals(Comandos.AUTENTITCAR.getCodigo())) {
 			System.out.println("AUTENTICAR");
 			Usuario us = checarLogin.logar(dados[atual+1], dados[atual+2]);
@@ -281,8 +285,6 @@ public class Servidor extends Thread{
 			}
 			retorno(bfw, msg);
 		}
-
-
 
 
 		else if(dados[atual].equals(Comandos.ENVIAR_MSG.getCodigo())) {
@@ -342,10 +344,9 @@ public class Servidor extends Thread{
 			}
 		}
 
-
-
 		else if(dados[atual].equals(Comandos.ENVIAR_ARQUIVO.getCodigo())) {
-
+			//RECEBER ARQUIVO E SALVAR NO BANCO
+			
 		}
 
 
@@ -376,6 +377,23 @@ public class Servidor extends Thread{
 				retorno(bfw, msg);
 
 			}
+		}else if(dados[atual].contains(Comandos.REQUISITAR_ARQUIVO.getCodigo())) {
+			int id= -1;
+			try {
+				id= Integer.parseInt(dados[atual +1]);
+			} catch (Exception e) {
+				System.out.println("Erro para converter o id para int");
+			}
+			Arquivo arq = checarLogin.buscarArquivo(id);
+			String msg = Comandos.RETORNAR_ARQUIVO.getCodigo() + Comandos.SEPARAR_DADOS.getCodigo() + Decodificadores.arquivoToMsg(arq);
+			System.out.println("**************\n" + msg);
+			retorno(bfw, msg);
+			
+		}else if(dados[atual].contains(Comandos.TODOS_ARQUIVOS_NOMES.getCodigo())) {
+			ArrayList<ArquivoDTO> lista = checarLogin.buscarArquivosChat(con.getLocalPort());
+			String msg = Comandos.TODOS_ARQUIVOS_NOMES_RET.getCodigo() + Comandos.SEPARAR_DADOS.getCodigo() + Decodificadores.listaArquivosToMsg(lista);
+			System.out.println(msg);
+			retorno(bfw, msg);
 		}
 		/*else if(dados[atual].contains(Comandos.UPAR_MENSAGENS.getCodigo())) {
 

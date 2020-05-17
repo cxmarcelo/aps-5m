@@ -17,12 +17,9 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentListener;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
-import javax.swing.JTextPane;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 
 import java.awt.Font;
 import javax.swing.JTextArea;
@@ -34,12 +31,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.Socket;
 import java.util.Date;
 import java.util.ArrayList;
 import javax.swing.SwingConstants;
-import javax.swing.JScrollPane;
-import java.awt.Scrollbar;
 
 public class JanelaChat extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -171,7 +165,7 @@ public class JanelaChat extends JFrame {
 		JButton btnArquivos = new JButton("Arquivos");
 		btnArquivos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				new JanelaArquivos(servConect);
+				new JanelaArquivos(servConect).setVisible(true);;
 			}
 		});
 		btnArquivos.setBounds(32, 509, 150, 31);
@@ -316,7 +310,6 @@ public class JanelaChat extends JFrame {
 					System.out.println("MENSAGEM RECEBIDA FOI: " + msg);
 					ultimaMsg = msg;
 				}
-					
 			}
 	}
 

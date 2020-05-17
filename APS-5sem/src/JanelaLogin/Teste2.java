@@ -3,6 +3,7 @@ package JanelaLogin;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.Instant;
@@ -11,7 +12,13 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 import com.aps.controler.Login;
+import com.aps.db.ArquivosDB;
+import com.aps.dominio.Arquivo;
 import com.aps.dominio.ArquivoDTO;
 import com.aps.dominio.enums.Comandos;
 
@@ -46,7 +53,51 @@ public class Teste2 {
 
 
 	public static void main(String[] args) {
-	
+		ArquivosDB t = new ArquivosDB();
+		Arquivo teste = t.buscarArquivo(1);
+	 
+		java.io.File file = new java.io.File("C:\\Users\\Marcelo\\Desktop\\LIVROS/teste7salvando.txt");
+		try {
+			FileOutputStream in = new FileOutputStream(file) ;  
+			String dados = "";
+			System.out.println("----" + teste.getArquivo().length);
+			for (int x = 0; x < teste.getArquivo().length; x++) {
+				dados += teste.getArquivo()[x];
+			}
+			for (byte b : teste.getArquivo()) {
+				System.out.println(b);
+			}
+			in.write(teste.getArquivo());
+			in.close();
+			
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		/*
+		String p = "Palavra";
+		
+		/*
+		
+		JFileChooser escolherLocal = new JFileChooser();
+		FileNameExtensionFilter filtroPDF = new FileNameExtensionFilter("Arquivos PDF, TXT, ODT", "pdf", "odt", "txt");  
+		escolherLocal.setFileFilter(filtroPDF);
+		escolherLocal.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		
+		
+		File arquivo = new File("testttteeee.pdf");
+		System.out.println(arquivo.getName());
+		
+
+		escolherLocal.setSelectedFile(arquivo);
+		if(escolherLocal.showOpenDialog(escolherLocal) == JFileChooser.APPROVE_OPTION){
+			String tes =  escolherLocal.getSelectedFile().getAbsolutePath();
+			System.out.println(tes);
+		}
+		
+		//t.insertFile(arquivo);
+		
+		/*
 		ArquivoDTO teste = new ArquivoDTO();
 		teste.setData(new Date(System.currentTimeMillis()));
 		System.out.println(teste.getDiaMes());

@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 
+import com.aps.dominio.Arquivo;
 import com.aps.dominio.ArquivoDTO;
 import com.aps.dominio.Mensagem;
 import com.aps.dominio.Usuario;
@@ -161,38 +162,51 @@ public class Decodificadores {
 	}
 	
 	
-	
-	
-	
-	
-	// NÃO IMPLEMENTADO
-	private static void fileToString(File f) {
-		String msg = "";
-		InputStream is;
-		try {
-			is = new FileInputStream( f );
-			byte[] bytes = new byte[(int)f.length() ];
-			int offset = 0;
-			int numRead = 0;
+	public static Arquivo msgToArquivo(String msg) {
+		if(contemComando(msg)) {
+			String[] dados = msg.split(Comandos.SEPARAR_DADOS.getCodigo());
+			Arquivo arq = new Arquivo();
+			arq.setId(Integer.parseInt(dados[1]));
+			arq.setNomeArquivo(dados[2]);
+			arq.setNomeRemetente(dados[3]);
+			Long data = Long.parseLong(dados[4]);
+			arq.setChat(Integer.parseInt(dados[5]));
+			arq.setDataHora(new Date(data));
 			try {
-				while (offset < bytes.length
-						&& (numRead = is.read(bytes, offset, bytes.length-offset)) >= 0) {
-					offset += numRead;
+				String[] dadosAux = dados[6].split("-");
+				byte[] aux = new byte[dadosAux.length];
+				for (int x = 0; x < dadosAux.length; x++) {
+					aux[x] = Byte.parseByte(dadosAux[x]);
 				}
-			} catch (IOException e) {
-				e.printStackTrace();
+				arq.setArquivo(aux);
+				return arq;
+				
+			} catch (Exception e) {
+				System.out.println("Erro para converter a msg em arquivo");
 			}
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+		
+		
+		
+		
 		}
-	        /*
-	        ps.setString( 1, f.getName() );
-	        ps.setBytes( 2, bytes );
-	        ps.execute();
-	        ps.close();
-	        c.close();*/
-	        
+		return null;
 	}
+	
+	public static String arquivoToMsg(Arquivo arq) {
+		//id, nomearq, nomeuser, data,chat, arq
+		String ret = "";
+		if(arq != null) {
+			String sep = Comandos.SEPARAR_DADOS.getCodigo();
+			String aux = "";
+			for (int x = 0; x < arq.getArquivo().length; x++) {
+				aux += arq.getArquivo()[x] + "-";
+			}
+			System.out.println(aux);
+			ret = arq.getId() + sep + arq.getNomeArquivo() + sep + arq.getNomeRemetente() + sep + arq.getDataHora().getTime() + sep + arq.getChat() + sep + aux;
+		}
+		return ret;
+	}
+	
 	
 	private static boolean contemComando(String msg) {
 		for (Comandos comando : Comandos.values()) {
@@ -206,7 +220,6 @@ public class Decodificadores {
 	
 	public static String msgCriarUsuario(Usuario us) {
 		String msg = "";
-		//Usuario us = new Usuario(login, senha, nome, tipo);
 		String sp = Comandos.SEPARAR_DADOS.getCodigo();
 		msg = Comandos.CRIAR_USUARIO.getCodigo() + sp + us.getLogin() + sp + us.getSenha() + sp + us.getNome()  + sp + us.getTipo();
 		return msg;
