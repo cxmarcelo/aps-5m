@@ -28,15 +28,18 @@ public class Servidor extends Thread{
 	private static ArrayList<BufferedWriter>clientesSala2;           
 	private static ArrayList<BufferedWriter>clientesSala3;           
 	private static ArrayList<BufferedWriter>clientesSala4;           
+	
 	private static ArrayList<String>conectadosSala1 = new ArrayList<String>();     
 	private static ArrayList<String>conectadosSala2 = new ArrayList<String>();     
 	private static ArrayList<String>conectadosSala3 = new ArrayList<String>();     
 	private static ArrayList<String>conectadosSala4 = new ArrayList<String>();     
+	
 	private static ServerSocket server; 
 	private static ServerSocket chat1; 
 	private static ServerSocket chat2; 
 	private static ServerSocket chat3; 
 	private static ServerSocket chat4; 
+	
 	private String nome;
 	private Socket con;
 	private InputStream in;  
@@ -353,8 +356,6 @@ public class Servidor extends Thread{
 			System.out.println(aux);
 			Arquivo arq = Decodificadores.msgToArquivo(aux);
 			System.out.println("Sai desse loop");
-			
-			
 			
 			System.out.println(checarLogin.salvarArquivo(arq) ? "Salvou" : "Erro");
 			System.out.println("Mas não desse");

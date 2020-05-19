@@ -53,20 +53,16 @@ public class Teste2 {
 
 
 	public static void main(String[] args) {
+		
+		
 		ArquivosDB t = new ArquivosDB();
-		Arquivo teste = t.buscarArquivo(2);
+		Arquivo teste = t.buscarArquivo(9);
 	 
-		java.io.File file = new java.io.File("C:\\Users\\Marcelo\\Desktop\\LIVROS/teste0002.txt");
+		java.io.File file = new java.io.File("C:\\Users\\Marcelo\\Desktop\\LIVROS/0057"+teste.getNomeArquivo());
 		try {
 			FileOutputStream in = new FileOutputStream(file) ;  
 			String dados = "";
 			System.out.println("----" + teste.getArquivo().length);
-			for (int x = 0; x < teste.getArquivo().length; x++) {
-				dados += teste.getArquivo()[x];
-			}
-			for (byte b : teste.getArquivo()) {
-				System.out.println(b);
-			}
 			in.write(teste.getArquivo());
 			in.close();
 			

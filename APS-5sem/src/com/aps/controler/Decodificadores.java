@@ -24,6 +24,8 @@ public class Decodificadores {
 		}else return null;
 	}
 	
+	private static String sepB = "-.-";
+	
 	public static ArrayList<Usuario> todosUsuarios(String msg) {
 		if(contemComando(msg)) {
 			String[] aux = msg.split((Comandos.SEPARAR_DADOS.getCodigo()));
@@ -172,15 +174,16 @@ public class Decodificadores {
 			arq.setChat(Integer.parseInt(dados[5]));
 			arq.setDataHora(new Date(data));
 			try {
-				String[] dadosAux = dados[6].split("-");
+				String[] dadosAux = dados[6].split(sepB);
 				byte[] aux = new byte[dadosAux.length];
 				for (int x = 0; x < dadosAux.length; x++) {
-					aux[x] = Byte.parseByte(dadosAux[x]);
+						aux[x] = Byte.parseByte(dadosAux[x]);
 				}
 				arq.setArquivo(aux);
 				return arq;
 				
 			} catch (Exception e) {
+				e.printStackTrace();
 				System.out.println("Erro para converter a msg em arquivo");
 			}
 		
@@ -198,7 +201,7 @@ public class Decodificadores {
 			String sep = Comandos.SEPARAR_DADOS.getCodigo();
 			String aux = "";
 			for (int x = 0; x < arq.getArquivo().length; x++) {
-				aux += arq.getArquivo()[x] + "-";
+				aux += arq.getArquivo()[x] + sepB;
 			}
 			ret = (arq.getId() == null ? "null" : arq.getId()) + sep + arq.getNomeArquivo() + sep + arq.getNomeRemetente() + sep + arq.getDataHora().getTime() + sep + arq.getChat() + sep + aux;
 		}
