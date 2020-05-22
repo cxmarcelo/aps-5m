@@ -52,6 +52,9 @@ public class ArquivosDB {
 		return false;
 	}
 
+	/*
+	Inclusão, delete, update
+	 */
 	
 	
 	public Arquivo buscarArquivo( int id ){

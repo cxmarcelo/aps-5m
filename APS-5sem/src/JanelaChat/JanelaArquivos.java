@@ -11,6 +11,8 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -40,7 +42,7 @@ public class JanelaArquivos extends JFrame {
 	private JLabel[] lblArquivoNome;
 	private JLabel[] lblData;
 	private JButton[] btnBaixar;
-	private JLabel lblNewLabel;
+	private JLabel lblPags;
 	private int paginas = 1;
 	private int chat;
 	private int paginaAtual = 1;
@@ -58,12 +60,8 @@ public class JanelaArquivos extends JFrame {
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 * @param servConect 
-	 */
 	public JanelaArquivos(int chat) {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		setBounds(100, 100, 500, 384);
 		setResizable(false);
 		contentPane = new JPanel();
@@ -72,16 +70,27 @@ public class JanelaArquivos extends JFrame {
 		contentPane.setLayout(null);
 
 		JButton btnPagAnt = new JButton("<<<");
+		btnPagAnt.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				paginaAnterior();
+			}
+		});
 		btnPagAnt.setBounds(50, 285, 90, 23);
 		contentPane.add(btnPagAnt);
 
-		lblNewLabel = new JLabel(paginaAtual +"/" + paginas);
-		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 13));
-		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setBounds(150, 285, 50, 23);
-		contentPane.add(lblNewLabel);
+		lblPags = new JLabel(paginaAtual +"/" + paginas);
+		lblPags.setForeground(Color.WHITE);
+		lblPags.setFont(new Font("Tahoma", Font.BOLD, 13));
+		lblPags.setHorizontalAlignment(SwingConstants.CENTER);
+		lblPags.setBounds(150, 285, 50, 23);
+		contentPane.add(lblPags);
 
 		JButton btnPagSeg = new JButton(">>>");
+		btnPagSeg.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				paginaSeguinte();
+			}
+		});
 		btnPagSeg.setBounds(210, 285, 90, 23);
 		contentPane.add(btnPagSeg);
 
@@ -97,17 +106,21 @@ public class JanelaArquivos extends JFrame {
 		for (int x = 0; x < lblArquivoNome.length; x++) {
 			lblQuemEnviou[x] = new JLabel("" + x);
 			lblQuemEnviou[x].setBounds(5, 0 + (35 * x), 125, 30);
+			lblQuemEnviou[x].setForeground(Color.WHITE);
 			contentPane.add(lblQuemEnviou[x]);
 
 			lblArquivoNome[x] = new JLabel(""+ x + "");
 			lblArquivoNome[x].setHorizontalAlignment(SwingConstants.CENTER);
 			lblArquivoNome[x].setBounds(130, 0 + (35 * x), 100, 30);
+			lblArquivoNome[x].setForeground(Color.WHITE);
+			
 			contentPane.add(lblArquivoNome[x]);
 
 
 			lblData[x] = new JLabel("");
 			lblData[x].setHorizontalAlignment(SwingConstants.CENTER);
 			lblData[x].setBounds(250, 0 + (35 * x), 100 , 30);
+			lblData[x].setForeground(Color.WHITE);
 			contentPane.add(lblData[x]);
 
 
@@ -126,6 +139,24 @@ public class JanelaArquivos extends JFrame {
 		conectar();
 		ouvir();
 		enviarRequisicao(Comandos.TODOS_ARQUIVOS_NOMES.getCodigo());
+		
+		
+		addWindowListener(new WindowAdapter() { 
+			public void windowClosing(WindowEvent evt){ 
+				sair();
+				System.exit(0);
+			} 
+		});
+	}
+
+	private void sair() {
+		String msg = Comandos.SAIR.getCodigo();
+		try {
+			cliConect.enviarMensagem(msg);
+			cliConect.sair();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 
@@ -236,16 +267,22 @@ public class JanelaArquivos extends JFrame {
 				}else if(msg.contains(Comandos.TODOS_ARQUIVOS_NOMES_RET.getCodigo())) {
 					listaArquivos = Decodificadores.msgToListaArquivosDTO(msg);
 					uparArquivos();
-
 				}
-
 			}
 	}
 
 
 	private void uparArquivos() {
-		lblNewLabel = new JLabel(paginaAtual +"/" + paginas);
-		for (int x = 0; x < btnBaixar.length; x++) {
+		paginas = 1;
+		paginaAtual = 1;
+		int contador = listaArquivos.size();
+
+		if(listaArquivos.size() > 8) {
+			paginas =  (int) Math.ceil(((double) listaArquivos.size() / 10));
+			contador = 8;
+		}		
+		lblPags.setText(paginaAtual +"/" + paginas);
+		for (int x = 0; x < contador; x++) {
 			try {
 				ArquivoDTO aux = listaArquivos.get(x);
 				lblQuemEnviou[x].setText(aux.getNomeRemetente());
@@ -269,4 +306,41 @@ public class JanelaArquivos extends JFrame {
 			e.printStackTrace();
 		}
 	}
+
+	private void paginaAnterior() {
+		if(paginaAtual > 1) {
+			paginaAtual--;
+			for(int x =0; x <8; x++) {
+				int y = x + 8 *( paginaAtual -1) ;
+				lblQuemEnviou[x].setText(listaArquivos.get(y).getNomeRemetente());
+				lblArquivoNome[x].setText(listaArquivos.get(y).getNomeArquivo());
+				lblData[x].setText(listaArquivos.get(y).getDiaMes());
+				btnBaixar[x].setVisible(true);
+			}
+		}
+	}
+	
+	private void paginaSeguinte() {
+		if(paginaAtual < paginas) {
+			paginaAtual++;
+			for(int x = 0 ; x < 8 ; x++) {
+				int y = x + 8 *( paginaAtual -1) ;
+				if(y >= listaArquivos.size()) {
+					lblQuemEnviou[x].setText("");
+					lblArquivoNome[x].setText("");
+					lblData[x].setText("");
+					btnBaixar[x].setVisible(false);
+				}else {
+					lblQuemEnviou[x].setText(listaArquivos.get(y).getNomeRemetente());
+					lblArquivoNome[x].setText(listaArquivos.get(y).getNomeArquivo());
+					lblData[x].setText(listaArquivos.get(y).getDiaMes());
+					btnBaixar[x].setVisible(true);
+				}
+				repaint();
+				revalidate();
+			}
+		}
+	}
+
+
 }

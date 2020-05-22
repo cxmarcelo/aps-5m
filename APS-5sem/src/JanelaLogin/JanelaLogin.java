@@ -166,6 +166,20 @@ public class JanelaLogin extends JFrame {
 		});
 		btnNewButton.setBounds(187, 488, 97, 25);
 		contentPane.add(btnNewButton);
+		
+		JLabel lblLogin = new JLabel("Login");
+		lblLogin.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblLogin.setHorizontalAlignment(SwingConstants.CENTER);
+		lblLogin.setForeground(Color.WHITE);
+		lblLogin.setBounds(131, 403, 46, 22);
+		contentPane.add(lblLogin);
+		
+		JLabel lblSenha = new JLabel("Senha");
+		lblSenha.setHorizontalAlignment(SwingConstants.CENTER);
+		lblSenha.setForeground(Color.WHITE);
+		lblSenha.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblSenha.setBounds(131, 438, 46, 22);
+		contentPane.add(lblSenha);
 		cliConect = new PrincipalCliente();
 		conectarServer();
 		
@@ -182,6 +196,7 @@ public class JanelaLogin extends JFrame {
 		String msg = Comandos.SAIR.getCodigo();
 		try {
 			cliConect.enviarMensagem(msg);
+			cliConect.sair();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

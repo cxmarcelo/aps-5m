@@ -14,6 +14,8 @@ import com.aps.dominio.Usuario;
 import com.aps.dominio.enums.Comandos;
 import com.aps.resources.PrincipalCliente;
 
+import JanelaSalas.JanelaSalas;
+
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 
@@ -105,6 +107,9 @@ public class JanelaChat extends JFrame {
 		JButton btnVoltar = new JButton("Voltar as Salas");
 		btnVoltar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				new JanelaSalas(user).setVisible(true);
+				sair();
+				dispose();
 			}
 		});
 		btnVoltar.setBounds(291, 509, 150, 31);
@@ -268,6 +273,7 @@ public class JanelaChat extends JFrame {
 			}
 		}
 	}
+	
 	private void paginaSeguinte() {
 		if(paginaAtual < paginas) {
 			paginaAtual++;
