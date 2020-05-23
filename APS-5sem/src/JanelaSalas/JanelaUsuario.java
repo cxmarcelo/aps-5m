@@ -65,27 +65,34 @@ public class JanelaUsuario extends JFrame {
 	public JanelaUsuario(Usuario usuario) {
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		setBounds(100, 100, 600, 450);
+		setResizable(false);
 		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		contentPane.setBackground(new Color(46,84,143));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
 		JLabel lblTitulo = new JLabel("Configura\u00E7\u00E3o do Usu\u00E1rio");
-		lblTitulo.setFont(new Font("Times New Roman", Font.PLAIN, 16));
-		lblTitulo.setForeground(Color.BLACK);
-		lblTitulo.setBounds(162, 11, 220, 24);
+		lblTitulo.setFont(new Font("Tahoma", Font.BOLD, 20));
+		lblTitulo.setForeground(Color.WHITE);
+		lblTitulo.setBounds(160, 11, 274, 24);
 		contentPane.add(lblTitulo);
 
 		JLabel lblNome = new JLabel("Nome: ");
+		lblNome.setForeground(Color.WHITE);
+		lblNome.setFont(new Font("Tahoma", Font.BOLD, 13));
 		lblNome.setBounds(10, 131, 46, 14);
 		contentPane.add(lblNome);
 
-		JLabel lblEmail = new JLabel("Email");
+		JLabel lblEmail = new JLabel("E-mail:");
+		lblEmail.setForeground(Color.WHITE);
+		lblEmail.setFont(new Font("Tahoma", Font.BOLD, 13));
 		lblEmail.setBounds(10, 156, 46, 14);
 		contentPane.add(lblEmail);
 
-		JLabel lblSenha = new JLabel("Senha Atual");
-		lblSenha.setBounds(10, 206, 69, 24);
+		JLabel lblSenha = new JLabel("Senha Atual:");
+		lblSenha.setForeground(Color.WHITE);
+		lblSenha.setFont(new Font("Tahoma", Font.BOLD, 13));
+		lblSenha.setBounds(10, 222, 86, 24);
 		contentPane.add(lblSenha);
 
 		JButton btnSalvar = new JButton("Salvar");
@@ -94,37 +101,42 @@ public class JanelaUsuario extends JFrame {
 				salvar();
 			}
 		});
-		btnSalvar.setBounds(329, 122, 121, 23);
+		btnSalvar.setBounds(352, 127, 121, 23);
 		contentPane.add(btnSalvar);
 
 		textNome = new JTextField();
-		textNome.setBounds(82, 128, 220, 20);
+		textNome.setBounds(82, 128, 246, 20);
 		contentPane.add(textNome);
 		textNome.setColumns(10);
 
 		textEmail = new JTextField();
 		textEmail.setColumns(10);
-		textEmail.setBounds(82, 156, 220, 20);
+		textEmail.setBounds(82, 156, 246, 20);
 		contentPane.add(textEmail);
 
-		JLabel lblSenhaNova = new JLabel("Senha nova");
-		lblSenhaNova.setBounds(10, 241, 69, 24);
+		JLabel lblSenhaNova = new JLabel("Senha nova:");
+		lblSenhaNova.setForeground(Color.WHITE);
+		lblSenhaNova.setFont(new Font("Tahoma", Font.BOLD, 13));
+		lblSenhaNova.setBounds(10, 259, 86, 24);
 		contentPane.add(lblSenhaNova);
 
-		JLabel lblLogin = new JLabel("Login");
+		JLabel lblLogin = new JLabel("Login:");
+		lblLogin.setForeground(Color.WHITE);
+		lblLogin.setFont(new Font("Tahoma", Font.BOLD, 13));
 		lblLogin.setBounds(10, 104, 46, 14);
 		contentPane.add(lblLogin);
 
 		textLogin = new JLabel();
+		textLogin.setForeground(Color.WHITE);
 		textLogin.setBounds(82, 97, 220, 20);
 		contentPane.add(textLogin);
 
 		passwordSenhaAtual = new JPasswordField();
-		passwordSenhaAtual.setBounds(82, 206, 220, 24);
+		passwordSenhaAtual.setBounds(108, 223, 220, 24);
 		contentPane.add(passwordSenhaAtual);
 
 		passwordNova = new JPasswordField();
-		passwordNova.setBounds(82, 241, 220, 22);
+		passwordNova.setBounds(108, 260, 220, 22);
 		contentPane.add(passwordNova);
 
 		JButton btnAlterarSenha = new JButton("Alterar Senha");
@@ -133,7 +145,7 @@ public class JanelaUsuario extends JFrame {
 				alterarSenha();
 			}
 		});
-		btnAlterarSenha.setBounds(329, 222, 121, 23);
+		btnAlterarSenha.setBounds(352, 243, 121, 23);
 		contentPane.add(btnAlterarSenha);
 
 		JButton btnVoltar = new JButton("Voltar");
@@ -148,11 +160,15 @@ public class JanelaUsuario extends JFrame {
 		contentPane.add(btnVoltar);
 
 		JLabel lblAltDados = new JLabel("Alterar Dados");
+		lblAltDados.setForeground(Color.WHITE);
+		lblAltDados.setFont(new Font("Tahoma", Font.BOLD, 15));
 		lblAltDados.setBounds(82, 61, 220, 14);
 		contentPane.add(lblAltDados);
 
 		JLabel lblAltSenha = new JLabel("Alterar Senha");
-		lblAltSenha.setBounds(82, 181, 220, 14);
+		lblAltSenha.setForeground(Color.WHITE);
+		lblAltSenha.setFont(new Font("Tahoma", Font.BOLD, 15));
+		lblAltSenha.setBounds(82, 195, 220, 14);
 		contentPane.add(lblAltSenha);
 
 		JButton btnDelete = new JButton("Deletar");
@@ -161,19 +177,23 @@ public class JanelaUsuario extends JFrame {
 				deletar();
 			}
 		});
-		btnDelete.setBounds(329, 334, 89, 23);
+		btnDelete.setBounds(352, 336, 89, 23);
 		contentPane.add(btnDelete);
 
 		JLabel lblExcluirConta = new JLabel("Excluir Conta");
-		lblExcluirConta.setBounds(82, 296, 220, 14);
+		lblExcluirConta.setForeground(Color.WHITE);
+		lblExcluirConta.setFont(new Font("Tahoma", Font.BOLD, 15));
+		lblExcluirConta.setBounds(82, 308, 220, 14);
 		contentPane.add(lblExcluirConta);
 
-		JLabel lblSenhaDelete = new JLabel("Senha");
+		JLabel lblSenhaDelete = new JLabel("Senha:");
+		lblSenhaDelete.setForeground(Color.WHITE);
+		lblSenhaDelete.setFont(new Font("Tahoma", Font.BOLD, 13));
 		lblSenhaDelete.setBounds(10, 343, 46, 14);
 		contentPane.add(lblSenhaDelete);
 
 		passwordDelete = new JPasswordField();
-		passwordDelete.setBounds(82, 335, 220, 24);
+		passwordDelete.setBounds(82, 335, 246, 24);
 		contentPane.add(passwordDelete);
 
 		addWindowListener(new WindowAdapter() { 

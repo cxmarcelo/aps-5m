@@ -29,6 +29,7 @@ import javax.swing.JButton;
 import javax.swing.JTextArea;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.Font;
 
 public class JanelaCadastro extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -89,7 +90,7 @@ public class JanelaCadastro extends JFrame {
 				}
 			}
 		});
-		textFieldNome.setBounds(129, 335, 335, 22);
+		textFieldNome.setBounds(177, 335, 287, 22);
 		contentPane.add(textFieldNome);
 		textFieldNome.setColumns(10);
 		
@@ -110,7 +111,7 @@ public class JanelaCadastro extends JFrame {
 				}
 			}
 		});
-		textFieldLogin.setBounds(129, 370, 159, 22);
+		textFieldLogin.setBounds(177, 370, 111, 22);
 		contentPane.add(textFieldLogin);
 		textFieldLogin.setColumns(10);
 		
@@ -131,7 +132,7 @@ public class JanelaCadastro extends JFrame {
 				}
 			}
 		});
-		passFieldSenha.setBounds(310, 370, 154, 22);
+		passFieldSenha.setBounds(353, 370, 111, 22);
 		contentPane.add(passFieldSenha);
 		passFieldSenha.setColumns(10);
 		
@@ -152,7 +153,7 @@ public class JanelaCadastro extends JFrame {
 				}
 			}
 		});
-		textFieldEmail.setBounds(129, 405, 335, 22);
+		textFieldEmail.setBounds(177, 405, 287, 22);
 		contentPane.add(textFieldEmail);
 		textFieldEmail.setColumns(10);
 		
@@ -181,6 +182,30 @@ public class JanelaCadastro extends JFrame {
 		textAreaGambi.setEditable(false);
 		textAreaGambi.setBackground(new Color(46,84,143));
 		contentPane.add(textAreaGambi);
+		
+		JLabel lblLogin = new JLabel("Login:");
+		lblLogin.setForeground(Color.WHITE);
+		lblLogin.setFont(new Font("Tahoma", Font.BOLD, 13));
+		lblLogin.setBounds(129, 373, 45, 16);
+		contentPane.add(lblLogin);
+		
+		JLabel lblNome = new JLabel("Nome:");
+		lblNome.setFont(new Font("Tahoma", Font.BOLD, 13));
+		lblNome.setForeground(Color.WHITE);
+		lblNome.setBounds(129, 338, 56, 16);
+		contentPane.add(lblNome);
+		
+		JLabel lblEmail = new JLabel("E-mail:");
+		lblEmail.setForeground(Color.WHITE);
+		lblEmail.setFont(new Font("Tahoma", Font.BOLD, 13));
+		lblEmail.setBounds(129, 408, 56, 16);
+		contentPane.add(lblEmail);
+		
+		JLabel lblSenha = new JLabel("Senha:");
+		lblSenha.setFont(new Font("Tahoma", Font.BOLD, 13));
+		lblSenha.setForeground(Color.WHITE);
+		lblSenha.setBounds(300, 373, 56, 16);
+		contentPane.add(lblSenha);
 		servConnect = new PrincipalCliente();
 		conectar();
 	}
@@ -252,13 +277,4 @@ public class JanelaCadastro extends JFrame {
 		}while (!msg.equals(Comandos.RETORNO_TRUE.getCodigo()) || !msg.equals(Comandos.RETORNO_FALSE.getCodigo()));
 		return retorno;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
 }

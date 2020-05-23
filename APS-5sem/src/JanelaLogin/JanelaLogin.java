@@ -166,18 +166,18 @@ public class JanelaLogin extends JFrame {
 		btnNewButton.setBounds(187, 488, 97, 25);
 		contentPane.add(btnNewButton);
 		
-		JLabel lblLogin = new JLabel("Login");
-		lblLogin.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		JLabel lblLogin = new JLabel("Login:");
+		lblLogin.setFont(new Font("Tahoma", Font.BOLD, 14));
 		lblLogin.setHorizontalAlignment(SwingConstants.CENTER);
 		lblLogin.setForeground(Color.WHITE);
-		lblLogin.setBounds(131, 403, 46, 22);
+		lblLogin.setBounds(129, 402, 46, 22);
 		contentPane.add(lblLogin);
 		
-		JLabel lblSenha = new JLabel("Senha");
+		JLabel lblSenha = new JLabel("Senha:");
 		lblSenha.setHorizontalAlignment(SwingConstants.CENTER);
 		lblSenha.setForeground(Color.WHITE);
-		lblSenha.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblSenha.setBounds(131, 438, 46, 22);
+		lblSenha.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblSenha.setBounds(119, 437, 61, 22);
 		contentPane.add(lblSenha);
 		cliConect = new PrincipalCliente();
 		conectarServer();
