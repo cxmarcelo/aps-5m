@@ -28,25 +28,24 @@ public class Servidor extends Thread{
 	private static ArrayList<BufferedWriter>clientesSala2;           
 	private static ArrayList<BufferedWriter>clientesSala3;           
 	private static ArrayList<BufferedWriter>clientesSala4;           
-	
+
 	private static ArrayList<String>conectadosSala1 = new ArrayList<String>();     
 	private static ArrayList<String>conectadosSala2 = new ArrayList<String>();     
 	private static ArrayList<String>conectadosSala3 = new ArrayList<String>();     
 	private static ArrayList<String>conectadosSala4 = new ArrayList<String>();     
-	
+
 	private static ServerSocket server; 
 	private static ServerSocket chat1; 
 	private static ServerSocket chat2; 
 	private static ServerSocket chat3; 
 	private static ServerSocket chat4; 
-	
+
 	private String nome;
 	private Socket con;
 	private InputStream in;  
 	private InputStreamReader inr;  
 	private BufferedReader bfr;
-	private Login checarLogin = new Login();
-	private String ultimoComando = "";
+	private Login bancos = new Login();
 
 	public Servidor(Socket con) {
 		this.con = con;
@@ -101,7 +100,6 @@ public class Servidor extends Thread{
 			{           
 				msg = bfr.readLine();
 				decodificarMsg(msg, bfw);
-				ultimoComando = msg;
 				msg = "";
 			}
 		} catch (Exception e) {
@@ -273,11 +271,9 @@ public class Servidor extends Thread{
 
 	// Metodo Principal ---------------------------------------------------------------------------------
 	private void executarComando(String[] dados, int atual, BufferedWriter bfw) {
-		
-		
 		if(dados[atual].equals(Comandos.AUTENTITCAR.getCodigo())) {
 			System.out.println("AUTENTICAR");
-			Usuario us = checarLogin.logar(dados[atual+1], dados[atual+2]);
+			Usuario us = bancos.logar(dados[atual+1], dados[atual+2]);
 			String msg;
 			if(us != null) {
 				System.out.println("Entrei pra enviar a msg de retorno");
@@ -297,7 +293,7 @@ public class Servidor extends Thread{
 					aux += msg + Comandos.SEPARAR_DADOS.getCodigo();
 				}
 				Mensagem mensagemRecebida = Decodificadores.stringToMensagem(aux);
-				System.out.println(checarLogin.criarMensgaem(mensagemRecebida, con.getLocalPort()) ? "Mensagem Criada" : "Mensagem nao foi criada caraleo");
+				System.out.println(bancos.criarMensgaem(mensagemRecebida, con.getLocalPort()) ? "Mensagem Criada" : "Mensagem nao foi criada caraleo");
 
 				String msgRetorno = Comandos.ENVIAR_MSG.getCodigo() + Comandos.SEPARAR_DADOS.getCodigo() +  Decodificadores.mensagemToString(mensagemRecebida);
 				sendToAllChat(bfw, msgRetorno);
@@ -307,8 +303,6 @@ public class Servidor extends Thread{
 				e.printStackTrace();
 			}
 		}
-
-
 
 
 		else if(dados[atual].contains(Comandos.SAIR.getCodigo())) {
@@ -347,6 +341,7 @@ public class Servidor extends Thread{
 			}
 		}
 
+
 		else if(dados[atual].equals(Comandos.ENVIAR_ARQUIVO.getCodigo())) {
 			System.out.println("Entrei no enviar arquivo ----------------------");
 			String aux = "";
@@ -356,13 +351,12 @@ public class Servidor extends Thread{
 			System.out.println(aux);
 			Arquivo arq = Decodificadores.msgToArquivo(aux);
 			System.out.println("Sai desse loop");
-			
-			System.out.println(checarLogin.salvarArquivo(arq) ? "Salvou" : "Erro");
+
+			System.out.println(bancos.salvarArquivo(arq) ? "Salvou" : "Erro");
 			System.out.println("Mas não desse");
-		}
 
 
-		else if(dados[atual].equals(Comandos.NOME_USUARIO.getCodigo())) {
+		}else if(dados[atual].equals(Comandos.NOME_USUARIO.getCodigo())) {
 			if(dados[atual +1].equals(Comandos.NULL.getCodigo())) {
 				return;
 			}else {
@@ -370,29 +364,24 @@ public class Servidor extends Thread{
 				uparMensagens(con.getLocalPort(), bfw);
 				adicionarUsuarioASala();
 			}
-		}
 
 
-
-		else if(dados[atual].equals(Comandos.CRIAR_USUARIO.getCodigo())) {
+		}else if(dados[atual].equals(Comandos.CRIAR_USUARIO.getCodigo())) {
 			Usuario user = new Usuario();
 			user.setLogin(dados[atual+1]);
 			user.setSenha(dados[atual+2]);
 			user.setNome(dados[atual+3]);
-			//trocar tipo por email futuramente
-			//user.setEmail(dados[atual+4]);
-			user.setTipo(dados[atual+4]);
+			user.setEmail(dados[atual+4]);
 			String msg = "";
-
-			//Nao implementado --------------------------------
-			if(checarLogin.criarUsuario(user)) {
+			if(bancos.criarUsuario(user)) {
 				msg = Comandos.RETORNO_TRUE.getCodigo();
 				retorno(bfw, msg);
 			}else {
 				msg = Comandos.RETORNO_FALSE.getCodigo();
 				retorno(bfw, msg);
-
 			}
+
+
 		}else if(dados[atual].contains(Comandos.REQUISITAR_ARQUIVO.getCodigo())) {
 			int id= -1;
 			try {
@@ -400,47 +389,65 @@ public class Servidor extends Thread{
 			} catch (Exception e) {
 				System.out.println("Erro para converter o id para int");
 			}
-			Arquivo arq = checarLogin.buscarArquivo(id);
+			Arquivo arq = bancos.buscarArquivo(id);
 			String msg = Comandos.RETORNAR_ARQUIVO.getCodigo() + Comandos.SEPARAR_DADOS.getCodigo() + Decodificadores.arquivoToMsg(arq);
 			System.out.println("**************\n" + msg);
 			retorno(bfw, msg);
-			
+
+
 		}else if(dados[atual].contains(Comandos.TODOS_ARQUIVOS_NOMES.getCodigo())) {
-			ArrayList<ArquivoDTO> lista = checarLogin.buscarArquivosChat(con.getLocalPort());
+			ArrayList<ArquivoDTO> lista = bancos.buscarArquivosChat(con.getLocalPort());
 			String msg = Comandos.TODOS_ARQUIVOS_NOMES_RET.getCodigo() + Comandos.SEPARAR_DADOS.getCodigo() + Decodificadores.listaArquivosToMsg(lista);
 			System.out.println(msg);
 			retorno(bfw, msg);
-		}
-		/*else if(dados[atual].contains(Comandos.UPAR_MENSAGENS.getCodigo())) {
-
-
-		}
-		/*else if(dados[atual].equals(Comandos.TODOS_USUARIOS_SALA.getCodigo())) {
-				try {
-					sendToAllChat(bfw, retNomeUsuarios());
-					retorno(bfw, retNomeUsuarios());
-					System.out.println(retNomeUsuarios());
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-		}*/
-		/*
-		else {
-			try {
-				sendToAllChat(bfw, dados[0]);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		
+		
+		}else if(dados[atual].equals(Comandos.ATUALIZAR_DADOS_USUARIO.getCodigo())) {
+			String aux = "";
+			for (String msg : dados) {
+				aux += msg + Comandos.SEPARAR_DADOS.getCodigo();
 			}
-
+			Usuario us = Decodificadores.toUsuario(aux);
+			String msg = "";
+			if(bancos.alterarDadosUsuario(us)) {
+				msg = Comandos.ATUALIZAR_DADOS_USUARIO.getCodigo() + Comandos.SEPARAR_DADOS.getCodigo() +Comandos.RETORNO_TRUE.getCodigo();
+			}else {
+				msg = Comandos.ATUALIZAR_DADOS_USUARIO.getCodigo() + Comandos.SEPARAR_DADOS.getCodigo() +Comandos.RETORNO_FALSE.getCodigo();
+			}
+			retorno(bfw, msg);
+			
+			
+		}else if(dados[atual].equals(Comandos.ATUALIZAR_SENHA_USUARIO.getCodigo())) {
+			String aux = "";
+			for (String msg : dados) {
+				aux += msg + Comandos.SEPARAR_DADOS.getCodigo();
+			}
+			Usuario us = Decodificadores.toUsuario(aux);
+			String msg = "";
+			if(bancos.alterarSenhaUsuario(us)) {
+				msg = Comandos.ATUALIZAR_SENHA_USUARIO.getCodigo() + Comandos.SEPARAR_DADOS.getCodigo() + Comandos.RETORNO_TRUE.getCodigo();
+			}else {
+				msg = Comandos.ATUALIZAR_SENHA_USUARIO.getCodigo() + Comandos.SEPARAR_DADOS.getCodigo() +Comandos.RETORNO_FALSE.getCodigo();
+			}
+			retorno(bfw, msg);
+			
+			
+		}else if(dados[atual].equals(Comandos.DELETAR_USUARIO.getCodigo())) {
+			String login = dados[atual+1];
+			String senha = dados[atual+2];
+			String msg = "";
+			if(bancos.deletarUsuario(login, senha)) {
+				msg = Comandos.DELETAR_USUARIO.getCodigo() + Comandos.SEPARAR_DADOS.getCodigo() +Comandos.RETORNO_TRUE.getCodigo();
+			}else {
+				msg = Comandos.DELETAR_USUARIO.getCodigo() + Comandos.SEPARAR_DADOS.getCodigo() +Comandos.RETORNO_FALSE.getCodigo();
+			}
+			retorno(bfw, msg);
 		}
-		 */
 	}
 
 
 	private void uparMensagens(int chat, BufferedWriter bfw) {
-		ArrayList<Mensagem> listaMsg = checarLogin.todasMensagens(chat, 0);
+		ArrayList<Mensagem> listaMsg = bancos.todasMensagens(chat, 0);
 		String msg = Comandos.UPAR_MENSAGENS.getCodigo() + Comandos.SEPARAR_DADOS.getCodigo() + Decodificadores.listaMsgToString(listaMsg);
 		retorno(bfw, msg);
 
@@ -453,7 +460,6 @@ public class Servidor extends Thread{
 			try {
 				sendToAllChat(null, retNomeUsuarios());
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			break;
@@ -463,7 +469,6 @@ public class Servidor extends Thread{
 			try {
 				sendToAllChat(null, retNomeUsuarios());
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			break;
@@ -473,7 +478,6 @@ public class Servidor extends Thread{
 			try {
 				sendToAllChat(null, retNomeUsuarios());
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			break;
@@ -483,7 +487,6 @@ public class Servidor extends Thread{
 			try {
 				sendToAllChat(null, retNomeUsuarios());
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			break;

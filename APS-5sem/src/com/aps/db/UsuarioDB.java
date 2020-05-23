@@ -14,11 +14,11 @@ public class UsuarioDB {
 		Connection con = ConnectionFactory.getConnection();
 		PreparedStatement stmt = null;
 		try {
-			stmt = con.prepareStatement("INSERT INTO usuario(login, senha, nome, tipo) VALUES (?, ?, ?, ?)");
+			stmt = con.prepareStatement("INSERT INTO usuario(login, senha, nome, email) VALUES (?, ?, ?, ?)");
 			stmt.setString(1, user.getLogin());
 			stmt.setString(2, user.getSenha());
 			stmt.setString(3, user.getNome());
-			stmt.setString(4, user.getTipo());
+			stmt.setString(4, user.getEmail());
 			int resul = stmt.executeUpdate();
 			return resul == 1 ? true : false ;
 		} catch (SQLException e) {
@@ -45,7 +45,7 @@ public class UsuarioDB {
 				user.setLogin(rs.getString("login"));
 				user.setSenha(rs.getString("senha"));
 				user.setSenha(rs.getString("nome"));
-				user.setSenha(rs.getString("tipo"));
+				user.setSenha(rs.getString("email"));
 				lista.add(user);
 			}
 
@@ -59,21 +59,21 @@ public class UsuarioDB {
 	}
 
 	
-	public ArrayList<Usuario> buscarPorTipo(String tipo) {
+	public ArrayList<Usuario> buscarPorTipo(String email) {
 		Connection con = ConnectionFactory.getConnection();
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		ArrayList<Usuario> lista = new ArrayList<Usuario>();
 		try {
-			stmt = con.prepareStatement("Select * from usuario where tipo = %?%;");
-			stmt.setString(1, tipo);
+			stmt = con.prepareStatement("Select * from usuario where email = %?%;");
+			stmt.setString(1, email);
 			rs = stmt.executeQuery();
 			while(rs.next()) {
 				Usuario user = new Usuario();
 				user.setLogin(rs.getString("login"));
 				user.setSenha(rs.getString("senha"));
 				user.setSenha(rs.getString("nome"));
-				user.setSenha(rs.getString("tipo"));
+				user.setSenha(rs.getString("email"));
 				lista.add(user);
 			}
 		} catch (SQLException e) {
@@ -101,7 +101,7 @@ public class UsuarioDB {
 				user.setLogin(rs.getString("login"));
 				user.setSenha(rs.getString("senha"));
 				user.setNome(rs.getString("nome"));
-				user.setTipo(rs.getString("tipo"));
+				user.setEmail(rs.getString("email"));
 				lista.add(user);
 			}
 		} catch (SQLException e) {
@@ -113,18 +113,45 @@ public class UsuarioDB {
 		return lista;
 	}
 
-	public void alterarNome(Usuario user, String nome ) {
+	public boolean alterarDados(Usuario user) {
 		Connection con = ConnectionFactory.getConnection();
 		PreparedStatement stmt = null;
 		try {
-			stmt = con.prepareStatement("update usuario set nome = ? where login = ? and senha = ?");
-			stmt.setString(1, nome);
-			stmt.setString(2, user.getLogin());
-			stmt.setString(3, user.getSenha());
-			stmt.executeUpdate();
+			stmt = con.prepareStatement("update usuario set nome = ?, email = ? where login = ? and senha = ?");
+			stmt.setString(1, user.getNome());
+			stmt.setString(2, user.getEmail());
+			stmt.setString(3, user.getLogin());
+			stmt.setString(4, user.getSenha());
+			
+			if(stmt.executeUpdate() == 1) {
+				return true;
+			}else {
+				return false;
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			System.out.println("erro: " + e);
+			return false;
+		}finally {
+			ConnectionFactory.closeConnection(con, stmt);
+		}
+	}
+	
+	public boolean alterarSenha(Usuario user) {
+		Connection con = ConnectionFactory.getConnection();
+		PreparedStatement stmt = null;
+		try {
+			stmt = con.prepareStatement("update usuario set senha = ? where login = ?");
+			stmt.setString(1, user.getSenha());
+			stmt.setString(2, user.getLogin());
+			
+			if(stmt.executeUpdate() == 1) {
+				return true;
+			}else {
+				return false;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
 		}finally {
 			ConnectionFactory.closeConnection(con, stmt);
 		}

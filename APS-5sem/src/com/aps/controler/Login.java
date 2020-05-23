@@ -34,6 +34,18 @@ public class Login {
 		}
 		return false;
 	}
+	
+	public boolean deletarUsuario(String login, String senha) {
+		return userDB.delete(login, senha);
+	}
+	
+	public boolean alterarDadosUsuario(Usuario us) {
+		return userDB.alterarDados(us);
+	}
+	
+	public boolean alterarSenhaUsuario(Usuario us) {
+		return userDB.alterarSenha(us);
+	}
 
 	
 	public boolean criarMensgaem(Mensagem msg, int porta) {

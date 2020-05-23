@@ -255,15 +255,21 @@ public class JanelaSalas extends JFrame {
 		lblNomeUsuario.setBounds(12, 11, 90, 25);
 		contentPane.add(lblNomeUsuario);
 
-		//Funções Eventos Mouse Entered/Exited
-		//Containers
+		JButton btnConfiguracoes = new JButton("Configura\u00E7\u00F5es");
+		btnConfiguracoes.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new JanelaUsuario(usuario).setVisible(true);
+				dispose();
+			}
+		});
+		btnConfiguracoes.setBounds(559, 31, 111, 23);
+		contentPane.add(btnConfiguracoes);
+
 		ContainerRemanejamento.addMouseListener(new MouseAdapter() {
-			@Override
 			public void mouseEntered(MouseEvent e) {
 				ContainerRemanejamento.setBorder(BorderFactory.createLineBorder(Color.BLACK,3));
 				TextBoxRemanejamento.setBorder(BorderFactory.createLineBorder(Color.BLACK,3));
 			}
-			@Override
 			public void mouseExited(MouseEvent e) {
 				ContainerRemanejamento.setBorder(BorderFactory.createLineBorder(Color.BLACK,1));
 				TextBoxRemanejamento.setBorder(BorderFactory.createLineBorder(Color.BLACK,1));
@@ -271,12 +277,10 @@ public class JanelaSalas extends JFrame {
 		});
 
 		ContainerPoluidores.addMouseListener(new MouseAdapter() {
-			@Override
 			public void mouseEntered(MouseEvent e) {
 				ContainerPoluidores.setBorder(BorderFactory.createLineBorder(Color.BLACK,3));
 				TextBoxPoluidores.setBorder(BorderFactory.createLineBorder(Color.BLACK,3));
 			}
-			@Override
 			public void mouseExited(MouseEvent e) {
 				ContainerPoluidores.setBorder(BorderFactory.createLineBorder(Color.BLACK,1));
 				TextBoxPoluidores.setBorder(BorderFactory.createLineBorder(Color.BLACK,1));
@@ -284,12 +288,10 @@ public class JanelaSalas extends JFrame {
 		});
 
 		ContainerEstacoes.addMouseListener(new MouseAdapter() {
-			@Override
 			public void mouseEntered(MouseEvent e) {
 				ContainerEstacoes.setBorder(BorderFactory.createLineBorder(Color.BLACK,3));
 				TextBoxEstacoes.setBorder(BorderFactory.createLineBorder(Color.BLACK,3));
 			}
-			@Override
 			public void mouseExited(MouseEvent e) {
 				ContainerEstacoes.setBorder(BorderFactory.createLineBorder(Color.BLACK,1));
 				TextBoxEstacoes.setBorder(BorderFactory.createLineBorder(Color.BLACK,1));
@@ -297,12 +299,10 @@ public class JanelaSalas extends JFrame {
 		});
 
 		ContainerUrbana.addMouseListener(new MouseAdapter() {
-			@Override
 			public void mouseEntered(MouseEvent e) {
 				ContainerUrbana.setBorder(BorderFactory.createLineBorder(Color.BLACK,3));
 				TextBoxUrbana.setBorder(BorderFactory.createLineBorder(Color.BLACK,3));
 			}
-			@Override
 			public void mouseExited(MouseEvent e) {
 				ContainerUrbana.setBorder(BorderFactory.createLineBorder(Color.BLACK,1));
 				TextBoxUrbana.setBorder(BorderFactory.createLineBorder(Color.BLACK,1));
@@ -311,12 +311,10 @@ public class JanelaSalas extends JFrame {
 
 		//TXTBOX
 		txtrRemanejamentoEsgoto.addMouseListener(new MouseAdapter() {
-			@Override
 			public void mouseEntered(MouseEvent e) {
 				ContainerRemanejamento.setBorder(BorderFactory.createLineBorder(Color.BLACK,3));
 				TextBoxRemanejamento.setBorder(BorderFactory.createLineBorder(Color.BLACK,3));
 			}
-			@Override
 			public void mouseExited(MouseEvent e) {
 				ContainerRemanejamento.setBorder(BorderFactory.createLineBorder(Color.BLACK,1));
 				TextBoxRemanejamento.setBorder(BorderFactory.createLineBorder(Color.BLACK,1));
@@ -324,12 +322,10 @@ public class JanelaSalas extends JFrame {
 		});
 
 		txtrPoluidoresRio.addMouseListener(new MouseAdapter() {
-			@Override
 			public void mouseEntered(MouseEvent e) {
 				ContainerPoluidores.setBorder(BorderFactory.createLineBorder(Color.BLACK,3));
 				TextBoxPoluidores.setBorder(BorderFactory.createLineBorder(Color.BLACK,3));
 			}
-			@Override
 			public void mouseExited(MouseEvent e) {
 				ContainerPoluidores.setBorder(BorderFactory.createLineBorder(Color.BLACK,1));
 				TextBoxPoluidores.setBorder(BorderFactory.createLineBorder(Color.BLACK,1));
@@ -337,12 +333,10 @@ public class JanelaSalas extends JFrame {
 		});
 
 		txtrEstacaoLimpeza.addMouseListener(new MouseAdapter() {
-			@Override
 			public void mouseEntered(MouseEvent e) {
 				ContainerEstacoes.setBorder(BorderFactory.createLineBorder(Color.BLACK,3));
 				TextBoxEstacoes.setBorder(BorderFactory.createLineBorder(Color.BLACK,3));
 			}
-			@Override
 			public void mouseExited(MouseEvent e) {
 				ContainerEstacoes.setBorder(BorderFactory.createLineBorder(Color.BLACK,1));
 				TextBoxEstacoes.setBorder(BorderFactory.createLineBorder(Color.BLACK,1));
@@ -350,12 +344,10 @@ public class JanelaSalas extends JFrame {
 		});
 
 		txtrUrbana.addMouseListener(new MouseAdapter() {
-			@Override
 			public void mouseEntered(MouseEvent e) {
 				ContainerUrbana.setBorder(BorderFactory.createLineBorder(Color.BLACK,3));
 				TextBoxUrbana.setBorder(BorderFactory.createLineBorder(Color.BLACK,3));
 			}
-			@Override
 			public void mouseExited(MouseEvent e) {
 				ContainerUrbana.setBorder(BorderFactory.createLineBorder(Color.BLACK,1));
 				TextBoxUrbana.setBorder(BorderFactory.createLineBorder(Color.BLACK,1));
@@ -364,12 +356,10 @@ public class JanelaSalas extends JFrame {
 
 		//Button
 		btnRemanejamentoEsgoto.addMouseListener(new MouseAdapter() {
-			@Override
 			public void mouseEntered(MouseEvent e) {
 				ContainerRemanejamento.setBorder(BorderFactory.createLineBorder(Color.GREEN,3));
 				TextBoxRemanejamento.setBorder(BorderFactory.createLineBorder(Color.BLACK,3));
 			}
-			@Override
 			public void mouseExited(MouseEvent e) {
 				ContainerRemanejamento.setBorder(BorderFactory.createLineBorder(Color.BLACK,1));
 				TextBoxRemanejamento.setBorder(BorderFactory.createLineBorder(Color.BLACK,1));
@@ -377,12 +367,10 @@ public class JanelaSalas extends JFrame {
 		});
 
 		btnPoluidoresRio.addMouseListener(new MouseAdapter() {
-			@Override
 			public void mouseEntered(MouseEvent e) {
 				ContainerPoluidores.setBorder(BorderFactory.createLineBorder(Color.GREEN,3));
 				TextBoxPoluidores.setBorder(BorderFactory.createLineBorder(Color.BLACK,3));
 			}
-			@Override
 			public void mouseExited(MouseEvent e) {
 				ContainerPoluidores.setBorder(BorderFactory.createLineBorder(Color.BLACK,1));
 				TextBoxPoluidores.setBorder(BorderFactory.createLineBorder(Color.BLACK,1));
@@ -390,12 +378,10 @@ public class JanelaSalas extends JFrame {
 		});
 
 		btnEstacoes.addMouseListener(new MouseAdapter() {
-			@Override
 			public void mouseEntered(MouseEvent e) {
 				ContainerEstacoes.setBorder(BorderFactory.createLineBorder(Color.GREEN,3));
 				TextBoxEstacoes.setBorder(BorderFactory.createLineBorder(Color.BLACK,3));
 			}
-			@Override
 			public void mouseExited(MouseEvent e) {
 				ContainerEstacoes.setBorder(BorderFactory.createLineBorder(Color.BLACK,1));
 				TextBoxEstacoes.setBorder(BorderFactory.createLineBorder(Color.BLACK,1));
@@ -403,18 +389,18 @@ public class JanelaSalas extends JFrame {
 		});
 
 		btnUrbana.addMouseListener(new MouseAdapter() {
-			@Override
 			public void mouseEntered(MouseEvent e) {
 				ContainerUrbana.setBorder(BorderFactory.createLineBorder(Color.GREEN,3));
 				TextBoxUrbana.setBorder(BorderFactory.createLineBorder(Color.BLACK,3));
 			}
-			@Override
 			public void mouseExited(MouseEvent e) {
 				ContainerUrbana.setBorder(BorderFactory.createLineBorder(Color.BLACK,1));
 				TextBoxUrbana.setBorder(BorderFactory.createLineBorder(Color.BLACK,1));
 			}
 		});
 	}
+
+
 
 	private void entrarEmSala(int sala, Usuario us) {
 		switch (sala) {
@@ -423,12 +409,11 @@ public class JanelaSalas extends JFrame {
 			dispose();
 			break;
 
-			
 		case 2:
 			new JanelaChat(us, 12347).setVisible(true);
 			dispose();
 			break;
-			
+
 		case 3:
 			new JanelaChat(us, 12348).setVisible(true);
 			dispose();
@@ -437,7 +422,7 @@ public class JanelaSalas extends JFrame {
 			new JanelaChat(us, 12349).setVisible(true);
 			dispose();
 			break;
-			
+
 		default:
 			JOptionPane.showMessageDialog(null, "Erro ao entrar na sala");
 			break;

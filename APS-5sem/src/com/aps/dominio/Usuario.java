@@ -6,17 +6,17 @@ public class Usuario {
 	private String login;
 	private String senha;
 	private String nome;
-	private String tipo;
+	private String email;
 	
 	public Usuario() {
 	}
 
-	public Usuario(String login, String senha, String nome, String tipo) {
+	public Usuario(String login, String senha, String nome, String email) {
 		super();
 		this.login = login;
 		this.senha = senha;
 		this.nome = nome;
-		this.tipo = tipo;
+		this.email = email;
 	}
 
 	public String getLogin() {
@@ -43,11 +43,11 @@ public class Usuario {
 		this.nome = nome;
 	}
 
-	public String getTipo() {
-		return tipo;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setTipo(String tipo) {
-		this.tipo = tipo;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 }

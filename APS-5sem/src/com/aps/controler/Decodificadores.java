@@ -19,7 +19,7 @@ public class Decodificadores {
 		us.setLogin(dados[1]);
 		us.setNome(dados[2]);
 		us.setSenha(dados[3]);
-		us.setTipo(dados[4]);
+		us.setEmail(dados[4]);
 		return us;
 		}else return null;
 	}
@@ -42,7 +42,7 @@ public class Decodificadores {
 				us.setLogin(dados[y]);
 				us.setNome(dados[y+1]);
 				us.setSenha(dados[y+2]);
-				us.setTipo(dados[y+3]);
+				us.setEmail(dados[y+3]);
 				lista.add(us);
 			}
 			return lista;
@@ -67,7 +67,7 @@ public class Decodificadores {
 	
 	public static String usuarioToMsg(Usuario us) {
 		String sp = Comandos.SEPARAR_DADOS.getCodigo();
-		String msg = us.getLogin() + sp + us.getNome() + sp + us.getSenha() + sp + us.getTipo() + "\r\n";
+		String msg = us.getLogin() + sp + us.getNome() + sp + us.getSenha() + sp + us.getEmail() + "\r\n";
 		return msg;
 	}
 	
@@ -222,7 +222,7 @@ public class Decodificadores {
 	public static String msgCriarUsuario(Usuario us) {
 		String msg = "";
 		String sp = Comandos.SEPARAR_DADOS.getCodigo();
-		msg = Comandos.CRIAR_USUARIO.getCodigo() + sp + us.getLogin() + sp + us.getSenha() + sp + us.getNome()  + sp + us.getTipo();
+		msg = Comandos.CRIAR_USUARIO.getCodigo() + sp + us.getLogin() + sp + us.getSenha() + sp + us.getNome()  + sp + us.getEmail();
 		return msg;
 	}
 	

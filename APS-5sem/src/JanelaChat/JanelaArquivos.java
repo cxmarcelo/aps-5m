@@ -154,6 +154,7 @@ public class JanelaArquivos extends JFrame {
 		try {
 			cliConect.enviarMensagem(msg);
 			cliConect.sair();
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

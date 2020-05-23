@@ -23,6 +23,7 @@ import javax.swing.JOptionPane;
 import java.awt.Font;
 import javax.swing.SwingConstants;
 
+import com.aps.controler.Decodificadores;
 import com.aps.dominio.Usuario;
 import com.aps.dominio.enums.Comandos;
 import com.aps.resources.PrincipalCliente;
@@ -74,14 +75,12 @@ public class JanelaLogin extends JFrame {
 		passField.setText("Senha");
 		passField.setForeground(Color.GRAY);
 		passField.addFocusListener(new FocusAdapter() {
-			@Override
 			public void focusGained(FocusEvent e) {
 				if("Senha".equals(String.copyValueOf(passField.getPassword()))) {
 					passField.setForeground(Color.BLACK);
 					passField.setText("");
 				}
 			}
-			@Override
 			public void focusLost(FocusEvent e) {
 				if("".equals(String.copyValueOf(passField.getPassword()))) {
 					passField.setForeground(Color.GRAY);
@@ -229,7 +228,7 @@ public class JanelaLogin extends JFrame {
 				msg = bfr.readLine();
 				System.out.println(msg);
 				if(msg.contains(Comandos.RETORNO_AUTENTICACAO.getCodigo())) {
-					user = cliConect.toUsuario(msg);
+					user = Decodificadores.toUsuario(msg);
 					System.out.println("Criei um usuario");
 					break;
 				}

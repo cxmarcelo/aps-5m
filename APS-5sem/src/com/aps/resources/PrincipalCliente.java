@@ -81,15 +81,6 @@ public class PrincipalCliente {
 
 	
 	
-	public Usuario toUsuario(String msg) {
-		Usuario us = new Usuario();
-		String[] dados = msg.split(Comandos.SEPARAR_DADOS.getCodigo());
-		us.setLogin(dados[1]);
-		us.setNome(dados[2]);
-		us.setSenha(dados[3]);
-		us.setTipo(dados[4]);
-		return us;
-	}
 	
 	
 	/*
