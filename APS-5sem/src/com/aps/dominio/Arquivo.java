@@ -1,11 +1,9 @@
 package com.aps.dominio;
 
-import java.io.FileOutputStream;
 import java.util.Date;
 
 public class Arquivo {
 
-	//id, nomeArquivo, nomeRemetente, dataHora, chat, arquivo
 	private Integer id;
 	private String nomeArquivo;
 	private String nomeRemetente;

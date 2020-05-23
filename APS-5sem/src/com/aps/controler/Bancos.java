@@ -10,7 +10,7 @@ import com.aps.dominio.ArquivoDTO;
 import com.aps.dominio.Mensagem;
 import com.aps.dominio.Usuario;
 
-public class Login {
+public class Bancos {
 
 	private UsuarioDB userDB = new UsuarioDB();
 	private MensagemDB msgDB = new MensagemDB();

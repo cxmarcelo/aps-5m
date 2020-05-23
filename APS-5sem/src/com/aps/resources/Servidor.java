@@ -13,7 +13,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 import com.aps.controler.Decodificadores;
-import com.aps.controler.Login;
+import com.aps.controler.Bancos;
 import com.aps.dominio.Arquivo;
 import com.aps.dominio.ArquivoDTO;
 import com.aps.dominio.Mensagem;
@@ -45,7 +45,7 @@ public class Servidor extends Thread{
 	private InputStream in;  
 	private InputStreamReader inr;  
 	private BufferedReader bfr;
-	private Login bancos = new Login();
+	private Bancos bancos = new Bancos();
 
 	public Servidor(Socket con) {
 		this.con = con;
