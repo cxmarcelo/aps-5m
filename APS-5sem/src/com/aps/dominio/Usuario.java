@@ -2,7 +2,6 @@
 
 public class Usuario {
 	
-	//id
 	private String login;
 	private String senha;
 	private String nome;

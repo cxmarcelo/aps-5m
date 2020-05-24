@@ -334,7 +334,6 @@ public class JanelaChat extends JFrame {
 					}
 
 				}else if(msg.contains(Comandos.TODOS_USUARIOS_SALA_RET.getCodigo())) {
-					System.out.println("RECEBI OS USUARIOS AQUI NESSE CARALEO");
 					conectados = Decodificadores.nomesUsuarios(msg);
 					zerarLabelsConectados();
 					atualizarConectados();

@@ -15,7 +15,6 @@ import java.util.Date;
 import com.aps.dominio.Arquivo;
 import com.aps.dominio.ArquivoDTO;
 
-//NAO IMPLEMENTADO
 public class ArquivosDB {
 
 	public boolean salvarAquivoBD(Arquivo arq ){
@@ -52,9 +51,6 @@ public class ArquivosDB {
 		return false;
 	}
 
-	/*
-	Inclusão, delete, update
-	 */
 	
 	
 	public Arquivo buscarArquivo( int id ){

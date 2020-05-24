@@ -95,6 +95,11 @@ public class JanelaArquivos extends JFrame {
 		contentPane.add(btnPagSeg);
 
 		JButton btnSair = new JButton("Sair");
+		btnSair.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				sair();
+			}
+		});
 		btnSair.setBounds(350, 285, 90, 23);
 		contentPane.add(btnSair);
 
@@ -104,12 +109,12 @@ public class JanelaArquivos extends JFrame {
 		btnBaixar = new JButton[8];
 
 		for (int x = 0; x < lblArquivoNome.length; x++) {
-			lblQuemEnviou[x] = new JLabel("" + x);
+			lblQuemEnviou[x] = new JLabel("");
 			lblQuemEnviou[x].setBounds(5, 0 + (35 * x), 125, 30);
 			lblQuemEnviou[x].setForeground(Color.WHITE);
 			contentPane.add(lblQuemEnviou[x]);
 
-			lblArquivoNome[x] = new JLabel(""+ x + "");
+			lblArquivoNome[x] = new JLabel("");
 			lblArquivoNome[x].setHorizontalAlignment(SwingConstants.CENTER);
 			lblArquivoNome[x].setBounds(130, 0 + (35 * x), 100, 30);
 			lblArquivoNome[x].setForeground(Color.WHITE);
