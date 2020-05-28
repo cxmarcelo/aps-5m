@@ -414,6 +414,7 @@ public class Servidor extends Thread{
 			}else {
 				msg = Comandos.ATUALIZAR_DADOS_USUARIO.getCodigo() + Comandos.SEPARAR_DADOS.getCodigo() +Comandos.RETORNO_FALSE.getCodigo();
 			}
+			System.out.println(msg);
 			retorno(bfw, msg);
 			
 			

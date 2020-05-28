@@ -117,12 +117,10 @@ public class UsuarioDB {
 		Connection con = ConnectionFactory.getConnection();
 		PreparedStatement stmt = null;
 		try {
-			stmt = con.prepareStatement("update usuario set nome = ?, email = ? where login = ? and senha = ?");
+			stmt = con.prepareStatement("update usuario set nome = ?, email = ? where login = ?");
 			stmt.setString(1, user.getNome());
 			stmt.setString(2, user.getEmail());
 			stmt.setString(3, user.getLogin());
-			stmt.setString(4, user.getSenha());
-			
 			if(stmt.executeUpdate() == 1) {
 				return true;
 			}else {

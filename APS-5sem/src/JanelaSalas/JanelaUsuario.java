@@ -217,7 +217,7 @@ public class JanelaUsuario extends JFrame {
 	private void upDados() {
 		textNome.setText(user.getNome());
 		textLogin.setText(user.getLogin());
-		textEmail.setText(user.getLogin());
+		textEmail.setText(user.getEmail());
 	}
 
 
@@ -235,19 +235,13 @@ public class JanelaUsuario extends JFrame {
 		}else {
 			JOptionPane.showMessageDialog(null, "Senha incorreta");
 		}
-		
 	}
 
 	private void salvar() {
 		String nome, login, email;
-		nome = user.getNome();
-		login = user.getLogin();
-		email = user.getEmail();
+		nome = textNome.getText();
+		email = textNome.getText();
 		if(nome.equals("") || nome == null) {
-			JOptionPane.showMessageDialog(null, "Nome inválido");
-			return;
-		}
-		if(login.equals("") || email == null) {
 			JOptionPane.showMessageDialog(null, "Nome inválido");
 			return;
 		}
@@ -256,11 +250,11 @@ public class JanelaUsuario extends JFrame {
 			return;
 		}
 		try {
-			user.setLogin(login);
 			user.setNome(nome);
 			user.setEmail(email);
 			String msg = "";
 			msg = Comandos.ATUALIZAR_DADOS_USUARIO.getCodigo() + Comandos.SEPARAR_DADOS.getCodigo() + Decodificadores.usuarioToMsg(user);
+			System.out.println(msg);
 			servConect.enviarMensagem(msg);
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(null, "Erro salvar dados");
