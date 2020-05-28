@@ -28,7 +28,6 @@ public enum Comandos {
 	DELETAR_USUARIO("::__DELETAR_USUARIO__::"),;
 	
 	private String codigo;
-	
 	private Comandos(String codigo) {
 		this.codigo = codigo;
 	}
@@ -36,5 +35,4 @@ public enum Comandos {
 	public String getCodigo() {
 		return codigo;
 	}
-
 }

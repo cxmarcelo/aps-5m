@@ -238,7 +238,7 @@ public class JanelaUsuario extends JFrame {
 	}
 
 	private void salvar() {
-		String nome, login, email;
+		String nome, email;
 		nome = textNome.getText();
 		email = textNome.getText();
 		if(nome.equals("") || nome == null) {

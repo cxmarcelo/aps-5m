@@ -27,11 +27,7 @@ public class PrincipalCliente {
 
 	public PrincipalCliente() {                  
 	}
-	/***
-	 * Método usado para conectar no server socket, retorna IO Exception caso dê algum erro.
-	 * @throws UnknownHostException 
-	 * @throws IOException
-	 */
+
 	public void conectar(int port, Usuario us) throws UnknownHostException, IOException {
 			socket = new Socket(iP,port);
 			ou = socket.getOutputStream();
@@ -45,10 +41,6 @@ public class PrincipalCliente {
 			}
 	}
 
-	/**
-	 * Método usado para receber mensagem do servidor
-	 * @throws IOException retorna IO Exception caso dê algum erro.
-	 */
 	public void escutar() throws IOException{
 
 		InputStream in = socket.getInputStream();
@@ -67,10 +59,6 @@ public class PrincipalCliente {
 			}
 	}
 
-	/***
-	 * Método usado quando o usuário clica em sair
-	 * @throws IOException retorna IO Exception caso dê algum erro.
-	 */
 	public void sair() throws IOException{
 		enviarMensagem(Comandos.SAIR.getCodigo());
 		bfw.close();
@@ -79,42 +67,6 @@ public class PrincipalCliente {
 		socket.close();
 	}
 
-	
-	
-	
-	
-	/*
-	  public void actionPerformed(ActionEvent e) {
-
-	    try {
-	       if(e.getActionCommand().equals(btnSend.getActionCommand()))
-	          enviarMensagem(txtMsg.getText());
-	       else
-	          if(e.getActionCommand().equals(btnSair.getActionCommand()))
-	          sair();
-	       } catch (IOException e1) {
-	            e1.printStackTrace();
-	       }                       
-	  }
-	 */
-
-	/*
-	  public void keyPressed(KeyEvent e) {
-
-	      if(e.getKeyCode() == KeyEvent.VK_ENTER){
-	         try {
-	            enviarMensagem(txtMsg.getText());
-	         } catch (IOException e1) {
-	             e1.printStackTrace();
-	         }                                                          
-	     }                       
-	  }
-	 */      
-	/***
-	 * Método usado para enviar mensagem para o server socket
-	 * @param msg do tipo String
-	 * @throws IOException retorna IO Exception caso dê algum erro.
-	 */
 	public void enviarMensagem(String msg) throws IOException{
 		if(msg.equals(Comandos.SAIR.getCodigo())){
 			bfw.write("Desconectado \r\n");
@@ -141,14 +93,4 @@ public class PrincipalCliente {
 	public Socket getSocket() {
 		return socket;
 	}
-	
-	public static void main(String []args) throws IOException{
-
-		PrincipalCliente app = new PrincipalCliente();
-		app.conectar(1, new Usuario("marcelo123", "marcelo2000", "Marcelo C", "ADM"));
-		app.enviarMensagem2(Comandos.ENVIAR_MSG.getCodigo() + Comandos.SEPARAR_DADOS.getCodigo() + "Não esta funcionando essa bosta do krl");
-		app.escutar();
-	}
-
-
 }
